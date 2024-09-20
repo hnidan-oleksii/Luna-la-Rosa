@@ -1,0 +1,13 @@
+version: '4'
+services:
+  postgres:
+    image: postgres:16.3
+    container_name: luna
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: florista
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/postgres/data:/var/lib/postgresql/data
+
