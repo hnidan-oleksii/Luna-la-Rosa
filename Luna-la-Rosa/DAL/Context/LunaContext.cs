@@ -1,5 +1,6 @@
 using DAL.Context.Configuration;
 using DAL.Entities;
+using DAL.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Context;
@@ -44,6 +45,22 @@ public class LunaContext : DbContext
         modelBuilder.ApplyConfiguration(new AddOnConfiguration());
         modelBuilder.ApplyConfiguration(new OrderAddOnConfiguration());
 
-        base.OnModelCreating(modelBuilder);
+        var seeder = new DataSeeder();
+
+        modelBuilder.Entity<User>().HasData(seeder.Users);
+        modelBuilder.Entity<Flower>().HasData(seeder.Flowers);
+        modelBuilder.Entity<Bouquet>().HasData(seeder.Bouquets);
+        modelBuilder.Entity<BouquetCategory>().HasData(seeder.BouquetCategories);
+        modelBuilder.Entity<BouquetCategoryAssociation>().HasData(seeder.BouquetCategoryAssociations);
+        modelBuilder.Entity<BouquetFlower>().HasData(seeder.BouquetFlowers);
+        modelBuilder.Entity<CustomBouquet>().HasData(seeder.CustomBouquets);
+        modelBuilder.Entity<CustomBouquetFlower>().HasData(seeder.CustomBouquetFlowers);
+        modelBuilder.Entity<ShoppingCart>().HasData(seeder.ShoppingCarts);
+        modelBuilder.Entity<CartItem>().HasData(seeder.CartItems);
+        modelBuilder.Entity<Order>().HasData(seeder.Orders);
+        modelBuilder.Entity<OrderBouquet>().HasData(seeder.OrderBouquets);
+        modelBuilder.Entity<Payment>().HasData(seeder.Payments);
+        modelBuilder.Entity<AddOn>().HasData(seeder.AddOns);
+        modelBuilder.Entity<OrderAddOn>().HasData(seeder.OrderAddOns);
     }
 }
