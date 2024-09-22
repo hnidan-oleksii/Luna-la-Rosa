@@ -8,18 +8,15 @@ public class AddOnConfiguration : IEntityTypeConfiguration<AddOn>
 {
     public void Configure(EntityTypeBuilder<AddOn> builder)
     {
-        builder.HasKey(a => a.Id);
+        builder.ToTable("Add_Ons");
+        builder.HasKey(ao => ao.Id);
+        builder.Property(ao => ao.Id).UseIdentityColumn();
+        builder.Property(ao => ao.Type).IsRequired().HasMaxLength(50);
+        builder.Property(ao => ao.Name).IsRequired().HasMaxLength(255);
+        builder.Property(ao => ao.Price).IsRequired().HasColumnType("NUMERIC(10, 2)");
+        builder.Property(ao => ao.Image).HasColumnType("BYTEA");
+        builder.Property(ao => ao.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.Property(a => a.Type)
-            .HasMaxLength(50)
-            .IsRequired();
-
-        builder.Property(a => a.Name)
-            .HasMaxLength(255)
-            .IsRequired();
-
-        builder.Property(a => a.Price)
-            .HasColumnType("decimal(10,2)")
-            .IsRequired();
+        builder.HasCheckConstraint("CK_AddOn_Type", "type IN ('Balloons', 'Card', 'Sweets')");
     }
 }

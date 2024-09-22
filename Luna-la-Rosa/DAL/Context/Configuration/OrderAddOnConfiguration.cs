@@ -8,15 +8,17 @@ public class OrderAddOnConfiguration : IEntityTypeConfiguration<OrderAddOn>
 {
     public void Configure(EntityTypeBuilder<OrderAddOn> builder)
     {
-        builder.HasKey(oa => new { oa.OrderBouquetId, oa.AddOnId });
+        builder.ToTable("Order_Add_Ons");
+        builder.HasKey(oao => new { oao.OrderBouquetId, oao.AddOnId });
 
-        // Relationships
-        builder.HasOne(oa => oa.OrderBouquet)
-            .WithMany(ob => ob.OrderAddOns)
-            .HasForeignKey(oa => oa.OrderBouquetId);
+        builder.HasOne(oao => oao.OrderBouquet)
+            .WithMany(ob => ob.AddOns)
+            .HasForeignKey(oao => oao.OrderBouquetId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(oa => oa.AddOn)
-            .WithMany(a => a.OrderAddOns)
-            .HasForeignKey(oa => oa.AddOnId);
+        builder.HasOne(oao => oao.AddOn)
+            .WithMany(ao => ao.OrderBouquets)
+            .HasForeignKey(oao => oao.AddOnId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

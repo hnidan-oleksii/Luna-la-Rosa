@@ -7,7 +7,8 @@ public class AddOn
     public string Name { get; set; }
     public decimal Price { get; set; }
     public byte[] Image { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
 
-    public ICollection<OrderAddOn> OrderAddOns { get; set; }
+    public ICollection<CartItemAddOnAssociation> CartItems { get; set; }
+    public ICollection<OrderAddOn> OrderBouquets { get; set; }
 }

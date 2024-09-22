@@ -21,11 +21,13 @@ public class LunaContext : DbContext
     public DbSet<CustomBouquetFlower> CustomBouquetFlowers { get; set; }
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<CartItemAddOnAssociation> CartItemAddOnAssociations { get; set; }
+    public DbSet<AddOn> AddOns { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderBouquet> OrderBouquets { get; set; }
-    public DbSet<Payment> Payments { get; set; }
-    public DbSet<AddOn> AddOns { get; set; }
     public DbSet<OrderAddOn> OrderAddOns { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<RibbonWrapping> RibbonWrappings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,11 +41,13 @@ public class LunaContext : DbContext
         modelBuilder.ApplyConfiguration(new CustomBouquetFlowerConfiguration());
         modelBuilder.ApplyConfiguration(new ShoppingCartConfiguration());
         modelBuilder.ApplyConfiguration(new CartItemConfiguration());
+        modelBuilder.ApplyConfiguration(new CartItemAddOnAssociationConfiguration());
+        modelBuilder.ApplyConfiguration(new AddOnConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
         modelBuilder.ApplyConfiguration(new OrderBouquetConfiguration());
-        modelBuilder.ApplyConfiguration(new PaymentConfiguration());
-        modelBuilder.ApplyConfiguration(new AddOnConfiguration());
         modelBuilder.ApplyConfiguration(new OrderAddOnConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentConfiguration());
+        modelBuilder.ApplyConfiguration(new RibbonWrappingConfiguration());
 
         var seeder = new DataSeeder();
 
@@ -57,10 +61,12 @@ public class LunaContext : DbContext
         modelBuilder.Entity<CustomBouquetFlower>().HasData(seeder.CustomBouquetFlowers);
         modelBuilder.Entity<ShoppingCart>().HasData(seeder.ShoppingCarts);
         modelBuilder.Entity<CartItem>().HasData(seeder.CartItems);
+        modelBuilder.Entity<CartItemAddOnAssociation>().HasData(seeder.CartItemAddOnAssociations);
+        modelBuilder.Entity<AddOn>().HasData(seeder.AddOns);
         modelBuilder.Entity<Order>().HasData(seeder.Orders);
         modelBuilder.Entity<OrderBouquet>().HasData(seeder.OrderBouquets);
-        modelBuilder.Entity<Payment>().HasData(seeder.Payments);
-        modelBuilder.Entity<AddOn>().HasData(seeder.AddOns);
         modelBuilder.Entity<OrderAddOn>().HasData(seeder.OrderAddOns);
+        modelBuilder.Entity<Payment>().HasData(seeder.Payments);
+        modelBuilder.Entity<RibbonWrapping>().HasData(seeder.RibbonWrappings);
     }
 }

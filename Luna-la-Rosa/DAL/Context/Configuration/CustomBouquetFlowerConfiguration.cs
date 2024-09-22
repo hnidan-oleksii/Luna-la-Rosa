@@ -8,17 +8,19 @@ public class CustomBouquetFlowerConfiguration : IEntityTypeConfiguration<CustomB
 {
     public void Configure(EntityTypeBuilder<CustomBouquetFlower> builder)
     {
+        builder.ToTable("Custom_Bouquet_Flowers");
         builder.HasKey(cbf => new { cbf.CustomBouquetId, cbf.FlowerId });
 
-        builder.Property(cbf => cbf.Quantity).IsRequired();
-
-        // Relationships
         builder.HasOne(cbf => cbf.CustomBouquet)
             .WithMany(cb => cb.CustomBouquetFlowers)
-            .HasForeignKey(cbf => cbf.CustomBouquetId);
+            .HasForeignKey(cbf => cbf.CustomBouquetId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(cbf => cbf.Flower)
             .WithMany(f => f.CustomBouquetFlowers)
-            .HasForeignKey(cbf => cbf.FlowerId);
+            .HasForeignKey(cbf => cbf.FlowerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(cbf => cbf.Quantity).IsRequired();
     }
 }

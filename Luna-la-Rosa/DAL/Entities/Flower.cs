@@ -7,10 +7,10 @@ public class Flower
     public string Type { get; set; }
     public string Color { get; set; }
     public decimal Price { get; set; }
-    public int AvailableQuantity { get; set; } = 0;
+    public int AvailableQuantity { get; set; }
     public byte[] Image { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     public ICollection<BouquetFlower> BouquetFlowers { get; set; }
     public ICollection<CustomBouquetFlower> CustomBouquetFlowers { get; set; }

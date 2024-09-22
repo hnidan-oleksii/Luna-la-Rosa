@@ -8,23 +8,25 @@ public class CustomBouquetConfiguration : IEntityTypeConfiguration<CustomBouquet
 {
     public void Configure(EntityTypeBuilder<CustomBouquet> builder)
     {
+        builder.ToTable("Custom_Bouquets");
         builder.HasKey(cb => cb.Id);
+        builder.Property(cb => cb.Id).UseIdentityColumn();
+        builder.Property(cb => cb.TotalPrice).HasColumnType("NUMERIC(10, 2)");
+        builder.Property(cb => cb.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.Property(cb => cb.TotalPrice)
-            .HasColumnType("decimal(10,2)");
+        builder.HasOne(cb => cb.User)
+            .WithMany(u => u.CustomBouquets)
+            .HasForeignKey(cb => cb.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Property(cb => cb.Ribbon)
-            .HasMaxLength(255);
+        builder.HasOne(cb => cb.Ribbon)
+            .WithMany(r => r.CustomBouquetsAsRibbon)
+            .HasForeignKey(cb => cb.RibbonId)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Property(cb => cb.Wrapping)
-            .HasMaxLength(255);
-
-        builder.Property(cb => cb.CreatedAt)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-        // One-to-Many with CustomBouquetFlower
-        builder.HasMany(cb => cb.CustomBouquetFlowers)
-            .WithOne(cbf => cbf.CustomBouquet)
-            .HasForeignKey(cbf => cbf.CustomBouquetId);
+        builder.HasOne(cb => cb.Wrapping)
+            .WithMany(w => w.CustomBouquetsAsWrapping)
+            .HasForeignKey(cb => cb.WrappingId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

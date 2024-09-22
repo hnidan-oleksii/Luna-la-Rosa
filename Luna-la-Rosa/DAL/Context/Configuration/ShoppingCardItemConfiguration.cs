@@ -8,22 +8,23 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
 {
     public void Configure(EntityTypeBuilder<CartItem> builder)
     {
+        builder.ToTable("Cart_Items");
         builder.HasKey(ci => ci.Id);
-
+        builder.Property(ci => ci.Id).UseIdentityColumn();
         builder.Property(ci => ci.Quantity).IsRequired();
 
-        // Relationships
-        builder.HasOne(ci => ci.Cart)
+        builder.HasOne(ci => ci.ShoppingCart)
             .WithMany(sc => sc.CartItems)
-            .HasForeignKey(ci => ci.CartId);
-
-        builder.HasOne(ci => ci.Bouquet)
-            .WithMany()
-            .HasForeignKey(ci => ci.BouquetId)
+            .HasForeignKey(ci => ci.CartId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(ci => ci.Bouquet)
+            .WithMany(b => b.CartItems)
+            .HasForeignKey(ci => ci.BouquetId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(ci => ci.CustomBouquet)
-            .WithMany()
+            .WithMany(cb => cb.CartItems)
             .HasForeignKey(ci => ci.CustomBouquetId)
             .OnDelete(DeleteBehavior.Cascade);
     }
