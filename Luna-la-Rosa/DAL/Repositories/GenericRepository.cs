@@ -7,7 +7,7 @@ namespace DAL.Repositories;
 public class GenericRepository<T>(LunaContext context) : IGenericRepository<T>
     where T : class
 {
-    public async Task<T> GenerateGetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(int id)
     {
         var entity = await context.Set<T>().FindAsync(id);
     
@@ -19,26 +19,23 @@ public class GenericRepository<T>(LunaContext context) : IGenericRepository<T>
         return entity;
     }
 
-    public async Task<IEnumerable<T>> GenerateGetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await context.Set<T>().ToListAsync();
     }
 
-    public async Task GenerateAddAsync(T entity)
+    public async Task AddAsync(T entity)
     {
         await context.Set<T>().AddAsync(entity);
-        await context.SaveChangesAsync();
     }
 
-    public async Task GenerateUpdateAsync(T entity)
+    public async Task UpdateAsync(T entity)
     {
-        context.Set<T>().Update(entity);
-        await context.SaveChangesAsync();
+        await Task.Run(() => context.Set<T>().Update(entity));
     }
 
-    public async Task GenerateDeleteAsync(T entity)
+    public async Task DeleteAsync(T entity)
     {
-        context.Set<T>().Remove(entity);
-        await context.SaveChangesAsync();
+        await Task.Run(() => context.Set<T>().Remove(entity));
     }
 }
