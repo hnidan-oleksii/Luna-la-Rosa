@@ -81,6 +81,17 @@ public class DataSeeder
         var faker = new Faker<Bouquet>()
             .RuleFor(b => b.Id, f => f.IndexFaker + 1)
             .RuleFor(b => b.Name, f => f.Commerce.ProductName())
+			.RuleFor(b => b.Price, (_, b) =>
+			{
+				var bouquetPrice = BouquetFlowers
+					.Where(bf => bf.BouquetId == b.Id)
+					.Sum(bf => Flowers.First(fl => fl.Id == bf.FlowerId).Price * bf.Quantity);
+				var addOnPrice = BouquetAddOns
+					.Where(bao => bao.BouquetId == b.Id)
+					.Sum(bao => AddOns.First(ao => ao.Id == bao.AddOnId).Price * bao.Quantity);
+
+				return bouquetPrice + addOnPrice;
+			})
             .RuleFor(b => b.Price, (_, b) =>
             {
                 var bouquetFlowers = BouquetFlowers.Where(bf => bf.BouquetId == b.Id);
@@ -136,10 +147,14 @@ public class DataSeeder
             .RuleFor(cb => cb.UserId, f => f.PickRandom<User>(Users).Id)
             .RuleFor(cb => cb.TotalPrice, (_, cb) =>
             {
-                var bouquetFlowers = CustomBouquetFlowers.Where(cbf => cbf.CustomBouquetId == cb.Id);
-                var flowersPrice =
-                    bouquetFlowers.Sum(cbf => Flowers.First(fl => fl.Id == cbf.FlowerId).Price * cbf.Quantity);
-                return flowersPrice;
+                var flowersPrice = CustomBouquetFlowers
+					.Where(cbf => cbf.CustomBouquetId == cb.Id)
+					.Sum(cbf => Flowers.First(fl => fl.Id == cbf.FlowerId).Price * cbf.Quantity);
+				var addOnPrice = BouquetAddOns
+					.Where(bao => bao.BouquetId == cb.Id)
+					.Sum(bao => AddOns.First(ao => ao.Id == bao.AddOnId).Price * bao.Quantity);
+
+                return flowersPrice + addOnPrice;
             })
             .RuleFor(cb => cb.CreatedAt, f => f.Date.Recent(30));
 
@@ -174,7 +189,24 @@ public class DataSeeder
             .RuleFor(ci => ci.BouquetId, f => f.Random.Bool() ? f.PickRandom<Bouquet>(Bouquets).Id : null)
             .RuleFor(ci => ci.CustomBouquetId,
                 (f, ci) => ci.BouquetId == null ? f.PickRandom<CustomBouquet>(CustomBouquets).Id : null)
-            .RuleFor(ci => ci.Quantity, f => f.Random.Int(1, 5));
+            .RuleFor(ci => ci.Quantity, f => f.Random.Int(1, 5))
+			.RuleFor(ci => ci.Price, (f, ci) =>
+			{
+					decimal basePrice = 0;
+					if (ci.BouquetId.HasValue)
+					{
+						basePrice = Bouquets.First(bq => bq.Id == ci.BouquetId.Value).Price;
+					}
+					else if (ci.CustomBouquetId.HasValue)
+					{
+						basePrice = CustomBouquets.First(cb => cb.Id == ci.CustomBouquetId.Value).TotalPrice;
+					}
+
+					var orderAddOns = OrderAddOns.Where(oao => oao.OrderBouquetId == ci.Id);
+					var addOnPrice = orderAddOns.Sum(oao => AddOns.First(ao => ao.Id == oao.AddOnId).Price);
+
+					return (basePrice + addOnPrice) * ci.Quantity;
+			});
 
         return GenerateRows(faker, count);
     }
@@ -258,7 +290,23 @@ public class DataSeeder
             .RuleFor(ob => ob.CustomBouquetId,
                 (f, ob) => ob.BouquetId == null ? f.PickRandom<CustomBouquet>(CustomBouquets).Id : null)
             .RuleFor(ob => ob.Quantity, f => f.Random.Int(1, 5))
-            .RuleFor(ob => ob.Price, f => f.Random.Decimal(10, 200));
+			.RuleFor(ob => ob.Price, (f, ob) =>
+			{
+					decimal basePrice = 0;
+					if (ob.BouquetId.HasValue)
+					{
+						basePrice = Bouquets.First(bq => bq.Id == ob.BouquetId.Value).Price;
+					}
+					else if (ob.CustomBouquetId.HasValue)
+					{
+						basePrice = CustomBouquets.First(cb => cb.Id == ob.CustomBouquetId.Value).TotalPrice;
+					}
+
+					var orderAddOns = OrderAddOns.Where(oao => oao.OrderBouquetId == ob.Id);
+					var addOnPrice = orderAddOns.Sum(oao => AddOns.First(ao => ao.Id == oao.AddOnId).Price);
+
+					return (basePrice + addOnPrice) * ob.Quantity;
+			});
 
         return GenerateRows(faker, count);
     }
