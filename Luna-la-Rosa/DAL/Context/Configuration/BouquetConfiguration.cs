@@ -26,5 +26,15 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
 
         builder.HasIndex(b => b.MainColor);
         builder.HasIndex(b => b.Size);
+
+        builder.HasMany(b => b.CartItems)
+            .WithOne(ci => ci.Bouquet)
+            .HasForeignKey(ci => ci.BouquetId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(b => b.OrderBouquets)
+            .WithOne(ob => ob.Bouquet)
+            .HasForeignKey(ob => ob.BouquetId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -18,4 +18,14 @@ public class AddOnConfiguration : IEntityTypeConfiguration<AddOn>
         builder.Property(ao => ao.Image).HasColumnType("BYTEA");
         builder.Property(ao => ao.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+        builder.HasMany(ao => ao.CartItems)
+            .WithOne(ca => ca.AddOn)
+            .HasForeignKey(ca => ca.AddOnId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(ao => ao.OrderBouquets)
+            .WithOne(oa => oa.AddOn)
+            .HasForeignKey(oa => oa.AddOnId)
+            .OnDelete(DeleteBehavior.Restrict);
+    } 
 }
