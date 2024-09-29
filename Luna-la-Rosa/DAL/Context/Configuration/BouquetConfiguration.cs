@@ -21,6 +21,7 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
         builder.Property(b => b.Image2).HasColumnType("BYTEA");
         builder.Property(b => b.Image3).HasColumnType("BYTEA");
         builder.Property(b => b.Description).HasMaxLength(30);
+        builder.Property(b => b.PopularityScore).HasDefaultValue(0);
         builder.Property(b => b.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         builder.Property(b => b.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 

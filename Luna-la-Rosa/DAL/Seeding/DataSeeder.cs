@@ -92,6 +92,7 @@ public class DataSeeder
             .RuleFor(b => b.Image2, f => f.Random.Bytes(100))
             .RuleFor(b => b.Image3, f => f.Random.Bytes(100))
             .RuleFor(b => b.Description, f => f.Lorem.Sentence())
+            .RuleFor(b => b.PopularityScore, f => f.Random.Int(0, 100))
             .RuleFor(b => b.CreatedAt, f => f.Date.Past())
             .RuleFor(b => b.UpdatedAt, f => f.Date.Recent(14));
 

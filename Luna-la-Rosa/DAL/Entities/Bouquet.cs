@@ -11,6 +11,7 @@ public class Bouquet
     public byte[] Image2 { get; set; }
     public byte[] Image3 { get; set; }
     public string Description { get; set; }
+    public int PopularityScore { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
