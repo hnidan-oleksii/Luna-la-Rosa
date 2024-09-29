@@ -27,7 +27,6 @@ public class LunaContext : DbContext
     public DbSet<OrderBouquet> OrderBouquets { get; set; }
     public DbSet<OrderAddOn> OrderAddOns { get; set; }
     public DbSet<Payment> Payments { get; set; }
-    public DbSet<RibbonWrapping> RibbonWrappings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,7 +46,6 @@ public class LunaContext : DbContext
         modelBuilder.ApplyConfiguration(new OrderBouquetConfiguration());
         modelBuilder.ApplyConfiguration(new OrderAddOnConfiguration());
         modelBuilder.ApplyConfiguration(new PaymentConfiguration());
-        modelBuilder.ApplyConfiguration(new RibbonWrappingConfiguration());
 
         var seeder = new DataSeeder();
 
@@ -67,6 +65,5 @@ public class LunaContext : DbContext
         modelBuilder.Entity<OrderBouquet>().HasData(seeder.OrderBouquets);
         modelBuilder.Entity<OrderAddOn>().HasData(seeder.OrderAddOns);
         modelBuilder.Entity<Payment>().HasData(seeder.Payments);
-        modelBuilder.Entity<RibbonWrapping>().HasData(seeder.RibbonWrappings);
     }
 }

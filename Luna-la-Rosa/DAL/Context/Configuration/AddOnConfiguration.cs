@@ -17,6 +17,6 @@ public class AddOnConfiguration : IEntityTypeConfiguration<AddOn>
         builder.Property(ao => ao.Image).HasColumnType("BYTEA");
         builder.Property(ao => ao.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.HasCheckConstraint("CK_AddOn_Type", "type IN ('Balloons', 'Card', 'Sweets')");
+        builder.HasCheckConstraint("CK_AddOn_Type", "type IN ('Balloons', 'Card', 'Sweets', 'Wrapping', 'Ribbon')");
     }
 }

@@ -21,7 +21,6 @@ public class DataSeeder
     public IReadOnlyCollection<OrderBouquet> OrderBouquets { get; }
     public IReadOnlyCollection<OrderAddOn> OrderAddOns { get; }
     public IReadOnlyCollection<Payment> Payments { get; }
-    public IReadOnlyCollection<RibbonWrapping> RibbonWrappings { get; }
 
     public DataSeeder(int rows = 30)
     {
@@ -41,7 +40,6 @@ public class DataSeeder
         OrderBouquets = GenerateOrderBouquets(rows);
         OrderAddOns = GenerateOrderAddOns(rows);
         Payments = GeneratePayments(rows);
-        RibbonWrappings = GenerateRibbonWrappings(rows);
     }
 
     public IReadOnlyCollection<User> GenerateUsers(int count)
@@ -136,11 +134,8 @@ public class DataSeeder
                 var bouquetFlowers = CustomBouquetFlowers.Where(cbf => cbf.CustomBouquetId == cb.Id);
                 var flowersPrice =
                     bouquetFlowers.Sum(cbf => Flowers.First(fl => fl.Id == cbf.FlowerId).Price * cbf.Quantity);
-                var wrappingPrice = RibbonWrappings.First(rw => rw.Id == cb.RibbonId).Price;
-                return flowersPrice + wrappingPrice;
+                return flowersPrice;
             })
-            .RuleFor(cb => cb.RibbonId, f => f.PickRandom<RibbonWrapping>(RibbonWrappings).Id)
-            .RuleFor(cb => cb.WrappingId, f => f.PickRandom<RibbonWrapping>(RibbonWrappings).Id)
             .RuleFor(cb => cb.CreatedAt, f => f.Date.Recent(30));
 
         return GenerateRows(faker, count);
@@ -183,7 +178,7 @@ public class DataSeeder
     {
         var faker = new Faker<AddOn>()
             .RuleFor(ao => ao.Id, f => f.IndexFaker + 1)
-            .RuleFor(ao => ao.Type, f => f.PickRandom("Balloons", "Card", "Sweets"))
+            .RuleFor(ao => ao.Type, f => f.PickRandom("Balloons", "Card", "Sweets", "Wrapping", "Ribbon"))
             .RuleFor(ao => ao.Name, f => f.Commerce.ProductName())
             .RuleFor(ao => ao.Price, f => f.Random.Decimal(1, 20))
             .RuleFor(ao => ao.Image, f => f.Random.Bytes(100))
@@ -266,20 +261,6 @@ public class DataSeeder
             .RuleFor(p => p.PaymentMethod, f => f.PickRandom("Card", "Cash on Delivery"))
             .RuleFor(p => p.Status, f => f.PickRandom("Pending", "Completed", "Failed"))
             .RuleFor(p => p.TransactionDate, f => f.Date.Recent(30));
-
-        return GenerateRows(faker, count);
-    }
-
-    public IReadOnlyCollection<RibbonWrapping> GenerateRibbonWrappings(int count)
-    {
-        var faker = new Faker<RibbonWrapping>()
-            .RuleFor(rw => rw.Id, f => f.IndexFaker + 1)
-            .RuleFor(rw => rw.Name, f => f.Commerce.ProductName())
-            .RuleFor(rw => rw.Photo, f => f.Random.Bytes(100))
-            .RuleFor(rw => rw.Price, f => f.Random.Decimal(1, 20))
-            .RuleFor(rw => rw.Type, f => f.PickRandom("Ribbon", "Wrapping"))
-            .RuleFor(rw => rw.AvailableQuantity, f => f.Random.Int(0, 100))
-            .RuleFor(rw => rw.CreatedAt, f => f.Date.Past());
 
         return GenerateRows(faker, count);
     }
