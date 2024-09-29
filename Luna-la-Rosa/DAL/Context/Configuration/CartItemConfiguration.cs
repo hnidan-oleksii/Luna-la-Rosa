@@ -11,6 +11,7 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
         builder.HasKey(ci => ci.Id);
         builder.Property(ci => ci.Id).UseIdentityColumn();
         builder.Property(ci => ci.Quantity).IsRequired();
+        builder.Property(ob => ob.Price).HasColumnType("NUMERIC(10, 2)");
 
         builder.HasOne(ci => ci.ShoppingCart)
             .WithMany(sc => sc.CartItems)

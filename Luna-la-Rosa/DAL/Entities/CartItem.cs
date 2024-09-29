@@ -7,6 +7,7 @@ public class CartItem
     public int? BouquetId { get; set; }
     public int? CustomBouquetId { get; set; }
     public int Quantity { get; set; }
+    public decimal Price { get; set; }
 
     public ShoppingCart ShoppingCart { get; set; }
     public Bouquet Bouquet { get; set; }

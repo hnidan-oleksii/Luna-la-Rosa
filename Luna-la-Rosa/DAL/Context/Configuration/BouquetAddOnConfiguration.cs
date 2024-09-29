@@ -9,6 +9,7 @@ public class BouquetAddOnConfiguration : IEntityTypeConfiguration<BouquetAddOn>
     public void Configure(EntityTypeBuilder<BouquetAddOn> builder)
     {
         builder.HasKey(ba => new { ba.BouquetId, ba.AddOnId });
+		builder.Property(ba => ba.Quantity).HasDefaultValue(1);
 
         builder.HasOne(ba => ba.Bouquet)
                .WithMany(b => b.BouquetAddOns)

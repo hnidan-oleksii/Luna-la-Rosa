@@ -61,8 +61,8 @@ public class LunaContext : DbContext
         modelBuilder.Entity<CustomBouquetFlower>().HasData(seeder.CustomBouquetFlowers);
         modelBuilder.Entity<ShoppingCart>().HasData(seeder.ShoppingCarts);
         modelBuilder.Entity<CartItem>().HasData(seeder.CartItems);
-        modelBuilder.Entity<CartItemAddOn>().HasData(seeder.CartItemAddOn);
         modelBuilder.Entity<AddOn>().HasData(seeder.AddOns);
+        modelBuilder.Entity<CartItemAddOn>().HasData(seeder.CartItemAddOn);
 		modelBuilder.Entity<BouquetAddOn>().HasData(seeder.BouquetAddOns);
         modelBuilder.Entity<Order>().HasData(seeder.Orders);
         modelBuilder.Entity<OrderBouquet>().HasData(seeder.OrderBouquets);
