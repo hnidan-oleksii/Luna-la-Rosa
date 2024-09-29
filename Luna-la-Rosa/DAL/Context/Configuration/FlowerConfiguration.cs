@@ -8,7 +8,6 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
 {
     public void Configure(EntityTypeBuilder<Flower> builder)
     {
-        builder.ToTable("Flowers");
         builder.HasKey(f => f.Id);
         builder.Property(f => f.Id).UseIdentityColumn();
         builder.Property(f => f.Name).IsRequired().HasMaxLength(255);

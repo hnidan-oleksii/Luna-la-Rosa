@@ -8,8 +8,8 @@ public class BouquetFlowerConfiguration : IEntityTypeConfiguration<BouquetFlower
 {
     public void Configure(EntityTypeBuilder<BouquetFlower> builder)
     {
-        builder.ToTable("Bouquet_Flowers");
         builder.HasKey(bf => new { bf.BouquetId, bf.FlowerId });
+        builder.Property(bf => bf.Quantity).IsRequired();
 
         builder.HasOne(bf => bf.Bouquet)
             .WithMany(b => b.BouquetFlowers)
@@ -20,7 +20,5 @@ public class BouquetFlowerConfiguration : IEntityTypeConfiguration<BouquetFlower
             .WithMany(f => f.BouquetFlowers)
             .HasForeignKey(bf => bf.FlowerId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Property(bf => bf.Quantity).IsRequired();
     }
 }

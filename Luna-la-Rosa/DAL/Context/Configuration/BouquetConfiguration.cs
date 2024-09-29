@@ -8,9 +8,8 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
 {
     public void Configure(EntityTypeBuilder<Bouquet> builder)
     {
-        builder.ToTable("Bouquets",
-            t => t.HasCheckConstraint("CK_Bouquet_Size", "size IN ('Small', 'Medium', 'Large')"));
-        
+        builder.ToTable(t => 
+            t.HasCheckConstraint("CK_Bouquet_Size", "size IN ('Small', 'Medium', 'Large')"));
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).UseIdentityColumn();
         builder.Property(b => b.Name).IsRequired().HasMaxLength(30);
