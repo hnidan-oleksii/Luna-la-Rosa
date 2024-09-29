@@ -23,6 +23,7 @@ public class LunaContext : DbContext
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<CartItemAddOn> CartItemAddOns { get; set; }
     public DbSet<AddOn> AddOns { get; set; }
+	public DbSet<BouquetAddOn> BouquetAddOns { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderBouquet> OrderBouquets { get; set; }
     public DbSet<OrderAddOn> OrderAddOns { get; set; }
@@ -42,6 +43,7 @@ public class LunaContext : DbContext
         modelBuilder.ApplyConfiguration(new CartItemConfiguration());
         modelBuilder.ApplyConfiguration(new CartItemAddOnConfiguration());
         modelBuilder.ApplyConfiguration(new AddOnConfiguration());
+		modelBuilder.ApplyConfiguration(new BouquetAddOnConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
         modelBuilder.ApplyConfiguration(new OrderBouquetConfiguration());
         modelBuilder.ApplyConfiguration(new OrderAddOnConfiguration());
@@ -61,6 +63,7 @@ public class LunaContext : DbContext
         modelBuilder.Entity<CartItem>().HasData(seeder.CartItems);
         modelBuilder.Entity<CartItemAddOn>().HasData(seeder.CartItemAddOn);
         modelBuilder.Entity<AddOn>().HasData(seeder.AddOns);
+		modelBuilder.Entity<BouquetAddOn>().HasData(seeder.BouquetAddOns);
         modelBuilder.Entity<Order>().HasData(seeder.Orders);
         modelBuilder.Entity<OrderBouquet>().HasData(seeder.OrderBouquets);
         modelBuilder.Entity<OrderAddOn>().HasData(seeder.OrderAddOns);

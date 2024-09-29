@@ -36,5 +36,10 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
             .WithOne(ob => ob.Bouquet)
             .HasForeignKey(ob => ob.BouquetId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(b => b.BouquetAddOns)
+               .WithOne(ba => ba.Bouquet)
+               .HasForeignKey(ba => ba.BouquetId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

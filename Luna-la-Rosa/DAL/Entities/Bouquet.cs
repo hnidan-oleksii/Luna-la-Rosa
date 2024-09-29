@@ -15,6 +15,7 @@ public class Bouquet
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
+    public ICollection<BouquetAddOn> BouquetAddOns { get; set; }
     public ICollection<BouquetCategoryBouquet> BouquetCategories { get; set; }
     public ICollection<BouquetFlower> BouquetFlowers { get; set; }
     public ICollection<CartItem> CartItems { get; set; }

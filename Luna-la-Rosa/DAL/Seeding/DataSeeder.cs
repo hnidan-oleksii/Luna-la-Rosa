@@ -17,6 +17,7 @@ public class DataSeeder
     public IReadOnlyCollection<CartItem> CartItems { get; }
     public IReadOnlyCollection<CartItemAddOn> CartItemAddOn { get; }
     public IReadOnlyCollection<AddOn> AddOns { get; }
+    public IReadOnlyCollection<BouquetAddOn> BouquetAddOns { get; }
     public IReadOnlyCollection<Order> Orders { get; }
     public IReadOnlyCollection<OrderBouquet> OrderBouquets { get; }
     public IReadOnlyCollection<OrderAddOn> OrderAddOns { get; }
@@ -35,6 +36,7 @@ public class DataSeeder
         ShoppingCarts = GenerateShoppingCarts(rows);
         CartItems = GenerateCartItems(rows);
         AddOns = GenerateAddOns(rows);
+		BouquetAddOns = GenerateBouquetAddOns(rows);
         CartItemAddOn = GenerateCartItemAddOn(rows);
         Orders = GenerateOrders(rows);
         OrderBouquets = GenerateOrderBouquets(rows);
@@ -189,6 +191,20 @@ public class DataSeeder
 
         return GenerateRows(faker, count);
     }
+
+	public IReadOnlyCollection<BouquetAddOn> GenerateBouquetAddOns(int count)
+	{
+		var faker = new Faker<BouquetAddOn>()
+			.RuleFor(bao => bao.BouquetId, f => f.PickRandom<Bouquet>(Bouquets).Id)
+			.RuleFor(bao => bao.AddOnId, f => f.PickRandom<AddOn>(AddOns).Id)
+			.RuleFor(bao => bao.AddOn.Price, (f, bao) =>
+					{
+						var addOn = AddOns.First(a => a.Id == bao.AddOnId);
+						return addOn.Price;
+					});
+
+		return GenerateRows(faker, count);
+	}
 
     public IReadOnlyCollection<CartItemAddOn> GenerateCartItemAddOn(int count)
     {
