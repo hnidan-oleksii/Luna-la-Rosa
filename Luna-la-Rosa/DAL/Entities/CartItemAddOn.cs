@@ -1,6 +1,6 @@
 namespace DAL.Entities;
 
-public class CartItemAddOnAssociation
+public class CartItemAddOn
 {
     public int CartItemId { get; set; }
     public int AddOnId { get; set; }

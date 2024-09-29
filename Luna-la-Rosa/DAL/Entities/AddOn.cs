@@ -9,6 +9,6 @@ public class AddOn
     public byte[] Image { get; set; }
     public DateTime CreatedAt { get; set; }
 
-    public ICollection<CartItemAddOnAssociation> CartItems { get; set; }
+    public ICollection<CartItemAddOn> CartItems { get; set; }
     public ICollection<OrderAddOn> OrderBouquets { get; set; }
 }

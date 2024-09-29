@@ -9,13 +9,13 @@ public class DataSeeder
     public IReadOnlyCollection<Flower> Flowers { get; }
     public IReadOnlyCollection<Bouquet> Bouquets { get; }
     public IReadOnlyCollection<BouquetCategory> BouquetCategories { get; }
-    public IReadOnlyCollection<BouquetCategoryAssociation> BouquetCategoryAssociations { get; }
+    public IReadOnlyCollection<BouquetCategoryBouquet> BouquetCategoryBouquets { get; }
     public IReadOnlyCollection<BouquetFlower> BouquetFlowers { get; }
     public IReadOnlyCollection<CustomBouquet> CustomBouquets { get; }
     public IReadOnlyCollection<CustomBouquetFlower> CustomBouquetFlowers { get; }
     public IReadOnlyCollection<ShoppingCart> ShoppingCarts { get; }
     public IReadOnlyCollection<CartItem> CartItems { get; }
-    public IReadOnlyCollection<CartItemAddOnAssociation> CartItemAddOnAssociations { get; }
+    public IReadOnlyCollection<CartItemAddOn> CartItemAddOn { get; }
     public IReadOnlyCollection<AddOn> AddOns { get; }
     public IReadOnlyCollection<Order> Orders { get; }
     public IReadOnlyCollection<OrderBouquet> OrderBouquets { get; }
@@ -28,14 +28,14 @@ public class DataSeeder
         Flowers = GenerateFlowers(rows);
         Bouquets = GenerateBouquets(rows);
         BouquetCategories = GenerateBouquetCategories(rows);
-        BouquetCategoryAssociations = GenerateBouquetCategoryAssociations(rows);
+        BouquetCategoryBouquets = GenerateBouquetCategoryBouquets(rows);
         BouquetFlowers = GenerateBouquetFlowers(rows);
         CustomBouquets = GenerateCustomBouquets(rows);
         CustomBouquetFlowers = GenerateCustomBouquetFlowers(rows);
         ShoppingCarts = GenerateShoppingCarts(rows);
         CartItems = GenerateCartItems(rows);
         AddOns = GenerateAddOns(rows);
-        CartItemAddOnAssociations = GenerateCartItemAddOnAssociations(rows);
+        CartItemAddOn = GenerateCartItemAddOn(rows);
         Orders = GenerateOrders(rows);
         OrderBouquets = GenerateOrderBouquets(rows);
         OrderAddOns = GenerateOrderAddOns(rows);
@@ -108,9 +108,9 @@ public class DataSeeder
         return GenerateRows(faker, count);
     }
 
-    public IReadOnlyCollection<BouquetCategoryAssociation> GenerateBouquetCategoryAssociations(int count)
+    public IReadOnlyCollection<BouquetCategoryBouquet> GenerateBouquetCategoryBouquets(int count)
     {
-        var faker = new Faker<BouquetCategoryAssociation>()
+        var faker = new Faker<BouquetCategoryBouquet>()
             .RuleFor(bca => bca.BouquetId, f => f.PickRandom<Bouquet>(Bouquets).Id)
             .RuleFor(bca => bca.CategoryId, f => f.PickRandom<BouquetCategory>(BouquetCategories).Id);
 
@@ -190,9 +190,9 @@ public class DataSeeder
         return GenerateRows(faker, count);
     }
 
-    public IReadOnlyCollection<CartItemAddOnAssociation> GenerateCartItemAddOnAssociations(int count)
+    public IReadOnlyCollection<CartItemAddOn> GenerateCartItemAddOn(int count)
     {
-        var faker = new Faker<CartItemAddOnAssociation>()
+        var faker = new Faker<CartItemAddOn>()
             .RuleFor(ciaa => ciaa.CartItemId, f => f.PickRandom<CartItem>(CartItems).Id)
             .RuleFor(ciaa => ciaa.AddOnId, f => f.PickRandom<AddOn>(AddOns).Id);
 

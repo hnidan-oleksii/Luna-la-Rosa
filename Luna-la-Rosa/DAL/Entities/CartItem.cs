@@ -11,5 +11,5 @@ public class CartItem
     public ShoppingCart ShoppingCart { get; set; }
     public Bouquet Bouquet { get; set; }
     public CustomBouquet CustomBouquet { get; set; }
-    public ICollection<CartItemAddOnAssociation> AddOns { get; set; }
+    public ICollection<CartItemAddOn> AddOns { get; set; }
 }
