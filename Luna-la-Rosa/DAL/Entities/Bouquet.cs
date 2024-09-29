@@ -7,7 +7,9 @@ public class Bouquet
     public decimal Price { get; set; }
     public string MainColor { get; set; }
     public string Size { get; set; }
-    public byte[] Image { get; set; }
+    public byte[] Image1 { get; set; }
+    public byte[] Image2 { get; set; }
+    public byte[] Image3 { get; set; }
     public string Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

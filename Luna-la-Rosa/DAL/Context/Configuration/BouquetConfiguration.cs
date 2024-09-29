@@ -17,7 +17,9 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
         builder.Property(b => b.Price).IsRequired().HasColumnType("NUMERIC(10, 2)");
         builder.Property(b => b.MainColor).IsRequired().HasMaxLength(50);
         builder.Property(b => b.Size).IsRequired().HasMaxLength(50);
-        builder.Property(b => b.Image).HasColumnType("BYTEA");
+        builder.Property(b => b.Image1).HasColumnType("BYTEA");
+        builder.Property(b => b.Image2).HasColumnType("BYTEA");
+        builder.Property(b => b.Image3).HasColumnType("BYTEA");
         builder.Property(b => b.Description).HasMaxLength(30);
         builder.Property(b => b.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         builder.Property(b => b.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
