@@ -1,7 +1,8 @@
+using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DAL.Entities;
+namespace DAL.Context.Configuration;
 
 public class CartItemAddOnAssociationConfiguration : IEntityTypeConfiguration<CartItemAddOnAssociation>
 {
