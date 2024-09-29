@@ -193,6 +193,7 @@ public class DataSeeder
     public IReadOnlyCollection<CartItemAddOn> GenerateCartItemAddOn(int count)
     {
         var faker = new Faker<CartItemAddOn>()
+            .RuleFor(ciaa => ciaa.CardNote, f => f.Lorem.Sentence())
             .RuleFor(ciaa => ciaa.CartItemId, f => f.PickRandom<CartItem>(CartItems).Id)
             .RuleFor(ciaa => ciaa.AddOnId, f => f.PickRandom<AddOn>(AddOns).Id);
 
@@ -249,6 +250,7 @@ public class DataSeeder
     public IReadOnlyCollection<OrderAddOn> GenerateOrderAddOns(int count)
     {
         var faker = new Faker<OrderAddOn>()
+            .RuleFor(oao => oao.CardNote, f => f.Lorem.Sentence())
             .RuleFor(oao => oao.OrderBouquetId, f => f.PickRandom<OrderBouquet>(OrderBouquets).Id)
             .RuleFor(oao => oao.AddOnId, f => f.PickRandom<AddOn>(AddOns).Id);
 

@@ -10,6 +10,7 @@ public class CartItemAddOnConfiguration : IEntityTypeConfiguration<CartItemAddOn
     {
         builder.ToTable("Cart_Items_Add_Ons_Associations");
         builder.HasKey(ciaa => new { ciaa.CartItemId, ciaa.AddOnId });
+        builder.Property(ciaa => ciaa.CardNote).HasMaxLength(250);
 
         builder.HasOne(ciaa => ciaa.CartItem)
             .WithMany(ci => ci.AddOns)

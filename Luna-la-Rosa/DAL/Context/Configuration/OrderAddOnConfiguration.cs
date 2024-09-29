@@ -10,6 +10,7 @@ public class OrderAddOnConfiguration : IEntityTypeConfiguration<OrderAddOn>
     {
         builder.ToTable("Order_Add_Ons");
         builder.HasKey(oao => new { oao.OrderBouquetId, oao.AddOnId });
+        builder.Property(oao => oao.CardNote).HasMaxLength(250);
 
         builder.HasOne(oao => oao.OrderBouquet)
             .WithMany(ob => ob.AddOns)
