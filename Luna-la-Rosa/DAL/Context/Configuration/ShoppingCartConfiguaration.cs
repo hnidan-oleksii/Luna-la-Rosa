@@ -8,7 +8,6 @@ public class ShoppingCartConfiguration : IEntityTypeConfiguration<ShoppingCart>
 {
     public void Configure(EntityTypeBuilder<ShoppingCart> builder)
     {
-        builder.ToTable("Shopping_Cart");
         builder.HasKey(sc => sc.UserId);
         builder.Property(sc => sc.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         builder.Property(sc => sc.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");

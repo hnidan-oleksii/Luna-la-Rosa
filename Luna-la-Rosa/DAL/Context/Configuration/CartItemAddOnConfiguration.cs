@@ -1,14 +1,15 @@
+using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DAL.Entities;
+namespace DAL.Context.Configuration;
 
-public class CartItemAddOnAssociationConfiguration : IEntityTypeConfiguration<CartItemAddOnAssociation>
+public class CartItemAddOnConfiguration : IEntityTypeConfiguration<CartItemAddOn>
 {
-    public void Configure(EntityTypeBuilder<CartItemAddOnAssociation> builder)
+    public void Configure(EntityTypeBuilder<CartItemAddOn> builder)
     {
-        builder.ToTable("Cart_Items_Add_Ons_Associations");
         builder.HasKey(ciaa => new { ciaa.CartItemId, ciaa.AddOnId });
+        builder.Property(ciaa => ciaa.CardNote).HasMaxLength(250);
 
         builder.HasOne(ciaa => ciaa.CartItem)
             .WithMany(ci => ci.AddOns)

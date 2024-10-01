@@ -8,7 +8,6 @@ public class CustomBouquetConfiguration : IEntityTypeConfiguration<CustomBouquet
 {
     public void Configure(EntityTypeBuilder<CustomBouquet> builder)
     {
-        builder.ToTable("Custom_Bouquets");
         builder.HasKey(cb => cb.Id);
         builder.Property(cb => cb.Id).UseIdentityColumn();
         builder.Property(cb => cb.TotalPrice).HasColumnType("NUMERIC(10, 2)");
@@ -18,15 +17,15 @@ public class CustomBouquetConfiguration : IEntityTypeConfiguration<CustomBouquet
             .WithMany(u => u.CustomBouquets)
             .HasForeignKey(cb => cb.UserId)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        builder.HasMany(cb => cb.CartItems)
+            .WithOne(ci => ci.CustomBouquet)
+            .HasForeignKey(ci => ci.CustomBouquetId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(cb => cb.Ribbon)
-            .WithMany(r => r.CustomBouquetsAsRibbon)
-            .HasForeignKey(cb => cb.RibbonId)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        builder.HasOne(cb => cb.Wrapping)
-            .WithMany(w => w.CustomBouquetsAsWrapping)
-            .HasForeignKey(cb => cb.WrappingId)
-            .OnDelete(DeleteBehavior.SetNull);
+        builder.HasMany(cb => cb.OrderBouquets)
+            .WithOne(ob => ob.CustomBouquet)
+            .HasForeignKey(ob => ob.CustomBouquetId)
+            .OnDelete(DeleteBehavior.Restrict); 
     }
 }

@@ -8,7 +8,6 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
 {
     public void Configure(EntityTypeBuilder<Flower> builder)
     {
-        builder.ToTable("Flowers");
         builder.HasKey(f => f.Id);
         builder.Property(f => f.Id).UseIdentityColumn();
         builder.Property(f => f.Name).IsRequired().HasMaxLength(255);
@@ -22,5 +21,15 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
 
         builder.HasIndex(f => f.Color);
         builder.HasIndex(f => f.Type);
+        
+        builder.HasMany(f => f.BouquetFlowers)
+            .WithOne(bf => bf.Flower)
+            .HasForeignKey(bf => bf.FlowerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(f => f.CustomBouquetFlowers)
+            .WithOne(cbf => cbf.Flower)
+            .HasForeignKey(cbf => cbf.FlowerId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

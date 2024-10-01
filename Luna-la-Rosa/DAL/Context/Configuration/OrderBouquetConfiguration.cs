@@ -8,7 +8,6 @@ public class OrderBouquetConfiguration : IEntityTypeConfiguration<OrderBouquet>
 {
     public void Configure(EntityTypeBuilder<OrderBouquet> builder)
     {
-        builder.ToTable("Order_Bouquets");
         builder.HasKey(ob => ob.Id);
         builder.Property(ob => ob.Id).UseIdentityColumn();
         builder.Property(ob => ob.Quantity).IsRequired();

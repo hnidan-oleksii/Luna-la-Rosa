@@ -1,6 +1,6 @@
 namespace DAL.Entities;
 
-public class BouquetCategoryAssociation
+public class BouquetCategoryBouquet
 {
     public int BouquetId { get; set; }
     public int CategoryId { get; set; }
