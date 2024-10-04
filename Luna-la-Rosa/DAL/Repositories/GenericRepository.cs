@@ -4,9 +4,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories;
 
-public class GenericRepository<T>(LunaContext context) : IGenericRepository<T>
+public class GenericRepository<T> : IGenericRepository<T>
     where T : class
 {
+    protected readonly LunaContext context;
+
+    public GenericRepository(LunaContext context)
+    {
+        this.context = context;
+    }
     public async Task<T> GetByIdAsync(int id)
     {
         var entity = await context.Set<T>().FindAsync(id);
