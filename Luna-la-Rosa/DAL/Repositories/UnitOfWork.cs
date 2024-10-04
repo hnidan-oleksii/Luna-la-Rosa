@@ -8,9 +8,11 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly LunaContext _context;
     private IDbContextTransaction _transaction;
-    public UnitOfWork(LunaContext context)
+    public IAddOnRepository AddOnRepository { get; }
+    public UnitOfWork(LunaContext context, IAddOnRepository addOnRepository)
     {
         _context = context;
+        AddOnRepository = addOnRepository;
     }
 
     public void Dispose()
