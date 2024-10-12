@@ -34,6 +34,7 @@ builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();
+builder.Services.AddScoped<IBouquetService, BouquetService>();
 
 var app = builder.Build();
 
