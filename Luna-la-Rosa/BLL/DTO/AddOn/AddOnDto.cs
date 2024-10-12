@@ -1,4 +1,4 @@
-﻿namespace BLL.DTO;
+﻿namespace BLL.DTO.AddOn;
 
 public class AddOnDto
 {

@@ -1,4 +1,4 @@
-﻿using BLL.DTO;
+﻿using BLL.DTO.AddOn;
 using FluentValidation;
 
 namespace BLL.Validation;

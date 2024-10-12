@@ -1,4 +1,4 @@
-﻿namespace BLL.Helpers;
+﻿namespace DAL.Helpers;
 
 public class PagedList <T> : List<T> where T : class
 {

@@ -2,7 +2,7 @@
 
 public interface IUnitOfWork : IDisposable
 {
-    IAddOnRepository AddOnRepository { get; }
+    IAddOnRepository AddOns { get; }
     Task SaveAsync();
     Task BeginTransactionAsync(CancellationToken cancellationToken);
     Task CommitTransactionAsync(CancellationToken cancellationToken);

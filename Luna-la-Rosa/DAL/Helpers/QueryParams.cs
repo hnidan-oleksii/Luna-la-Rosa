@@ -1,4 +1,4 @@
-﻿namespace BLL.Helpers;
+﻿namespace DAL.Helpers;
 
 public class QueryParams
 {
@@ -16,4 +16,6 @@ public class QueryParams
             _pageSize = (value > maxPageSize) ? maxPageSize : value;
         }
     }
+    
+    public string OrderBy { get; set; }
 }

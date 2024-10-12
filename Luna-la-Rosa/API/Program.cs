@@ -1,5 +1,4 @@
 using BLL;
-using BLL.DTO;
 using BLL.Services;
 using BLL.Services.Interfaces;
 using BLL.Validation;
@@ -20,13 +19,14 @@ builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 //Fluent validation
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
-builder.Services.AddScoped<IValidator<AddOnDto>, AddOnDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddOnDtoValidator>();
 
+// Repositories + UoW
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAddOnRepository, AddOnRepository>();
 
+// Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

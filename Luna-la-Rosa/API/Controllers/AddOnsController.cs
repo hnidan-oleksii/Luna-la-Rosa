@@ -1,4 +1,4 @@
-﻿using BLL.DTO;
+﻿using BLL.DTO.AddOn;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +13,13 @@ public class AddOnsController : ControllerBase
     public AddOnsController(IAddOnService addOnService)
     {
         _addOnService = addOnService;
+    }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<IEnumerable<AddOnDto>>> GetAllAddOnsAsync()
+    {
+        var addOns = await _addOnService.GetAllAddOnsAsync();
+        return Ok(addOns);
     }
     
     [HttpGet]
