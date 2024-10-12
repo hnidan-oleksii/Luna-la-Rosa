@@ -30,6 +30,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddOnDtoValidator>();
 // Repositories + UoW
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAddOnRepository, AddOnRepository>();
+builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();

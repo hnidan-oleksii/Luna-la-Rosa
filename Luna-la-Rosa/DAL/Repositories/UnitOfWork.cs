@@ -10,12 +10,15 @@ public class UnitOfWork : IUnitOfWork
     private IDbContextTransaction _transaction;
 
     public IAddOnRepository AddOns { get; }
+    public IBouquetRepository Bouquets { get; }
 
     public UnitOfWork(LunaContext context,
-        IAddOnRepository addOns)
+        IAddOnRepository addOns,
+        IBouquetRepository bouquetRepository)
     {
         _context = context;
         AddOns = addOns;
+        Bouquets = bouquetRepository;
     }
 
     public void Dispose()
