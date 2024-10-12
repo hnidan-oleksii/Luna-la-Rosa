@@ -1,3 +1,5 @@
+using Api.Middleware.Exceptions;
+using API.Middleware.Exceptions;
 using BLL;
 using BLL.Services;
 using BLL.Services.Interfaces;
@@ -12,6 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Exception Handling
+builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 //AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
@@ -36,7 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseExceptionHandler();
 
 app.UseAuthorization();
 
