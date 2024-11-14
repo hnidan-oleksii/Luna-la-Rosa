@@ -8,7 +8,7 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
 {
     public void Configure(EntityTypeBuilder<Bouquet> builder)
     {
-        builder.ToTable(t => 
+        builder.ToTable(t =>
             t.HasCheckConstraint("CK_Bouquet_Size", "size IN ('Small', 'Medium', 'Large')"));
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).UseIdentityColumn();
@@ -36,8 +36,8 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(b => b.BouquetAddOns)
-               .WithOne(ba => ba.Bouquet)
-               .HasForeignKey(ba => ba.BouquetId)
-               .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(ba => ba.Bouquet)
+            .HasForeignKey(ba => ba.BouquetId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

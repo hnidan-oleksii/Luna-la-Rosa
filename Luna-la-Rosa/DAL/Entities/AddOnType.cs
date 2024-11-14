@@ -5,5 +5,5 @@ public class AddOnType
     public int Id { get; set; }
     public string Name { get; set; }
 
-    public ICollection<AddOn> AddOn { get; set; }
+    public IEnumerable<AddOn> AddOn { get; set; } = new List<AddOn>();
 }

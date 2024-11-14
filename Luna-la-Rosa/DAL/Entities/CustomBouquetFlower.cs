@@ -6,6 +6,6 @@ public class CustomBouquetFlower
     public int FlowerId { get; set; }
     public int Quantity { get; set; }
 
-    public CustomBouquet CustomBouquet { get; set; }
-    public Flower Flower { get; set; }
+    public CustomBouquet? CustomBouquet { get; set; }
+    public Flower? Flower { get; set; }
 }

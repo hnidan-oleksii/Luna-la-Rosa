@@ -10,11 +10,11 @@ public class FlowerTypeConfiguration : IEntityTypeConfiguration<FlowerType>
     {
         builder.HasKey(ft => ft.Id);
         builder.Property(ft => ft.Id).UseIdentityColumn();
-		builder.Property(ft => ft.Name).IsRequired().HasMaxLength(50);
+        builder.Property(ft => ft.Name).IsRequired().HasMaxLength(50);
 
-		builder.HasMany(ft => ft.Flower)
-			.WithOne(f => f.Type)
-			.HasForeignKey(f => f.TypeId)
-			.OnDelete(DeleteBehavior.Restrict);
-    } 
+        builder.HasMany(ft => ft.Flower)
+            .WithOne(f => f.Type)
+            .HasForeignKey(f => f.TypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

@@ -10,11 +10,11 @@ public class AddOnTypeConfiguration : IEntityTypeConfiguration<AddOnType>
     {
         builder.HasKey(aot => aot.Id);
         builder.Property(aot => aot.Id).UseIdentityColumn();
-		builder.Property(aot => aot.Name).IsRequired().HasMaxLength(50);
+        builder.Property(aot => aot.Name).IsRequired().HasMaxLength(50);
 
-		builder.HasMany(aot => aot.AddOn)
-			.WithOne(ao => ao.Type)
-			.HasForeignKey(ao => ao.TypeId)
-			.OnDelete(DeleteBehavior.Restrict);
-    } 
+        builder.HasMany(aot => aot.AddOn)
+            .WithOne(ao => ao.Type)
+            .HasForeignKey(ao => ao.TypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }

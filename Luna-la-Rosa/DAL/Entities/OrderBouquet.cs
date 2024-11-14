@@ -9,8 +9,8 @@ public class OrderBouquet
     public int Quantity { get; set; }
     public decimal Price { get; set; }
 
-    public Order Order { get; set; }
-    public Bouquet Bouquet { get; set; }
-    public CustomBouquet CustomBouquet { get; set; }
-    public ICollection<OrderAddOn> AddOns { get; set; }
+    public Order? Order { get; set; }
+    public Bouquet? Bouquet { get; set; }
+    public CustomBouquet? CustomBouquet { get; set; }
+    public IEnumerable<OrderAddOn> AddOns { get; set; } = new List<OrderAddOn>();
 }
