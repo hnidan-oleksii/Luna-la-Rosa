@@ -6,6 +6,7 @@ public class ShoppingCart
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public User User { get; set; }
-    public ICollection<CartItem> CartItems { get; set; }
+    public User? User { get; set; }
+
+    public IEnumerable<CartItem> CartItems { get; set; } = new List<CartItem>();
 }

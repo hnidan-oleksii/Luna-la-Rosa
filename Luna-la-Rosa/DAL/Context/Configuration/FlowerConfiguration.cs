@@ -19,8 +19,7 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
         builder.Property(f => f.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasIndex(f => f.Color);
-        builder.HasIndex(f => f.Type);
-        
+
         builder.HasMany(f => f.BouquetFlowers)
             .WithOne(bf => bf.Flower)
             .HasForeignKey(bf => bf.FlowerId)

@@ -11,8 +11,9 @@ public class Flower
     public byte[] Image { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public bool IsDeleted { get; set; }
 
-	public FlowerType Type { get; set; }
-    public ICollection<BouquetFlower> BouquetFlowers { get; set; }
-    public ICollection<CustomBouquetFlower> CustomBouquetFlowers { get; set; }
+    public FlowerType? Type { get; set; }
+    public IEnumerable<BouquetFlower> BouquetFlowers { get; set; } = new List<BouquetFlower>();
+    public IEnumerable<CustomBouquetFlower> CustomBouquetFlowers { get; set; } = new List<CustomBouquetFlower>();
 }

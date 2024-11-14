@@ -17,7 +17,7 @@ public class CustomBouquetConfiguration : IEntityTypeConfiguration<CustomBouquet
             .WithMany(u => u.CustomBouquets)
             .HasForeignKey(cb => cb.UserId)
             .OnDelete(DeleteBehavior.SetNull);
-        
+
         builder.HasMany(cb => cb.CartItems)
             .WithOne(ci => ci.CustomBouquet)
             .HasForeignKey(ci => ci.CustomBouquetId)
@@ -26,6 +26,6 @@ public class CustomBouquetConfiguration : IEntityTypeConfiguration<CustomBouquet
         builder.HasMany(cb => cb.OrderBouquets)
             .WithOne(ob => ob.CustomBouquet)
             .HasForeignKey(ob => ob.CustomBouquetId)
-            .OnDelete(DeleteBehavior.Restrict); 
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

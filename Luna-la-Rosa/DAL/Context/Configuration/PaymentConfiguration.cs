@@ -8,10 +8,10 @@ public class PaymentConfiguration : IEntityTypeConfiguration<Payment>
 {
     public void Configure(EntityTypeBuilder<Payment> builder)
     {
-        builder.ToTable(t => 
+        builder.ToTable(t =>
             t.HasCheckConstraint("CK_Payment_PaymentMethod", "payment_method IN ('Card', 'Cash on Delivery')"));
         builder.HasKey(p => p.Id);
-        builder.Property(p => p.Id).UseIdentityColumn();
+        builder.Property(p => p.OrderId).IsRequired();
         builder.Property(p => p.Amount).IsRequired().HasColumnType("NUMERIC(10, 2)");
         builder.Property(p => p.PaymentMethod).IsRequired().HasMaxLength(50);
         builder.Property(p => p.Status).IsRequired().HasMaxLength(20);

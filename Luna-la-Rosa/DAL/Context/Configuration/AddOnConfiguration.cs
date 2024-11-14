@@ -25,9 +25,9 @@ public class AddOnConfiguration : IEntityTypeConfiguration<AddOn>
             .HasForeignKey(oa => oa.AddOnId)
             .OnDelete(DeleteBehavior.Restrict);
 
-		builder.HasMany(ao => ao.BouquetAddOns)
-			.WithOne(ba => ba.AddOn)
-			.HasForeignKey(ba => ba.AddOnId)
-			.OnDelete(DeleteBehavior.Restrict);
-    } 
+        builder.HasMany(ao => ao.BouquetAddOns)
+            .WithOne(ba => ba.AddOn)
+            .HasForeignKey(ba => ba.AddOnId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
