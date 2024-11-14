@@ -39,7 +39,7 @@ public class AddOnService : IAddOnService
         try
         {
             var addOn = _mapper.Map<AddOn>(addOnDto);
-            addOn.CreatedAt = DateTime.Now;
+            addOn.CreatedAt = DateTime.Now.ToUniversalTime();
             await _unitOfWork.AddOns.AddAsync(addOn);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);

@@ -38,7 +38,7 @@ public class BouquetService : IBouquetService
         {
             var bouquet = _mapper.Map<Bouquet>(bouquetDto);
 
-            bouquet.CreatedAt = DateTime.Now;
+            bouquet.CreatedAt = DateTime.Now.ToUniversalTime();
             bouquet.Price = bouquetDto.Flowers.Sum(f => f.Quantity * f.Flower.Price);
             if (bouquetDto.AddOns != null)
             {
@@ -75,6 +75,7 @@ public class BouquetService : IBouquetService
         try
         {
             var bouquet = _mapper.Map<Bouquet>(bouquetDto);
+            bouquet.UpdatedAt = DateTime.Now.ToUniversalTime();
             await _unitOfWork.Bouquets.UpdateAsync(bouquet);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
