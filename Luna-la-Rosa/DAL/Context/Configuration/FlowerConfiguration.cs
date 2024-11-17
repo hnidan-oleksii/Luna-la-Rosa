@@ -11,7 +11,6 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
         builder.HasKey(f => f.Id);
         builder.Property(f => f.Id).UseIdentityColumn();
         builder.Property(f => f.Name).IsRequired().HasMaxLength(255);
-        builder.Property(f => f.Type).IsRequired().HasMaxLength(255);
         builder.Property(f => f.Color).IsRequired().HasMaxLength(50);
         builder.Property(f => f.Price).IsRequired().HasColumnType("NUMERIC(10, 2)");
         builder.Property(f => f.AvailableQuantity).HasDefaultValue(0);
@@ -20,8 +19,7 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
         builder.Property(f => f.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.HasIndex(f => f.Color);
-        builder.HasIndex(f => f.Type);
-        
+
         builder.HasMany(f => f.BouquetFlowers)
             .WithOne(bf => bf.Flower)
             .HasForeignKey(bf => bf.FlowerId)

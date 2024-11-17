@@ -8,7 +8,7 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
 {
     public void Configure(EntityTypeBuilder<Bouquet> builder)
     {
-        builder.ToTable(t => 
+        builder.ToTable(t =>
             t.HasCheckConstraint("CK_Bouquet_Size", "size IN ('Small', 'Medium', 'Large')"));
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).UseIdentityColumn();
@@ -16,9 +16,7 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
         builder.Property(b => b.Price).IsRequired().HasColumnType("NUMERIC(10, 2)");
         builder.Property(b => b.MainColor).IsRequired().HasMaxLength(50);
         builder.Property(b => b.Size).IsRequired().HasMaxLength(50);
-        builder.Property(b => b.Image1).HasColumnType("BYTEA");
-        builder.Property(b => b.Image2).HasColumnType("BYTEA");
-        builder.Property(b => b.Image3).HasColumnType("BYTEA");
+        builder.Property(b => b.Image).HasColumnType("BYTEA");
         builder.Property(b => b.Description).HasMaxLength(30);
         builder.Property(b => b.PopularityScore).HasDefaultValue(0);
         builder.Property(b => b.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -38,8 +36,8 @@ public class BouquetConfiguration : IEntityTypeConfiguration<Bouquet>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(b => b.BouquetAddOns)
-               .WithOne(ba => ba.Bouquet)
-               .HasForeignKey(ba => ba.BouquetId)
-               .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(ba => ba.Bouquet)
+            .HasForeignKey(ba => ba.BouquetId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

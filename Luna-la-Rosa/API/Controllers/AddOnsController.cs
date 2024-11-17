@@ -1,4 +1,4 @@
-﻿using BLL.DTO;
+using BLL.DTO.AddOn;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +13,13 @@ public class AddOnsController : ControllerBase
     public AddOnsController(IAddOnService addOnService)
     {
         _addOnService = addOnService;
+    }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<IEnumerable<AddOnDto>>> GetAllAddOnsAsync()
+    {
+        var addOns = await _addOnService.GetAllAddOnsAsync();
+        return Ok(addOns);
     }
     
     [HttpGet]
@@ -30,15 +37,8 @@ public class AddOnsController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        try
-        {
-            await _addOnService.AddAddOnAsync(addOnDto, cancellationToken);
-            return CreatedAtAction(nameof(GetAddOnsGroupedByType), new { id = addOnDto.Id }, addOnDto);
-        }
-        catch (ApplicationException ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        await _addOnService.AddAddOnAsync(addOnDto, cancellationToken);
+        return CreatedAtAction(nameof(GetAddOnsGroupedByType), new { id = addOnDto.Id }, addOnDto);
     }
     
     [HttpPut("{id}")]
@@ -54,36 +54,14 @@ public class AddOnsController : ControllerBase
             return BadRequest("ID mismatch");
         }
 
-        try
-        {
-            await _addOnService.UpdateAddOnAsync(addOnDto, cancellationToken);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (ApplicationException ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        await _addOnService.UpdateAddOnAsync(addOnDto, cancellationToken);
+        return NoContent();
     }
     
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAddOn(int id, CancellationToken cancellationToken)
     {
-        try
-        {
-            await _addOnService.DeleteAddOnAsync(id, cancellationToken);
-            return NoContent();
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (ApplicationException ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+        await _addOnService.DeleteAddOnAsync(id, cancellationToken);
+        return NoContent();
     }
 }

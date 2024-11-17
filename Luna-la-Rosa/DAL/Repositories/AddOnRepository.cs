@@ -1,7 +1,6 @@
 ﻿using DAL.Context;
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories;
 
@@ -15,7 +14,7 @@ public class AddOnRepository : GenericRepository<AddOn>, IAddOnRepository
     {
         var addOns = await GetAllAsync();
         var groupedAddOns = addOns
-            .GroupBy(addOn => addOn.Type)
+            .GroupBy(addOn => addOn.Type.Name)
             .ToDictionary(k => k.Key, g => g.ToList());
 
         return groupedAddOns;

@@ -12,7 +12,7 @@ public class User
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public ShoppingCart ShoppingCart { get; set; }
-    public ICollection<Order> Orders { get; set; }
-    public ICollection<CustomBouquet> CustomBouquets { get; set; }
+    public ShoppingCart? ShoppingCart { get; set; }
+    public IEnumerable<Order> Orders { get; set; } = new List<Order>();
+    public IEnumerable<CustomBouquet> CustomBouquets { get; set; } = new List<CustomBouquet>();
 }

@@ -1,13 +1,31 @@
-version: '4'
 services:
   postgres:
     image: postgres:16.3
-    container_name: luna
+    container_name: luna.postgres
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_PASSWORD: florista
+      POSTGRES_PASSWORD: pass
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./docker/postgres/data:/var/lib/postgresql/data
+    networks:
+      - luna-network
 
+  luna.api:
+    build:
+      dockerfile: Luna-la-Rosa/API/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: 8080
+      ASPNETCORE_ENVIRONMENT: Development
+      BUILD_CONFIGURATION: Development
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+    networks:
+      - luna-network
+    command: ["dotnet", "API.dll"]
+
+networks:
+  luna-network:
+    driver: bridge

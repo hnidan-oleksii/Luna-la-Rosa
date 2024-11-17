@@ -8,11 +8,17 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly LunaContext _context;
     private IDbContextTransaction _transaction;
-    public IAddOnRepository AddOnRepository { get; }
-    public UnitOfWork(LunaContext context, IAddOnRepository addOnRepository)
+
+    public IAddOnRepository AddOns { get; }
+    public IBouquetRepository Bouquets { get; }
+
+    public UnitOfWork(LunaContext context,
+        IAddOnRepository addOns,
+        IBouquetRepository bouquetRepository)
     {
         _context = context;
-        AddOnRepository = addOnRepository;
+        AddOns = addOns;
+        Bouquets = bouquetRepository;
     }
 
     public void Dispose()
@@ -32,7 +38,7 @@ public class UnitOfWork : IUnitOfWork
     }
 
     public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
-    { 
+    {
         await _transaction.CommitAsync(cancellationToken);
     }
 

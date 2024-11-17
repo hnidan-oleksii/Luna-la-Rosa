@@ -3,7 +3,7 @@ namespace DAL.Entities;
 public class Order
 {
     public int Id { get; set; }
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
     public string Status { get; set; }
     public decimal DeliveryPrice { get; set; }
     public decimal TotalPrice { get; set; }
@@ -14,7 +14,7 @@ public class Order
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public User User { get; set; }
-    public ICollection<OrderBouquet> OrderBouquets { get; set; }
-    public Payment Payment { get; set; }
+    public User? User { get; set; }
+    public IEnumerable<OrderBouquet> OrderBouquets { get; set; } = new List<OrderBouquet>();
+    public Payment? Payment { get; set; }
 }
