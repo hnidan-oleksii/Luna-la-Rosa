@@ -32,8 +32,13 @@ public class AddOnService : IAddOnService
         }
         return result;
     }
+    
+    public async Task<AddOnDto> GetAddOnByIdAsync(int id)
+    {
+        return _mapper.Map<AddOnDto>(await _unitOfWork.AddOns.GetByIdAsync(id));
+    }
 
-    public async Task AddAddOnAsync(AddOnDto addOnDto, CancellationToken cancellationToken)
+    public async Task<int> AddAddOnAsync(CreateAddOnDto addOnDto, CancellationToken cancellationToken)
     {
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
@@ -43,6 +48,8 @@ public class AddOnService : IAddOnService
             await _unitOfWork.AddOns.AddAsync(addOn);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
+            
+            return addOn.Id;
         }
         catch (Exception)
         {
