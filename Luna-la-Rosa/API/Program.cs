@@ -5,6 +5,7 @@ using BLL.Services;
 using BLL.Services.Interfaces;
 using BLL.Validation;
 using DAL.Context;
+using DAL.Helpers.Search;
 using DAL.Helpers.Sorting;
 using DAL.Repositories;
 using DAL.Repositories.Interfaces;
@@ -41,6 +42,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<AddOnDtoValidator>();
 
 // Repositories + UoW
 builder.Services.AddScoped(typeof(ISortHelper<>), typeof(SortHelper<>));
+builder.Services.AddScoped(typeof(ISearchHelper<>), typeof(SearchHelper<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAddOnRepository, AddOnRepository>();
 builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();

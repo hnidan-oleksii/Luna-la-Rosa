@@ -2,6 +2,7 @@
 using BLL.DTO.AddOn;
 using BLL.Services.Interfaces;
 using DAL.Entities;
+using DAL.Helpers;
 using DAL.Repositories.Interfaces;
 
 namespace BLL.Services;
@@ -17,9 +18,13 @@ public class AddOnService : IAddOnService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<AddOnDto>> GetAllAddOnsAsync()
+    public async Task<IEnumerable<AddOnDto>> GetAllAddOnsAsync(AddOnParams addOnParams)
     {
-        return _mapper.Map<IEnumerable<AddOnDto>>(await _unitOfWork.AddOns.GetAllAsync());
+        var searchFields = new List<string> {"Name"};
+        var addOnsQuery = await _unitOfWork.AddOns.GetAllAddOnsAsync(addOnParams, searchFields);
+        var addOns = addOnsQuery.ToList();
+
+        return _mapper.Map<IEnumerable<AddOnDto>>(addOns);
     }
 
     public async Task<Dictionary<string, List<AddOnDto>>> GetAddOnsGroupedByTypeAsync()
