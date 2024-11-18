@@ -13,7 +13,9 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<AddOn, AddOnDto>().ReverseMap(); 
+        //AddOn
+        CreateMap<AddOn, AddOnDto>().ReverseMap();
+        CreateMap<CreateAddOnDto, AddOn>().ReverseMap();
         // Bouquets
         CreateMap<Bouquet, BouquetDto>();
         CreateMap<CreateBouquetDto, Bouquet>();

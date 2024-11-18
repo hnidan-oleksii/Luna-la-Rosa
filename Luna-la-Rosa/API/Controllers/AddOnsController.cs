@@ -28,17 +28,24 @@ public class AddOnsController : ControllerBase
         var addOns = await _addOnService.GetAddOnsGroupedByTypeAsync();
         return Ok(addOns);
     }
-    
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AddOnDto>> GetAddOnById(int id)
+    {
+        var addOn = await _addOnService.GetAddOnByIdAsync(id);
+        return Ok(addOn);
+    }
+
     [HttpPost]
-    public async Task<IActionResult> AddAddOn([FromBody] AddOnDto addOnDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddAddOn([FromBody] CreateAddOnDto addOnDto, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        await _addOnService.AddAddOnAsync(addOnDto, cancellationToken);
-        return CreatedAtAction(nameof(GetAddOnsGroupedByType), new { id = addOnDto.Id }, addOnDto);
+        var createdId = await _addOnService.AddAddOnAsync(addOnDto, cancellationToken);
+        return CreatedAtAction(nameof(GetAddOnById), new { id = createdId }, addOnDto);
     }
     
     [HttpPut("{id}")]
