@@ -32,7 +32,7 @@ public class BouquetsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateBouquet(CreateBouquetDto createBouquetDto,
+    public async Task<ActionResult> CreateBouquet([FromBody] CreateBouquetDto createBouquetDto,
         CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
