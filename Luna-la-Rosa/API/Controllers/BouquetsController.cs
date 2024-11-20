@@ -37,9 +37,8 @@ public class BouquetsController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        await _bouquetService.AddBouquetAsync(createBouquetDto, cancellationToken);
-        return CreatedAtAction(nameof(GetAllBouquetsAsync), new { bouquetParams = new BouquetParams() },
-            new BouquetParams());
+        var createdBouquetId = await _bouquetService.AddBouquetAsync(createBouquetDto, cancellationToken);
+        return CreatedAtAction(nameof(GetBouquetById), new { id = createdBouquetId }, createdBouquetId);
     }
 
     [HttpPut("id")]

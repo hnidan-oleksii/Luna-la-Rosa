@@ -16,7 +16,7 @@ public class CreateBouquetDtoValidator : AbstractValidator<CreateBouquetDto>
         RuleFor(x => x.Size)
             .NotEmpty().WithMessage("Size is required")
             .MaximumLength(50).WithMessage("Size length must be between 1 and 50 characters")
-            .Must(BeValidSize).WithMessage("Size must be one of the following: small, medium, large");
+            .Must(BeValidSize).WithMessage("Size must be one of the following: Small, Medium, Large");
         RuleFor(x => x.MainColor)
             .NotEmpty().WithMessage("MainColor is required")
             .MaximumLength(50).WithMessage("MainColor length must be between 1 and 50 characters");
@@ -26,7 +26,7 @@ public class CreateBouquetDtoValidator : AbstractValidator<CreateBouquetDto>
 
     private bool BeValidSize(string size)
     {
-        var validSizes = new[] { "small", "medium", "large" };
+        var validSizes = new[] { "Small", "Medium", "Large" };
         return validSizes.Contains(size);
     }
 }

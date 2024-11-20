@@ -33,7 +33,7 @@ public class BouquetService : IBouquetService
         return _mapper.Map<PagedList<BouquetDto>>(bouquets);
     }
 
-    public async Task AddBouquetAsync(CreateBouquetDto bouquetDto, CancellationToken cancellationToken)
+    public async Task<int> AddBouquetAsync(CreateBouquetDto bouquetDto, CancellationToken cancellationToken)
     {
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
@@ -56,10 +56,12 @@ public class BouquetService : IBouquetService
             bouquet.BouquetCategories = _mapper.Map<ICollection<BouquetCategoryBouquet>>(bouquetDto.Categories);
             bouquet.BouquetAddOns = _mapper.Map<ICollection<BouquetAddOn>>(bouquetDto.AddOns);
             bouquet.BouquetFlowers = _mapper.Map<ICollection<BouquetFlower>>(bouquetDto.Flowers);
-            await _unitOfWork.Bouquets.UpdateAsync(bouquet);
+            await _unitOfWork.Bouquets.AddAsync(bouquet);
 
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+            return bouquet.Id;
         }
         catch (Exception)
         {
