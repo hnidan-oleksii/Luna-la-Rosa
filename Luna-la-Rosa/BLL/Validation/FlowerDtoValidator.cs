@@ -20,5 +20,8 @@ public class FlowerDtoValidator : AbstractValidator<FlowerDto>
             .NotEmpty().WithMessage("Image is required");
         RuleFor(x => x.TypeId)
             .NotEmpty().WithMessage("TypeId is required");
+        RuleFor(x => x.AvailableQuantity)
+            .NotEmpty().WithMessage("Quantity is required")
+            .GreaterThan(-1).WithMessage("Quantity must be non-negative");
     }
 }
