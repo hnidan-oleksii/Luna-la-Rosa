@@ -28,5 +28,6 @@ public class MappingProfile : Profile
         CreateMap<BouquetFlower, BouquetFlowerDto>().ReverseMap();
         // Flowers
         CreateMap<Flower, FlowerDto>().ReverseMap();
+        CreateMap<CreateFlowerDto, Flower>();
     }
 }
