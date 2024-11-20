@@ -1,6 +1,6 @@
 ﻿using BLL.DTO.AddOn;
 using BLL.Services.Interfaces;
-using DAL.Helpers;
+using DAL.Helpers.Params;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -22,7 +22,7 @@ public class AddOnsController : ControllerBase
         var addOns = await _addOnService.GetAllAddOnsAsync(addOnParams);
         return Ok(addOns);
     }
-    
+
     [HttpGet]
     public async Task<ActionResult<Dictionary<string, List<AddOnDto>>>> GetAddOnsGroupedByType()
     {
@@ -40,32 +40,24 @@ public class AddOnsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddAddOn([FromBody] CreateAddOnDto addOnDto, CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var createdId = await _addOnService.AddAddOnAsync(addOnDto, cancellationToken);
         return CreatedAtAction(nameof(GetAddOnById), new { id = createdId }, addOnDto);
     }
-    
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateAddOn(int id, [FromBody] AddOnDto addOnDto, CancellationToken cancellationToken)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
 
-        if (id != addOnDto.Id)
-        {
-            return BadRequest("ID mismatch");
-        }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAddOn(int id, [FromBody] AddOnDto addOnDto,
+        CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        if (id != addOnDto.Id) return BadRequest("ID mismatch");
 
         await _addOnService.UpdateAddOnAsync(addOnDto, cancellationToken);
         return NoContent();
     }
-    
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAddOn(int id, CancellationToken cancellationToken)
     {

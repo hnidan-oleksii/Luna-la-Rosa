@@ -1,8 +1,7 @@
 ﻿using DAL.Context;
 using DAL.Entities;
-using DAL.Helpers;
+using DAL.Helpers.Params;
 using DAL.Helpers.Search;
-using DAL.Helpers.Sorting;
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +9,8 @@ namespace DAL.Repositories;
 
 public class AddOnRepository : GenericRepository<AddOn>, IAddOnRepository
 {
-    private ISearchHelper<AddOn> _searchHelper;
+    private readonly ISearchHelper<AddOn> _searchHelper;
+
     public AddOnRepository(LunaContext context, ISearchHelper<AddOn> searchHelper) : base(context)
     {
         _searchHelper = searchHelper;
@@ -23,14 +23,14 @@ public class AddOnRepository : GenericRepository<AddOn>, IAddOnRepository
             query = _searchHelper.ApplySearch(query, addOnParams.SearchQuery, searchFields);
         return await Task.FromResult(query);
     }
-    
+
     public async Task<Dictionary<string, List<AddOn>>> GetAddOnsGroupedByTypeAsync()
     {
         var addOns = await context.AddOns
             .Include(addOn => addOn.Type)
             .Where(addOn => !addOn.IsDeleted)
             .ToListAsync();
-        
+
         var groupedAddOns = addOns
             .GroupBy(addOn => addOn.Type?.Name)
             .ToDictionary(k => k.Key, g => g.ToList());

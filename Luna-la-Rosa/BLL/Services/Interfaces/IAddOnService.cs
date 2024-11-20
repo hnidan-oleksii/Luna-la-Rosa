@@ -1,5 +1,5 @@
 ﻿using BLL.DTO.AddOn;
-using DAL.Helpers;
+using DAL.Helpers.Params;
 
 namespace BLL.Services.Interfaces;
 

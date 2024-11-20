@@ -1,5 +1,6 @@
 using BLL.DTO.Bouquet;
 using DAL.Helpers;
+using DAL.Helpers.Params;
 
 namespace BLL.Services.Interfaces;
 

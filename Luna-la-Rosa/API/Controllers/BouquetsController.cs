@@ -1,6 +1,7 @@
 using BLL.DTO.Bouquet;
 using BLL.Services.Interfaces;
 using DAL.Helpers;
+using DAL.Helpers.Params;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -34,10 +35,7 @@ public class BouquetsController : ControllerBase
     public async Task<ActionResult> CreateBouquet(CreateBouquetDto createBouquetDto,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         await _bouquetService.AddBouquetAsync(createBouquetDto, cancellationToken);
         return CreatedAtAction(nameof(GetAllBouquetsAsync), new { bouquetParams = new BouquetParams() },
@@ -48,15 +46,9 @@ public class BouquetsController : ControllerBase
     public async Task<ActionResult> UpdateBouquet(int id, [FromBody] BouquetDto bouquetDto,
         CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        if (id != bouquetDto.Id)
-        {
-            return BadRequest("ID mismatch");
-        }
+        if (id != bouquetDto.Id) return BadRequest("ID mismatch");
 
         await _bouquetService.UpdateBouquetAsync(bouquetDto, cancellationToken);
         return NoContent();

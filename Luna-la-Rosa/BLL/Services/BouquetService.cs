@@ -5,6 +5,7 @@ using BLL.DTO.ItemAddOn;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Helpers;
+using DAL.Helpers.Params;
 using DAL.Repositories.Interfaces;
 
 namespace BLL.Services;
@@ -41,10 +42,7 @@ public class BouquetService : IBouquetService
 
             bouquet.CreatedAt = DateTime.Now.ToUniversalTime();
             bouquet.Price = bouquetDto.Flowers.Sum(f => f.Quantity * f.Flower.Price);
-            if (bouquetDto.AddOns != null)
-            {
-                bouquet.Price += bouquetDto.AddOns.Sum(ao => ao.Quantity * ao.AddOn.Price);
-            }
+            if (bouquetDto.AddOns != null) bouquet.Price += bouquetDto.AddOns.Sum(ao => ao.Quantity * ao.AddOn.Price);
 
             await _unitOfWork.Bouquets.AddAsync(bouquet);
 

@@ -2,7 +2,7 @@
 using BLL.DTO.AddOn;
 using BLL.Services.Interfaces;
 using DAL.Entities;
-using DAL.Helpers;
+using DAL.Helpers.Params;
 using DAL.Repositories.Interfaces;
 
 namespace BLL.Services;
@@ -20,7 +20,7 @@ public class AddOnService : IAddOnService
 
     public async Task<IEnumerable<AddOnDto>> GetAllAddOnsAsync(AddOnParams addOnParams)
     {
-        var searchFields = new List<string> {"Name"};
+        var searchFields = new List<string> { "Name" };
         var addOnsQuery = await _unitOfWork.AddOns.GetAllAddOnsAsync(addOnParams, searchFields);
         var addOns = addOnsQuery.ToList();
 
@@ -31,13 +31,10 @@ public class AddOnService : IAddOnService
     {
         var groupedAddOns = await _unitOfWork.AddOns.GetAddOnsGroupedByTypeAsync();
         var result = new Dictionary<string, List<AddOnDto>>();
-        foreach (var k in groupedAddOns)
-        {
-            result[k.Key] = _mapper.Map<List<AddOnDto>>(k.Value);
-        }
+        foreach (var k in groupedAddOns) result[k.Key] = _mapper.Map<List<AddOnDto>>(k.Value);
         return result;
     }
-    
+
     public async Task<AddOnDto> GetAddOnByIdAsync(int id)
     {
         return _mapper.Map<AddOnDto>(await _unitOfWork.AddOns.GetByIdAsync(id));
@@ -53,7 +50,7 @@ public class AddOnService : IAddOnService
             await _unitOfWork.AddOns.AddAsync(addOn);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
-            
+
             return addOn.Id;
         }
         catch (Exception)
