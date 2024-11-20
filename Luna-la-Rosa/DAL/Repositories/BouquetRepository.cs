@@ -2,6 +2,7 @@ using DAL.Helpers;
 using DAL.Context;
 using DAL.Entities;
 using DAL.Helpers.Filtering;
+using DAL.Helpers.Params;
 using DAL.Helpers.Search;
 using DAL.Helpers.Sorting;
 using DAL.Repositories.Interfaces;
@@ -30,10 +31,7 @@ public class BouquetRepository : GenericRepository<Bouquet>, IBouquetRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(b => b.Id == id);
 
-        if (bouquet == null)
-        {
-            throw new KeyNotFoundException($"Bouquet with ID {id} not found.");
-        }
+        if (bouquet == null) throw new KeyNotFoundException($"Bouquet with ID {id} not found.");
 
         return bouquet;
     }
@@ -45,9 +43,7 @@ public class BouquetRepository : GenericRepository<Bouquet>, IBouquetRepository
         ApplyFilters(ref bouquets, parameters);
 
         if (!string.IsNullOrWhiteSpace(parameters.SearchQuery))
-        {
             bouquets = _searchHelper.ApplySearch(bouquets, parameters.SearchQuery, searchFields);
-        }
 
         var sortedBouquets = _sortHelper.ApplySort(bouquets, parameters.OrderBy);
 
@@ -72,21 +68,14 @@ public class BouquetRepository : GenericRepository<Bouquet>, IBouquetRepository
         var predicate = PredicateBuilder.True<Bouquet>();
 
         if (parameters.MinPrice > 0 || parameters.MaxPrice > 0)
-        {
             predicate = predicate.And(b =>
                 b.Price >= (parameters.MinPrice > 0 ? parameters.MinPrice : b.Price) &&
                 b.Price <= (parameters.MaxPrice > 0 ? parameters.MaxPrice : b.Price));
-        }
 
-        if (!string.IsNullOrWhiteSpace(parameters.Size))
-        {
-            predicate = predicate.And(b => b.Size == parameters.Size);
-        }
+        if (!string.IsNullOrWhiteSpace(parameters.Size)) predicate = predicate.And(b => b.Size == parameters.Size);
 
         if (!string.IsNullOrWhiteSpace(parameters.MainColor))
-        {
             predicate = predicate.And(b => b.MainColor == parameters.MainColor);
-        }
 
         if (!string.IsNullOrWhiteSpace(parameters.FlowerTypeNames))
         {

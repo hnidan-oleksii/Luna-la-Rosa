@@ -1,4 +1,4 @@
-namespace DAL.Helpers;
+namespace DAL.Helpers.Params;
 
 public class BouquetParams : QueryParams
 {
