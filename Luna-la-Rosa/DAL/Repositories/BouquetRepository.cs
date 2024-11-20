@@ -27,7 +27,9 @@ public class BouquetRepository : GenericRepository<Bouquet>, IBouquetRepository
         var bouquet = await context.Bouquets
             .Include(b => b.BouquetCategories)
             .Include(b => b.BouquetFlowers)
+            .ThenInclude(bf => bf.Flower)
             .Include(b => b.BouquetAddOns)
+            .ThenInclude(bao => bao.AddOn)
             .AsNoTracking()
             .FirstOrDefaultAsync(b => b.Id == id);
 
@@ -59,7 +61,9 @@ public class BouquetRepository : GenericRepository<Bouquet>, IBouquetRepository
         return context.Bouquets
             .Include(b => b.BouquetCategories)
             .Include(b => b.BouquetFlowers)
+            .ThenInclude(bf => bf.Flower)
             .Include(b => b.BouquetAddOns)
+            .ThenInclude(bao => bao.AddOn)
             .AsNoTracking();
     }
 
