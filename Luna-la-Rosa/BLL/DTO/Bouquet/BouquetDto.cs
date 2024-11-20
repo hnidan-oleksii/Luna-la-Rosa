@@ -16,7 +16,7 @@ public class BouquetDto
     public int PopularityScore { get; set; }
     public DateTime CreatedAt { get; set; }
 
-    public ICollection<BouquetFlowerDto> Flowers { get; set; }
-    public ICollection<BouquetCategoryBouquetDto>? Categories { get; set; }
-    public ICollection<ItemAddOnDto>? AddOns { get; set; }
+    public IEnumerable<BouquetFlowerDto> Flowers { get; set; }
+    public IEnumerable<BouquetCategoryBouquetDto>? Categories { get; set; }
+    public IEnumerable<ItemAddOnDto>? AddOns { get; set; }
 }

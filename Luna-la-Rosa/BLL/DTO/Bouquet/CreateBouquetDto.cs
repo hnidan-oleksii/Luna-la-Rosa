@@ -7,7 +7,6 @@ namespace BLL.DTO.Bouquet;
 public class CreateBouquetDto
 {
     public string Name { get; set; }
-    public decimal Price { get; set; }
     public string MainColor { get; set; }
     public string Size { get; set; }
     public byte[] Image { get; set; }
