@@ -46,6 +46,7 @@ builder.Services.AddScoped(typeof(ISearchHelper<>), typeof(SearchHelper<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAddOnRepository, AddOnRepository>();
 builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();
+builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();
