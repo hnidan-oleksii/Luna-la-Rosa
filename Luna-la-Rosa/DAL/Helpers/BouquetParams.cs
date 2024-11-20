@@ -7,10 +7,11 @@ public class BouquetParams : QueryParams
         OrderBy = "PopularityScore";
     }
 
-    public string BouquetCategories { get; set; }
-    public string MainColor { get; set; }
-    public string Size { get; set; }
-    public string FlowerTypeNames { get; set; }
+    public string? SearchQuery { get; set; }
+    public string? BouquetCategories { get; set; }
+    public string? MainColor { get; set; }
+    public string? Size { get; set; }
+    public string? FlowerTypeNames { get; set; }
     public uint MinPrice { get; set; }
     public uint MaxPrice { get; set; }
 

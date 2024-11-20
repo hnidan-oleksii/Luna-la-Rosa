@@ -25,9 +25,10 @@ public class BouquetService : IBouquetService
         return _mapper.Map<BouquetDto>(await _unitOfWork.Bouquets.GetByIdAsync(id));
     }
 
-    public async Task<PagedList<BouquetDto>> GetBouquets(BouquetParams parameters)
+    public PagedList<BouquetDto> GetBouquets(BouquetParams parameters)
     {
-        var bouquets = await Task.Run(() => _unitOfWork.Bouquets.GetBouquets(parameters));
+        var searchFields = new List<string> { "Name" };
+        var bouquets = _unitOfWork.Bouquets.GetBouquets(parameters, searchFields);
         return _mapper.Map<PagedList<BouquetDto>>(bouquets);
     }
 
