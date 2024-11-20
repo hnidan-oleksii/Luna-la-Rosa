@@ -11,14 +11,17 @@ public class UnitOfWork : IUnitOfWork
 
     public IAddOnRepository AddOns { get; }
     public IBouquetRepository Bouquets { get; }
+    public IFlowerRepository Flowers { get; }
 
     public UnitOfWork(LunaContext context,
         IAddOnRepository addOns,
-        IBouquetRepository bouquetRepository)
+        IBouquetRepository bouquets,
+        IFlowerRepository flowers)
     {
         _context = context;
         AddOns = addOns;
-        Bouquets = bouquetRepository;
+        Bouquets = bouquets;
+        Flowers = flowers;
     }
 
     public void Dispose()
