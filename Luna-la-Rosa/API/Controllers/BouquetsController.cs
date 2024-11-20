@@ -17,9 +17,9 @@ public class BouquetsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedList<BouquetDto>>> GetAllBouquetsAsync([FromQuery] BouquetParams bouquetParams)
+    public ActionResult<PagedList<BouquetDto>> GetAllBouquetsAsync([FromQuery] BouquetParams bouquetParams)
     {
-        var bouquets = await _bouquetService.GetBouquets(bouquetParams);
+        var bouquets = _bouquetService.GetBouquets(bouquetParams);
         return Ok(bouquets);
     }
 
