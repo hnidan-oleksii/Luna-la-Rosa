@@ -26,11 +26,15 @@ public class FlowerRepository : GenericRepository<Flower>, IFlowerRepository
 
     public async Task<Dictionary<string, List<Flower>>> GetFlowersGroupedByTypeAsync()
     {
-        var groupedFlowers = await context.Flowers
+        var flowers = await context.Flowers
             .Include(f => f.Type)
             .Where(f => !f.IsDeleted)
+            .ToListAsync();
+
+        var groupedFlowers = flowers
             .GroupBy(f => f.Type!.Name)
-            .ToDictionaryAsync(g => g.Key, g => g.ToList());
+            .ToDictionary(g => g.Key, g => g.ToList());
+
         return groupedFlowers;
     }
 }
