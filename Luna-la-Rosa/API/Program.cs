@@ -3,7 +3,7 @@ using API.Middleware.Exceptions;
 using BLL;
 using BLL.Services;
 using BLL.Services.Interfaces;
-using BLL.Validation;
+using BLL.Validation.AddOn;
 using DAL.Context;
 using DAL.Helpers.Search;
 using DAL.Helpers.Sorting;
