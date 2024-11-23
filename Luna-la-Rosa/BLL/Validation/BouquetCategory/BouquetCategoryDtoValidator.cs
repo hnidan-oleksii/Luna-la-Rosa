@@ -1,7 +1,7 @@
 using BLL.DTO.BouquetCategory;
 using FluentValidation;
 
-namespace BLL.Validation;
+namespace BLL.Validation.BouquetCategory;
 
 public class BouquetCategoryDtoValidator : AbstractValidator<BouquetCategoryDto>
 {
