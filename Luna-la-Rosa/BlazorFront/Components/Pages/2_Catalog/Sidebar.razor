@@ -1,0 +1,106 @@
+﻿<aside class="sidebar">
+    <h3>Сортувати за</h3>
+    <hr class="sidebar-line">
+    <form>
+        <label>
+            <input type="radio" name="sort" value="popularity" @onchange="HandleSortChange"> Популярність
+        </label><br>
+        <label>
+            <input type="radio" name="sort" value="ascending" @onchange="HandleSortChange"> Зростання
+        </label><br>
+        <label>
+            <input type="radio" name="sort" value="descending" @onchange="HandleSortChange"> Спадання
+        </label><br>
+
+        <h3>Колір</h3>
+        <hr class="sidebar-line">
+        <div class="color-options">
+            @foreach (var color in Colors)
+            {
+                <label>
+                    <input type="checkbox" @onchange="HandleColorChange" value="@color">
+                    <span class="color-box" style="background-color: @color;"></span> @color
+                </label><br>
+            }
+        </div>
+
+        <h3>Вид квітів</h3>
+        <hr class="sidebar-line">
+        <div>
+            @foreach (var flower in Flowers)
+            {
+                <label>
+                    <input type="checkbox" @onchange="HandleFlowerChange" value="@flower"> @flower
+                </label><br>
+            }
+        </div>
+
+        <h3>Розмір</h3>
+        <hr class="sidebar-line">
+        <div>
+            @foreach (var size in Sizes)
+            {
+                <label>
+                    <input type="checkbox" @onchange="HandleSizeChange" value="@size"> @size
+                </label><br>
+            }
+        </div>
+
+        <h3>Ціна</h3>
+        <hr class="sidebar-line">
+        <input type="number" @bind-value="PriceFrom" min="1" placeholder="від"> - 
+        <input type="number" @bind-value="PriceTo" max="10000" placeholder="до"><br>
+        <button type="submit" @onclick="ApplyFilters">ОК</button>
+    </form>
+
+    <h4>Не сподобався жоден букет? </h4>
+    <button class="create-custom-btn" @onclick="CreateCustomBouquet">Створити власний</button>
+</aside>
+
+@code {
+    private List<string> Colors = new() { "Червоний", "Рожевий", "Білий", "Жовтий", "Помаранчевий", "Фіолетовий", "Чорний" };
+    private List<string> Flowers = new() { "Троянди", "Гвоздики", "Гіпсофіли", "Орхідеї", "Лаванда", "Півонії", "Ромашки" };
+    private List<string> Sizes = new() { "Великий", "Середній", "Маленький" };
+    private int? PriceFrom;
+    private int? PriceTo;
+
+    private void HandleSortChange(ChangeEventArgs e)
+    {
+        var selectedSort = e.Value.ToString();
+        Console.WriteLine($"Sort by: {selectedSort}");
+        // Додайте логіку для сортування
+    }
+
+    private void HandleColorChange(ChangeEventArgs e)
+    {
+        var selectedColor = e.Value.ToString();
+        Console.WriteLine($"Color filter: {selectedColor}");
+        // Додайте логіку для фільтрації за кольором
+    }
+
+    private void HandleFlowerChange(ChangeEventArgs e)
+    {
+        var selectedFlower = e.Value.ToString();
+        Console.WriteLine($"Flower filter: {selectedFlower}");
+        // Додайте логіку для фільтрації за видом квітів
+    }
+
+    private void HandleSizeChange(ChangeEventArgs e)
+    {
+        var selectedSize = e.Value.ToString();
+        Console.WriteLine($"Size filter: {selectedSize}");
+        // Додайте логіку для фільтрації за розміром
+    }
+
+    private void ApplyFilters()
+    {
+        Console.WriteLine($"Price range: {PriceFrom} - {PriceTo}");
+        // Додайте логіку для застосування фільтрів
+    }
+
+    private void CreateCustomBouquet()
+    {
+        Console.WriteLine("Create custom bouquet clicked.");
+        // Додайте логіку для переходу на сторінку створення букета
+    }
+}

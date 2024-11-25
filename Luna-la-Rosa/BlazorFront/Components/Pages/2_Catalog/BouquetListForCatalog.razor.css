@@ -1,0 +1,70 @@
+﻿/* Bouquet List */
+.bouquet-list {
+    display: flex;
+    flex-wrap: wrap;
+    width: 960px;
+    gap: 20px;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.bouquet-item {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 210px;
+    height: 340px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s;
+}
+
+    .bouquet-item img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+.bouquet-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.bouquet-name {
+    font-size: 16px;
+}
+
+.bouquet-desc {
+    color: #777;
+    margin: 0px 0;
+    font-size: 14px;
+}
+
+.bouquet-price {
+    font-size: 14px;
+    color: #333;
+}
+
+.add-to-cart-btn {
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+    .add-to-cart-btn:hover {
+        background-color: #555;
+    }

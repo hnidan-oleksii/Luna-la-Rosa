@@ -1,0 +1,166 @@
+﻿/* Account Page */
+.account-page {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+    .account-page h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 28px;
+    }
+
+/* Account Container */
+.account-container {
+    display: flex;
+    gap: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    position: sticky;
+    top: 50px;
+    align-self: flex-start;
+}
+
+    .sidebar ul {
+        list-style: none;
+    }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+            .sidebar ul li a {
+                text-decoration: none;
+                color: #333;
+                font-size: 18px;
+            }
+
+
+/* Account Details Section */
+.account-details {
+    flex: 1;
+}
+
+.personal-info, .password-update, .order-history {
+    padding: 20px;
+    margin-bottom: 20px;
+    border-top: 2px solid #ccc;
+}
+
+.account-details h2 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+
+.input-group {
+    display: flex;
+    gap: 4%;
+    margin-bottom: 10px;
+}
+
+    .input-group input {
+        width: 48%;
+        padding: 10px;
+        border: 1px solid #c4c4c4;
+        background-color: #fff;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+.update-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+    .update-button:hover {
+        background-color: #555;
+    }
+
+
+/* Stauts Helper Table */
+.status-helper-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: -10px;
+}
+
+    .status-helper-table th, .status-helper-table td {
+        padding: 10px;
+        border: none;
+        text-align: left;
+    }
+
+    .status-helper-table th {
+        background-color: none;
+    }
+
+    .status-helper-table p {
+        margin-left: 25px;
+    }
+
+/* Order History Table */
+.order-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .order-history-table th, .order-history-table td {
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    .order-history-table th {
+        background-color: #f1f1f1;
+    }
+
+.order-status {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.green {
+    background-color: green;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.gray {
+    background-color: gray;
+}
+
+/* Icon Button Styling */
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin: 5px;
+}
+
+    .icon-button .icon {
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+
+    .icon-button:hover .icon {
+        opacity: 0.8;
+    }

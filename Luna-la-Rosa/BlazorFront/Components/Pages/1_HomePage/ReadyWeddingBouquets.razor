@@ -1,0 +1,103 @@
+﻿<section class="wedding-bouquets">
+    <div class="line-and-header">
+        <h2>Весільні букети</h2>
+    </div>
+    <div class="bouquet-list">
+        @if (VisibleBouquets == null || VisibleBouquets.Count == 0)
+        {
+            <p>Loading wedding bouquets...</p>
+        }
+        else
+        {
+            @foreach (var bouquet in VisibleBouquets)
+            {
+                <div class="bouquet-item">
+                    <img src="@bouquet.ImageUrl" alt="@bouquet.Name">
+                    <div class="bouquet-info">
+                        <p class="bouquet-name">@bouquet.Name</p>
+                        <p class="bouquet-price">@bouquet.Price$</p>
+                    </div>
+                    <p class="bouquet-desc">@bouquet.Description</p>
+                    <button class="add-to-cart-btn" @onclick="() => AddToCart(bouquet.Id)">У кошик</button>
+                </div>
+            }
+        }
+    </div>
+    @if (HasMoreBouquets)
+    {
+        <div class="view-more-container">
+            <button class="view-more-btn" @onclick="LoadMore">Переглянути ще ↓</button>
+        </div>
+    }
+</section>
+
+@code {
+    private List<BouquetDto> AllBouquets = new();  // Всі весільні букети
+    private List<BouquetDto> VisibleBouquets = new();  // Відображені весільні букети
+    private int CurrentPage = 0;  // Поточна сторінка
+    private const int PageSize = 5;  // Кількість букетів для завантаження за раз
+
+    // Властивість для перевірки, чи є ще букети
+    private bool HasMoreBouquets => VisibleBouquets.Count < AllBouquets.Count;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Завантажуємо всі букети (замініть на реальний виклик бекенду)
+            AllBouquets = await LoadBouquetsAsync();
+            LoadMore();  // Завантажуємо перші 5 букетів
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading wedding bouquets: {ex.Message}");
+        }
+    }
+
+    private async Task<List<BouquetDto>> LoadBouquetsAsync()
+    {
+        // Заглушка: повертає список весільних букетів
+        await Task.Delay(500);  // Емуляція затримки
+        return new List<BouquetDto>
+        {
+            new BouquetDto { Id = 1, Name = "Букет Ніжність", Price = 1200, Description = "Елегантний весільний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 2, Name = "Букет Мрія", Price = 1400, Description = "Романтичний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 3, Name = "Букет Класика", Price = 1300, Description = "Класичний весільний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 4, Name = "Букет Весна", Price = 1100, Description = "Весняні мотиви для весілля", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 5, Name = "Букет Щастя", Price = 1500, Description = "Вишуканий букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 6, Name = "Букет Літо", Price = 1000, Description = "Яскравий весільний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 7, Name = "Букет Зима", Price = 1250, Description = "Зимовий весільний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 8, Name = "Букет Розкіш", Price = 1600, Description = "Розкішний букет для нареченої", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 9, Name = "Букет Щедрість", Price = 1350, Description = "Щедрий весільний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 10, Name = "Букет Святковий", Price = 1700, Description = "Святковий букет для весілля", ImageUrl = "icons/bouquet.png" }
+        };
+    }
+
+    private void LoadMore()
+    {
+        // Завантажуємо наступні 5 букетів
+        var nextBouquets = AllBouquets
+            .Skip(CurrentPage * PageSize)
+            .Take(PageSize)
+            .ToList();
+
+        VisibleBouquets.AddRange(nextBouquets);
+        CurrentPage++;  // Переходимо до наступної сторінки
+    }
+
+    private void AddToCart(int bouquetId)
+    {
+        Console.WriteLine($"Wedding bouquet with ID {bouquetId} added to cart.");
+        // Логіка для додавання до кошика
+    }
+
+    // DTO для букету
+    public class BouquetDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+    }
+}

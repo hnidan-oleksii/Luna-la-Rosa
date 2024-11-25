@@ -1,0 +1,116 @@
+﻿@page "/admin-user-details"
+<!-- Main Content -->
+<main class="account-page">
+    <h1>Деталі користувача</h1>
+
+    <div class="account-container">
+        <!-- Account Details Section -->
+        <section class="account-details">
+            <!-- Personal Information Section -->
+            <div class="details-header">
+                <h2>Обліковий запис</h2>
+            </div>
+            <div class="personal-info">
+                <div class="input-group">
+                    <input type="text" placeholder="Ім'я">
+                    <input type="text" placeholder="Прізвище">
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="Номер телефону">
+                    <input type="email" placeholder="E-mail">
+                </div>
+                <button class="delete-button">Видалити користувача</button>
+            </div>
+
+            <!-- Order History Section -->
+            <div class="details-header">
+                <h2>Замовлення</h2>
+            </div>
+            <div class="order-history">
+                <table class="status-helper-table">
+                    <tr>
+                        <th><span class="order-status gray"><p>Обробляється</p></span></th>
+                        <th><span class="order-status yellow"><p>Доставляється</p></span></th>
+                        <th><span class="order-status green"><p>Готове</p></span></th>
+
+                    </tr>
+                </table>
+                <table class="order-history-table">
+                    <tr>
+                        <th>№</th>
+                        <th>Статус</th>
+                        <th>Номер замовлення</th>
+                        <th>Дата доставки</th>
+                        <th>Дата замовлення</th>
+                        <th>Дії</th>
+                    </tr>
+                    <tr>
+                        <td>1.</td>
+                        <td><span class="order-status green"></span></td>
+                        <td>12345</td>
+                        <td>2023-10-28</td>
+                        <td>2023-10-25</td>
+                        <td>
+                            <button class="icon-button">
+                                <img src="checkmark.png" alt="Переглянути замовлення" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="double-tick-icon.png" alt="Прийняти замовлення" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="more-info-icon3.png" alt="Детальна інформація" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="delete-icon2.png" alt="Повторити замовлення" class="icon">
+
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2.</td>
+                        <td><span class="order-status yellow"></span></td>
+                        <td>12346</td>
+                        <td>2023-10-29</td>
+                        <td>2023-10-26</td>
+                        <td>
+                            <button class="icon-button">
+                                <img src="checkmark.png" alt="Переглянути замовлення" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="double-tick-icon.png" alt="Прийняти замовлення" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="more-info-icon3.png" alt="Детальна інформація" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="delete-icon2.png" alt="Повторити замовлення" class="icon">
+
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3.</td>
+                        <td><span class="order-status gray"></span></td>
+                        <td>12347</td>
+                        <td>2023-10-30</td>
+                        <td>2023-10-27</td>
+                        <td>
+                            <button class="icon-button">
+                                <img src="checkmark.png" alt="Переглянути замовлення" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="double-tick-icon.png" alt="Прийняти замовлення" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="more-info-icon3.png" alt="Детальна інформація" class="icon">
+                            </button>
+                            <button class="icon-button">
+                                <img src="delete-icon2.png" alt="Повторити замовлення" class="icon">
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>

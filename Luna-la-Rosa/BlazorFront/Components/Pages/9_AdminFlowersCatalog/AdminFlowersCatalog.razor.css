@@ -1,0 +1,140 @@
+﻿/* Product Management Page */
+.product-management-page {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.search-add-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.add-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    border: 2px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .add-button:hover {
+        background-color: #333;
+        color: #fff;
+    }
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    width: 220px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s;
+    overflow: hidden;
+}
+
+
+/* Image Styling */
+.product-image {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Product Information Styling */
+.product-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-price {
+    font-size: 16px;
+    color: #333;
+}
+
+.product-description {
+    color: #777;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+/* Icon Button Styling */
+/* Styling for Icon Buttons */
+.icon-btn {
+    width: 24px; /* Adjust the size as needed */
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+    /* Hover Effect */
+    .icon-btn:hover {
+        transform: scale(1.1);
+    }
+
+/* Specific Styling for Add Flower Icon */
+.add-flower-icon {
+    filter: grayscale(0.5); /* Slightly gray effect */
+}
+
+    .add-flower-icon:hover {
+        filter: brightness(1.2); /* Light hover effect */
+    }
+
+/* Specific Styling for Edit and Delete Icons */
+.edit-icon {
+    filter: grayscale(0.5);
+}
+
+.delete-icon {
+    filter: grayscale(0.5);
+}
+
+.edit-icon:hover {
+    filter: brightness(1.2);
+}
+
+.delete-icon:hover {
+    filter: brightness(0.8);
+}

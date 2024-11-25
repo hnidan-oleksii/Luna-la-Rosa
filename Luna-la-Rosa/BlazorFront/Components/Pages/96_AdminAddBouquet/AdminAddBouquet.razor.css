@@ -1,0 +1,387 @@
+﻿/* Main Bouquet Creation Section */
+.bouquet-creation {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+    .bouquet-creation h1 {
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+.bouquet-container {
+    display: flex;
+    gap: 20px;
+}
+
+/* Секція форми */
+.bouquet-form-simple {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+    .bouquet-form-simple h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Секція форми */
+.bouquet-form-simple {
+    max-width: 600px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+    .bouquet-form-simple h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Рядок форми */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.radio-options {
+    display: flex;
+    gap: 10px;
+}
+
+    .radio-options label {
+        font-size: 14px;
+    }
+
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Додаткові стилі для кнопки */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.save-button {
+    padding: 12px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .save-button:hover {
+        background-color: #555;
+    }
+
+
+
+/* Left Column */
+.left-column {
+    width: 60%;
+}
+
+.category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+    .category-tabs button {
+        width: 100px;
+        height: 40px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-align: center;
+        font-size: 16px;
+    }
+
+        .category-tabs button:hover {
+            background-color: #eee;
+        }
+
+/* Selection Section for Flowers and Decorations */
+.selection-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+    .selection-section h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+/* Flower Item Style */
+.flower-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+    .flower-item img {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        margin-right: 10px;
+        border: 1px solid #d4d4d4;
+    }
+
+.item-details {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+    .item-details p {
+        font-size: 16px;
+        margin: 0;
+        font-weight: bold;
+    }
+
+.price {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Quantity Control */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    .quantity-control button {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+        .quantity-control button:hover {
+            background-color: #ddd;
+        }
+
+    .quantity-control input[type="number"] {
+        width: 50px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+        .quantity-control input[type="number"]::-webkit-outer-spin-button,
+        .quantity-control input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+.decoration-div {
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+
+
+/* Decoration Item */
+.selection-section .decoration-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Decoration Image */
+.decoration-image {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.decoration-item .item-details {
+    flex-grow: 1;
+}
+
+    .decoration-item .item-details p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+.decoration-item .price {
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* Right Column with Scroll */
+.right-column {
+    width: 100%;
+    max-width: 350px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    height: 600px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+    .right-column h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+.bouquet-summary {
+    background-color: #f2f2f2;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+
+.bouquet-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    position: relative;
+}
+
+.remove-item {
+    position: absolute;
+    top: 10px;
+    left: -15px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.bouquet-item img {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.total {
+    text-align: center;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.checkout-button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: white;
+    border: 1px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+    .checkout-button:hover {
+        background-color: #333;
+        color: #fff;
+    }

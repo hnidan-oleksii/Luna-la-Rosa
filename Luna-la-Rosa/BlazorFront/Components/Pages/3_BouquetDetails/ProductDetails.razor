@@ -1,0 +1,158 @@
+﻿@page "/product-details/{ProductId:int}"
+@using System.Collections.Generic
+
+<main>
+    <!-- Product Details Section -->
+    <section class="product-details">
+        <div class="product-info">
+            <img src="@Product.ImageUrl" alt="@Product.Name">
+            <div class="details">
+                <h2>@Product.Name</h2>
+                <p class="price">@Product.Price грн</p>
+                <p>Склад букета:</p>
+                <ul>
+                    @foreach (var component in Product.Components)
+                    {
+                        <li>@component</li>
+                    }
+                </ul>
+                <h4>Бажаєте додати подарунок?</h4>
+                <div class="gift-options">
+                    @foreach (var gift in GiftOptions)
+                    {
+                        <img src="@gift.ImageUrl" alt="@gift.Name" @onclick="() => SelectGift(gift)">
+                    }
+                </div>
+                <div class="product-actions">
+                    <button class="add-to-cart" @onclick="AddToCart">Додати у кошик</button>
+                    <button class="order-now" @onclick="OrderNow">Замовити зараз</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Similar Bouquets Section -->
+    <section class="suggestions">
+        <h3>Букети, які вам також сподобаються</h3>
+        <div class="suggested-items">
+            @foreach (var bouquet in SuggestedBouquets)
+            {
+                <div class="bouquet-item">
+                    <img src="@bouquet.ImageUrl" alt="@bouquet.Name">
+                    <div class="bouquet-info">
+                        <p class="bouquet-name">@bouquet.Name</p>
+                        <p class="bouquet-price">@bouquet.Price грн</p>
+                    </div>
+                    <p class="bouquet-desc">@bouquet.Description</p>
+                    <button class="add-to-cart-btn" @onclick="() => AddToCart(bouquet.Id)">У кошик</button>
+                </div>
+            }
+        </div>
+    </section>
+</main>
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    private ProductDto Product { get; set; }
+    private List<GiftDto> GiftOptions { get; set; } = new();
+    private List<BouquetDto> SuggestedBouquets { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        // Симуляція отримання даних для продукту
+        LoadProductDetails();
+        LoadGiftOptions();
+        LoadSuggestedBouquets();
+    }
+
+    private void AddToCart(int bouquetId)
+    {
+        Console.WriteLine($"Bouquet with ID {bouquetId} added to cart.");
+        // Реалізуйте логіку додавання в кошик
+    }
+
+    private void LoadProductDetails()
+    {
+        // Імітація завантаження даних із сервісу чи бази
+        Product = new ProductDto
+        {
+            Id = ProductId,
+            Name = "Тюльпанний снігопад",
+            Price = 1000,
+                ImageUrl = "icons/bouquet.png",
+            Components = new List<string>
+            {
+                "51 x Жовтий тюльпан",
+                "1 x Крафтовий папір (1 лист)"
+            }
+        };
+    }
+
+    private void LoadGiftOptions()
+    {
+        GiftOptions = new List<GiftDto>
+        {
+            new GiftDto { Id = 1, Name = "Повітряна кулька", ImageUrl = "icons/bouquet.png" },
+            new GiftDto { Id = 2, Name = "Коробка цукерок", ImageUrl = "icons/bouquet.png" },
+            new GiftDto { Id = 3, Name = "Листівка", ImageUrl = "icons/bouquet.png" }
+        };
+    }
+
+    private void LoadSuggestedBouquets()
+    {
+        SuggestedBouquets = new List<BouquetDto>
+        {
+            new BouquetDto { Id = 2, Name = "Букет Ніжність", Price = 1200, Description = "Класичний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 3, Name = "Букет Щастя", Price = 900, Description = "Легкий і ніжний", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 4, Name = "Букет Кохання", Price = 1300, Description = "Букет для закоханих", ImageUrl = "icons/bouquet.png" }
+        };
+    }
+
+    private void AddToCart()
+    {
+        Console.WriteLine($"Product {ProductId} added to cart.");
+        // Реалізація додавання до кошика
+    }
+
+    private void OrderNow()
+    {
+        Console.WriteLine($"Product {ProductId} ordered now.");
+        // Реалізація моментального замовлення
+    }
+
+    private void SelectGift(GiftDto gift)
+    {
+        Console.WriteLine($"Gift {gift.Name} selected.");
+        // Логіка обробки вибору подарунка
+    }
+
+    // DTO для продукту
+    private class ProductDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string ImageUrl { get; set; }
+        public List<string> Components { get; set; } = new();
+    }
+
+    // DTO для подарунків
+    private class GiftDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ImageUrl { get; set; }
+    }
+
+    // DTO для рекомендованих букетів
+    private class BouquetDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
+    }
+}
