@@ -1,0 +1,227 @@
+﻿@page "/admin-add-bouquet"
+
+<!-- Main Section for Bouquet Creation -->
+<main class="bouquet-creation">
+    <section class="bouquet-form-simple">
+        <h2>Створення букета</h2>
+        <form>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="bouquet-name">Назва букета</label>
+                    <input type="text" id="bouquet-name" placeholder="Назва букета">
+                </div>
+                <div class="form-group">
+                    <label for="bouquet-price">Ціна букета</label>
+                    <input type="number" id="bouquet-price" placeholder="Ціна букета">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Колір</label>
+                    <div class="select-box">
+                        <select id="bouquet-color">
+                            <option>Червоний</option>
+                            <option>Білий</option>
+                            <option>Рожевий</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bouquet-description">Опис букета</label>
+                    <input type="text" id="bouquet-description" placeholder="Опис букета">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Розмір</label>
+                    <div class="radio-options">
+                        <label><input type="radio" name="size" value="Великий"> Великий</label>
+                        <label><input type="radio" name="size" value="Середній"> Середній</label>
+                        <label><input type="radio" name="size" value="Маленький"> Маленький</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bouquet-photo">Завантажити фото букета</label>
+                    <input type="file" id="bouquet-photo">
+                </div>
+            </div>
+        </form>
+    </section>
+
+
+    <div class="bouquet-container">
+        <!-- Left Column: Flower and Decoration Selection -->
+        <div class="left-column">
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                <button>Троянди</button>
+                <button>Тюльпани</button>
+                <button>Півонії</button>
+                <button>Тюльпани</button>
+                <button>Півонії</button>
+                <button>Тюльпани</button>
+                <button>Півонії</button>
+                <button>Тюльпани</button>
+                <button>Півонії</button>
+            </div>
+
+            <!-- Flower Selection -->
+            <div class="selection-section">
+                <div class="flower-item">
+                    <img src="bouquet.png" alt="Жовтий тюльпан">
+                    <div class="item-details">
+                        <p>Жовтий тюльпан</p>
+                        <span class="price">45 грн/шт.</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="minus">-</button>
+                        <input type="number" min="0" value="1">
+                        <button class="plus">+</button>
+                    </div>
+                </div>
+
+                <div class="flower-item">
+                    <img src="bouquet.png" alt="Білий тюльпан">
+                    <div class="item-details">
+                        <p>Білий тюльпан</p>
+                        <span class="price">45 грн/шт.</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="minus">-</button>
+                        <input type="number" min="0" value="0">
+                        <button class="plus">+</button>
+                    </div>
+                </div>
+
+                <div class="flower-item">
+                    <img src="bouquet.png" alt="Червоний тюльпан">
+                    <div class="item-details">
+                        <p>Червоний тюльпан</p>
+                        <span class="price">45 грн/шт.</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="minus">-</button>
+                        <input type="number" min="0" value="0">
+                        <button class="plus">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decoration-div">
+                <p>Оформлення</p>
+            </div>
+
+
+            <!-- Decoration Selection -->
+            <div class="selection-section">
+                <div class="decoration-item">
+                    <img src="bouquet.png" alt="Картонний папір" class="decoration-image">
+                    <div class="item-details">
+                        <p>Картонний папір 1 лист</p>
+                        <span class="price">25 грн</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="minus">-</button>
+                        <input type="number" min="0" value="0">
+                        <button class="plus">+</button>
+                    </div>
+                </div>
+                <div class="decoration-item">
+                    <img src="bouquet.png" alt="Мотузка з текстурою" class="decoration-image">
+                    <div class="item-details">
+                        <p>Мотузка з текстурою</p>
+                        <span class="price">40 грн</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="minus">-</button>
+                        <input type="number" min="0" value="0">
+                        <button class="plus">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Bouquet Summary -->
+        <div class="right-column">
+            <h2>Ваш букет:</h2>
+            <div class="bouquet-summary">
+                <div class="bouquet-item">
+                    <button class="remove-item">×</button>
+                    <img src="bouquet.png" alt="Жовтий тюльпан">
+                    <div class="item-details">
+                        <p class="item-name">Жовтий тюльпан</p>
+                        <span class="price">45 грн</span>
+                        <div class="quantity-control">
+                            <button class="minus">-</button>
+                            <input type="number" min="1" value="1">
+                            <button class="plus">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bouquet-summary">
+                <div class="bouquet-item">
+                    <button class="remove-item">×</button>
+                    <img src="bouquet.png" alt="Жовтий тюльпан">
+                    <div class="item-details">
+                        <p class="item-name">Жовтий тюльпан</p>
+                        <span class="price">45 грн</span>
+                        <div class="quantity-control">
+                            <button class="minus">-</button>
+                            <input type="number" min="1" value="1">
+                            <button class="plus">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bouquet-summary">
+                <div class="bouquet-item">
+                    <button class="remove-item">×</button>
+                    <img src="bouquet.png" alt="Жовтий тюльпан">
+                    <div class="item-details">
+                        <p class="item-name">Жовтий тюльпан</p>
+                        <span class="price">45 грн</span>
+                        <div class="quantity-control">
+                            <button class="minus">-</button>
+                            <input type="number" min="1" value="1">
+                            <button class="plus">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bouquet-summary">
+                <div class="bouquet-item">
+                    <button class="remove-item">×</button>
+                    <img src="bouquet.png" alt="Жовтий тюльпан">
+                    <div class="item-details">
+                        <p class="item-name">Жовтий тюльпан</p>
+                        <span class="price">45 грн</span>
+                        <div class="quantity-control">
+                            <button class="minus">-</button>
+                            <input type="number" min="1" value="1">
+                            <button class="plus">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bouquet-summary">
+                <div class="bouquet-item">
+                    <button class="remove-item">×</button>
+                    <img src="bouquet.png" alt="Жовтий тюльпан">
+                    <div class="item-details">
+                        <p class="item-name">Жовтий тюльпан</p>
+                        <span class="price">45 грн</span>
+                        <div class="quantity-control">
+                            <button class="minus">-</button>
+                            <input type="number" min="1" value="1">
+                            <button class="plus">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="save-button">Зберегти</button>
+    </div>
+</main>

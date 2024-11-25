@@ -1,0 +1,58 @@
+﻿<section class="bouquet-list">
+    @if (Bouquets == null || Bouquets.Count == 0)
+    {
+        <p>Букети не знайдено.</p>
+    }
+    else
+    {
+        @foreach (var bouquet in Bouquets)
+        {
+            <div class="bouquet-item">
+                <img src="@bouquet.ImageUrl" alt="@bouquet.Name">
+                <div class="bouquet-info">
+                    <p class="bouquet-name">@bouquet.Name</p>
+                    <p class="bouquet-price">@bouquet.Price грн</p>
+                </div>
+                <p class="bouquet-desc">@bouquet.Description</p>
+                <button class="add-to-cart-btn" @onclick="() => AddToCart(bouquet.Id)">У кошик</button>
+            </div>
+        }
+    }
+</section>
+
+@code {
+    private List<BouquetDto> Bouquets = new();
+
+    protected override void OnInitialized()
+    {
+        // Завантаження даних локально або через сервіс
+        LoadBouquets();
+    }
+
+    private void LoadBouquets()
+    {
+        Bouquets = new List<BouquetDto>
+        {
+            new BouquetDto { Id = 1, Name = "Букет Розкіш", Price = 1000, Description = "Чудовий букет із троянд", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 2, Name = "Букет Ніжність", Price = 1200, Description = "Класичний букет", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 3, Name = "Букет Щастя", Price = 900, Description = "Легкий і ніжний", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 4, Name = "Букет Кохання", Price = 1300, Description = "Букет для закоханих", ImageUrl = "icons/bouquet.png" },
+            new BouquetDto { Id = 5, Name = "Букет Пікант", Price = 800, Description = "Романтичний букет", ImageUrl = "icons/bouquet.png" }
+        };
+    }
+
+    private void AddToCart(int bouquetId)
+    {
+        Console.WriteLine($"Bouquet {bouquetId} added to cart.");
+        // Логіка для додавання до кошика
+    }
+
+    public class BouquetDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public string ImageUrl { get; set; }
+    }
+}

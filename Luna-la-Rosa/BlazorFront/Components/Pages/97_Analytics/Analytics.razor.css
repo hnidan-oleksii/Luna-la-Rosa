@@ -1,0 +1,78 @@
+﻿/* Main Section */
+.analytics {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+    .analytics h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+.date-selection {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.date-range {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 20px 0;
+}
+
+.date-picker {
+    text-align: center;
+}
+
+    .date-picker label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .date-picker input[type="date"] {
+        width: 150px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+.analytics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.analytics-card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    text-align: center;
+}
+
+    .analytics-card p {
+        margin: 0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .analytics-card h2 {
+        font-size: 24px;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    .analytics-card .growth {
+        font-size: 14px;
+        color: green;
+        font-weight: bold;
+    }

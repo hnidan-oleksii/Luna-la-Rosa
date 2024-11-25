@@ -1,0 +1,85 @@
+﻿@page "/admin-order-details"
+<!-- Main Section for Order Checkout -->
+<main class="checkout">
+    <h1>Подробиці замовлення</h1>
+
+    <div class="checkout-container">
+        <!-- Left Column: User Data and Delivery -->
+        <div class="left-column">
+            <!-- User Data Section -->
+            <div class="form-section user-data">
+                <h2>Дані отримувача</h2>
+                <input type="text" placeholder="Ім'я">
+                <input type="text" placeholder="Прізвище">
+                <input type="tel" placeholder="Номер телефону">
+                <input type="email" placeholder="E-mail">
+                <p class="question">Вже замовляли у нас?  <a href="#">Увійдіть</a></p>
+            </div>
+
+            <!-- Delivery Information Section -->
+            <div class="form-section delivery">
+                <h2>Дані користувача</h2>
+                <input type="text" placeholder="Місто">
+                <input type="text" placeholder="Вулиця">
+                <input type="text" placeholder="Будинок">
+                <input type="date" placeholder="Дата та час доставки">
+                <textarea placeholder="Нотатки до замовлення" rows="3"></textarea>
+            </div>
+        </div>
+
+        <!-- Right Column: Order Summary and Payment Method -->
+        <div class="right-column">
+            <!-- Order Summary Section -->
+            <div class="order-summary">
+                <h2>Дані замовлення</h2>
+
+                <div class="order-item">
+                    <img src="bouquet1.png" alt="Bouquet Image" class="order-image">
+                    <p class="item-name">Назва</p>
+                    <div class="price-quantity">
+                        <span class="price">1000$</span>
+                        <span class="quantity">1шт</span>
+                    </div>
+                </div>
+
+                <div class="order-item">
+                    <img src="bouquet1.png" alt="Bouquet Image" class="order-image">
+                    <p class="item-name">Назва</p>
+                    <div class="price-quantity">
+                        <span class="price">1000$</span>
+                        <span class="quantity">1шт</span>
+                    </div>
+                </div>
+                <div class="order-item">
+                    <img src="bouquet1.png" alt="Bouquet Image" class="order-image">
+                    <p class="item-name">Назва</p>
+                    <div class="price-quantity">
+                        <span class="price">1000$</span>
+                        <span class="quantity">1шт</span>
+                    </div>
+                </div>
+
+                <div class="order-item">
+                    <img src="bouquet1.png" alt="Bouquet Image" class="order-image">
+                    <p class="item-name">Назва</p>
+                    <div class="price-quantity">
+                        <span class="price">1000$</span>
+                        <span class="quantity">1шт</span>
+                    </div>
+                </div>
+
+                <p>Доставка: <span class="price">10$</span></p>
+                <p>Оплата: <span class="payment-method">Оплата котркою онлайн</span></p>
+                <hr>
+                <p class="total">Загалом: <span>2000$</span></p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Confirm Order Button -->
+    <div class="edit-button">
+        <button>Редагувати</button>
+    </div>
+</main>
