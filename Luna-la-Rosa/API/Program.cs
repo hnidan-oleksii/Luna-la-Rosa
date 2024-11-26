@@ -55,6 +55,7 @@ builder.Services.AddScoped<IAddOnService, AddOnService>();
 builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IFlowerService, FlowerService>();
 builder.Services.AddScoped<ICustomBouquetService, CustomBouquetService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 var app = builder.Build();
 
