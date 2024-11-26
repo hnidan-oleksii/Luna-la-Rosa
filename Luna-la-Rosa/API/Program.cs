@@ -53,6 +53,7 @@ builder.Services.AddScoped<ICustomBouquetRepository, CustomBouquetRepository>();
 builder.Services.AddScoped<IAddOnService, AddOnService>();
 builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IFlowerService, FlowerService>();
+builder.Services.AddScoped<ICustomBouquetService, CustomBouquetService>();
 
 var app = builder.Build();
 
