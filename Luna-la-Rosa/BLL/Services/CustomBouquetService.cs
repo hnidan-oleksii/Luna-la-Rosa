@@ -1,5 +1,6 @@
 using AutoMapper;
 using BLL.DTO.CustomBouquet;
+using BLL.DTO.ShoppingCart;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Repositories.Interfaces;
@@ -17,9 +18,6 @@ public class CustomBouquetService : ICustomBouquetService
         _mapper = mapper;
     }
 
-<<<<<<< HEAD
-    public async Task<int> AddCustomBouquetAsync(CreateCustomBouquetDto customBouquetDto,
-=======
     public async Task<CustomBouquetDto> GetCustomBouquetByIdAsync(int id)
     {
         var customBouquet = await _unitOfWork.CustomBouquets.GetByIdAsync(id);
@@ -27,7 +25,6 @@ public class CustomBouquetService : ICustomBouquetService
     }
 
     public async Task<ShoppingCartDto> AddCustomBouquetAsync(CreateCustomBouquetDto customBouquetDto,
->>>>>>> 5cddf92 (fixup for custom bouquet service)
         CancellationToken cancellationToken)
     {
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
@@ -35,12 +32,12 @@ public class CustomBouquetService : ICustomBouquetService
         {
             var customBouquet = _mapper.Map<CustomBouquet>(customBouquetDto);
             await _unitOfWork.CustomBouquets.AddAsync(customBouquet);
+            await _unitOfWork.SaveAsync();
 
             foreach (var flower in customBouquetDto.CustomBouquetFlowers)
                 flower.BouquetId = customBouquet.Id;
             foreach (var addOn in customBouquetDto.CustomBouquetAddOns)
                 addOn.BouquetId = customBouquet.Id;
-
             customBouquet.CustomBouquetFlowers =
                 _mapper.Map<IEnumerable<CustomBouquetFlower>>(customBouquetDto.CustomBouquetFlowers,
                     opts => opts.Items["CustomBouquetId"] = customBouquet.Id);
@@ -49,10 +46,33 @@ public class CustomBouquetService : ICustomBouquetService
                     opts => opts.Items["CustomBouquetId"] = customBouquet.Id);
             await _unitOfWork.CustomBouquets.UpdateAsync(customBouquet);
 
+            var shoppingCart = await _unitOfWork.ShoppingCarts.GetShoppingCartByUserId(customBouquet.UserId);
+            if (shoppingCart == null)
+            {
+                shoppingCart = new ShoppingCart()
+                {
+                    UserId = customBouquet.UserId,
+                    CreatedAt = customBouquet.CreatedAt
+                };
+                await _unitOfWork.ShoppingCarts.AddAsync(shoppingCart);
+                await _unitOfWork.SaveAsync();
+            }
+
+            var cartItem = new CartItem()
+            {
+                CartId = shoppingCart.UserId,
+                BouquetId = null,
+                CustomBouquetId = customBouquet.Id,
+                Quantity = 1,
+                Price = customBouquet.TotalPrice
+            };
+            var cartItems = shoppingCart.CartItems.ToList();
+            cartItems.Add(cartItem);
+            shoppingCart.CartItems = cartItems;
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
 
-            return customBouquet.Id;
+            return _mapper.Map<ShoppingCartDto>(shoppingCart);
         }
         catch (Exception)
         {
