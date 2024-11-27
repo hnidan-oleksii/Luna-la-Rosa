@@ -8,6 +8,6 @@ public class BouquetCategoryBouquetDtoValidator : AbstractValidator<BouquetCateg
     public BouquetCategoryBouquetDtoValidator()
     {
         RuleFor(x => x.CategoryId)
-            .NotEmpty().WithMessage("BouquetCategoryId is required.");
+            .NotEmpty().WithMessage("BouquetCategoryId is required");
     }
 }
