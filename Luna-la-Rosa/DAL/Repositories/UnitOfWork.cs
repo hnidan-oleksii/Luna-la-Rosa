@@ -14,13 +14,15 @@ public class UnitOfWork : IUnitOfWork
     public IFlowerRepository Flowers { get; }
     public ICustomBouquetRepository CustomBouquets { get; }
     public IShoppingCartRepository ShoppingCarts { get; }
+    public IOrderRepository Orders { get; }
 
     public UnitOfWork(LunaContext context,
         IAddOnRepository addOns,
         IBouquetRepository bouquets,
         IFlowerRepository flowers,
         ICustomBouquetRepository customBouquets,
-        IShoppingCartRepository shoppingCarts)
+        IShoppingCartRepository shoppingCarts,
+        IOrderRepository orders)
     {
         _context = context;
         AddOns = addOns;
@@ -28,6 +30,7 @@ public class UnitOfWork : IUnitOfWork
         Flowers = flowers;
         CustomBouquets = customBouquets;
         ShoppingCarts = shoppingCarts;
+        Orders = orders;
     }
 
     public void Dispose()
