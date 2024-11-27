@@ -7,6 +7,7 @@ using BLL.DTO.BouquetFlower;
 using BLL.DTO.CustomBouquet;
 using BLL.DTO.Flower;
 using BLL.DTO.ItemAddOn;
+using BLL.DTO.Order;
 using BLL.DTO.ShoppingCart;
 using BLL.Helpers.Mapping;
 using DAL.Entities;
@@ -65,5 +66,23 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<CartItem, CartItemDto>()
             .ForMember(dto => dto.AddOns, opt => opt.MapFrom(entity => entity.AddOns));
+
+        // Orders
+        CreateMap<Order, OrderDto>()
+            .ForMember(dto => dto.DeliveryCity, opt => opt.MapFrom<DeliveryAddressConverter.DeliveryCityResolver>())
+            .ForMember(dto => dto.DeliveryStreet, opt => opt.MapFrom<DeliveryAddressConverter.DeliveryStreetResolver>())
+            .ForMember(dto => dto.DeliveryBuilding,
+                opt => opt.MapFrom<DeliveryAddressConverter.DeliveryBuildingResolver>())
+            .ReverseMap()
+            .ForMember(entity => entity.DeliveryAddress,
+                opt => opt.MapFrom(dto =>
+                    string.Join(", ", dto.DeliveryCity, dto.DeliveryStreet, dto.DeliveryBuilding)));
+        CreateMap<OrderBouquet, OrderBouquetDto>()
+            .ForMember(dto => dto.AddOns, opt => opt.MapFrom(entity => entity.AddOns))
+            .ReverseMap()
+            .ForMember(entity => entity.AddOns, opt => opt.Ignore());
+        CreateMap<OrderAddOn, ItemAddOnDto>()
+            .ForMember(dto => dto.BouquetId, opt => opt.MapFrom(entity => entity.OrderBouquetId))
+            .ReverseMap();
     }
 }
