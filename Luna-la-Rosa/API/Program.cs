@@ -49,6 +49,7 @@ builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();
 builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
 builder.Services.AddScoped<ICustomBouquetRepository, CustomBouquetRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepisitory>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();

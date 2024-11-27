@@ -7,6 +7,7 @@ public interface IUnitOfWork : IDisposable
     IFlowerRepository Flowers { get; }
     ICustomBouquetRepository CustomBouquets { get; }
     IShoppingCartRepository ShoppingCarts { get; }
+    IOrderRepository Orders { get; }
     Task SaveAsync();
     Task BeginTransactionAsync(CancellationToken cancellationToken);
     Task CommitTransactionAsync(CancellationToken cancellationToken);
