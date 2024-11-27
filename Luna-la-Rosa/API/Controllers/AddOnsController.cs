@@ -1,6 +1,7 @@
 ﻿using BLL.DTO.AddOn;
 using BLL.Services.Interfaces;
 using DAL.Helpers.Params;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -16,6 +17,7 @@ public class AddOnsController : ControllerBase
         _addOnService = addOnService;
     }
 
+    [Authorize(Roles = "admin")]
     [HttpGet("all")]
     public async Task<ActionResult<IEnumerable<AddOnDto>>> GetAllAddOnsAsync([FromQuery] AddOnParams addOnParams)
     {

@@ -12,6 +12,7 @@ services:
       - luna-network
 
   luna.api:
+    container_name: luna.api
     build:
       dockerfile: Luna-la-Rosa/API/Dockerfile
     environment:
@@ -22,9 +23,53 @@ services:
       - "5000:8080"
     depends_on:
       - postgres
+      - keycloak
     networks:
       - luna-network
     command: ["dotnet", "API.dll"]
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - luna-network
+
+  keycloak-postgres:
+    image: postgres:16.2
+    container_name: keycloak-postgres
+    volumes:
+      - ./docker/postgres_keycloak/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloakpassword
+    networks:
+      - luna-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.6
+    container_name: keycloak
+    command: [ "start-dev", "--import-realm" ]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/keycloak_db
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpassword
+    ports:
+      - "8888:8080"
+    restart: always
+    volumes:
+      - ./docker/keycloak/realms/:/opt/keycloak/data/import/
+    depends_on:
+      - keycloak-postgres
+      - mailhog
+    networks:
+      - luna-network
 
 networks:
   luna-network:
