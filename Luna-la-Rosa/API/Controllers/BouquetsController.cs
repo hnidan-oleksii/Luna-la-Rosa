@@ -4,6 +4,7 @@ using BLL.DTO.ShoppingCart;
 using BLL.Services.Interfaces;
 using DAL.Helpers;
 using DAL.Helpers.Params;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -33,6 +34,7 @@ public class BouquetsController : ControllerBase
         return Ok(bouquet);
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<ActionResult> CreateBouquet([FromBody] CreateBouquetDto createBouquetDto,
         CancellationToken cancellationToken)
@@ -43,6 +45,7 @@ public class BouquetsController : ControllerBase
         return CreatedAtAction(nameof(GetBouquetById), new { id = createdBouquetId }, createdBouquetId);
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpPut("id")]
     public async Task<ActionResult> UpdateBouquet(int id, [FromBody] BouquetDto bouquetDto,
         CancellationToken cancellationToken)
@@ -55,6 +58,7 @@ public class BouquetsController : ControllerBase
         return NoContent();
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpDelete("id")]
     public async Task<ActionResult> DeleteBouquet(int id, CancellationToken cancellationToken)
     {

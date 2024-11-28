@@ -37,6 +37,7 @@ public class FlowerController : ControllerBase
         return Ok(flower);
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpPost]
     public async Task<IActionResult> AddFlower([FromBody] CreateFlowerDto flowerDto,
         CancellationToken cancellationToken)
@@ -47,6 +48,7 @@ public class FlowerController : ControllerBase
         return CreatedAtAction(nameof(GetFlowerById), new { id = createdId }, flowerDto);
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateFlower(int id, [FromBody] FlowerDto flowerDto,
         CancellationToken cancellationToken)
@@ -59,6 +61,7 @@ public class FlowerController : ControllerBase
         return NoContent();
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFlower(int id, CancellationToken cancellationToken)
     {
