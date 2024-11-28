@@ -26,6 +26,8 @@ public class ShoppingCartsController : ControllerBase
     public async Task<ActionResult<ShoppingCartDto>> ChangeItemQuantityInShoppingCart(int userId,
         [FromQuery] int itemId, [FromQuery] int quantity, CancellationToken cancellationToken)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
         var shoppingCart =
             await _shoppingCartService.ChangeShoppingCartItemQuantityAsync(userId, itemId, quantity, cancellationToken);
         return Ok(shoppingCart);
