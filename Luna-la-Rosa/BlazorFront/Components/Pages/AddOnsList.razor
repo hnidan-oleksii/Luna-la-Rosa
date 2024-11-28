@@ -1,49 +1,35 @@
-﻿@page "/addons"
+﻿@page "/example"
 
-@using BLL.DTO.AddOn
-@using BlazorFront.Services.Interfaces
-@inject IAddOnService AddOnService
+@rendermode InteractiveServer
 
-<h3>List of AddOns</h3>
+<div>
+    <input @bind="text" @bind:event="oninput" @bind:after="Search">
+    <button @onclick="OnClick">Clear</button>
+    <p>@text</p>
+    <p>@searcgResult</p>
+</div>
 
-@if (IsLoading)
-{
-    <p>Loading AddOns...</p>
-}
-else if (AddOns?.Any() == true)
-{
-    <ul>
-        @foreach (var addOn in AddOns)
-        {
-            <li>
-                <strong>@addOn.Name</strong> - @addOn.Price
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>No AddOns available.</p>
-}
 
 @code {
-    private List<AddOnDto> AddOns { get; set; } = new List<AddOnDto>();
-    private bool IsLoading { get; set; } = true;
+    string text = "";
 
-    protected override async Task OnInitializedAsync()
+    string searcgResult = ""
+    ;
+    private void OnChange(ChangeEventArgs e)
     {
-        try
-        {
-            IsLoading = true;
-            AddOns = (await AddOnService.GetAllAddOnsAsync()).ToList();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading AddOns: {ex.Message}");
-        }
-        finally
-        {
-            IsLoading = false;
-        }
+        text = (string)e.Value!;
+    }
+
+    private void OnClick(MouseEventArgs e)
+    {
+        text = "";
+    }
+
+    async Task Search()
+    {
+
+        searcgResult = "Searching...";
+        await Task.Delay(2000);
+        searcgResult = $"Found {Random.Shared.Next()} results";
     }
 }

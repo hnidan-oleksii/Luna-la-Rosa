@@ -1,92 +1,87 @@
-﻿<section class="ready-bouquets">
+﻿@using BlazorFront.Services.Interfaces
+@using BLL.DTO.Bouquet
+@using DAL.Helpers.Params
+@inject IBouquetService BouquetService
+
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+<section class="ready-bouquets">
     <div class="line-and-header">
         <h2>Готові букети</h2>
     </div>
     <div class="bouquet-list">
-        @if (VisibleBouquets == null || VisibleBouquets.Count == 0)
-        {
-            <p>Loading...</p>
-        }
-        else
+        @if (Bouquets != null && Bouquets.Any())
         {
             @foreach (var bouquet in VisibleBouquets)
             {
-                <div class="bouquet-item">
-                    <img src="@bouquet.ImageUrl" alt="@bouquet.Name">
+                <div class="bouquet-item" @onclick="() => NavigateToDetails(bouquet.Id)">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(bouquet.Image)" alt="@bouquet.Name">
                     <div class="bouquet-info">
                         <p class="bouquet-name">@bouquet.Name</p>
-                        <p class="bouquet-price">@bouquet.Price$</p>
+                        <p class="bouquet-price">@($"{bouquet.Price:C}")</p>
                     </div>
                     <p class="bouquet-desc">@bouquet.Description</p>
-                    <button class="add-to-cart-btn" @onclick="() => AddToCart(bouquet.Id)">У кошик</button>
+                    <button class="add-to-cart-btn">У кошик</button>
                 </div>
             }
         }
+        else
+        {
+            <p>Завантаження...</p>
+        }
     </div>
-    @if (HasMoreBouquets)
+    @if (VisibleBouquets.Count < Bouquets.Count)
     {
         <div class="view-more-container">
-            <button class="view-more-btn" @onclick="LoadMore">Переглянути ще ↓</button>
+            <button class="view-more-btn" @onclick="LoadMoreBouquets">Переглянути ще ↓</button>
         </div>
     }
 </section>
 
 @code {
-    private List<BouquetDto> AllBouquets = new();
-    private List<BouquetDto> VisibleBouquets = new();
-    private int CurrentPage = 0;
-    private int PageSize = 5; // Кількість букетів, які додаються за один раз
+    private List<BouquetDto> Bouquets { get; set; } = new(); // Всі букети
+    private List<BouquetDto> VisibleBouquets { get; set; } = new(); // Відображувані букети
+    private int PageSize { get; set; } = 5; // Кількість букетів, які додаються кожного разу
 
-    private bool HasMoreBouquets => VisibleBouquets.Count < AllBouquets.Count;
+    private void NavigateToDetails(int bouquetId)
+    {
+        NavigationManager.NavigateTo($"/product-details/{bouquetId}");
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        // Завантажуємо всі букети (припустимо, що сервіс повертає всі букети одразу)
-        AllBouquets = await LoadBouquets();
-        LoadMore(); // Завантажуємо перші 5 букетів
+        await LoadInitialBouquets();
     }
 
-    private async Task<List<BouquetDto>> LoadBouquets()
+    private async Task LoadInitialBouquets()
     {
-        // Заглушка для отримання даних з бекенду
-        return new List<BouquetDto>
+        try
         {
-            new BouquetDto { Id = 1, Name = "Букет Розкіш", Price = 1000, Description = "Чудовий букет із троянд", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 2, Name = "Букет Ніжність", Price = 1200, Description = "Класичний букет", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 3, Name = "Букет Щастя", Price = 900, Description = "Легкий і ніжний", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 4, Name = "Букет Кохання", Price = 1300, Description = "Букет для закоханих", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 5, Name = "Букет Романтика", Price = 800, Description = "Романтичний букет", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 6, Name = "Букет Сонця", Price = 1100, Description = "Сонячні квіти", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 7, Name = "Букет Весна", Price = 950, Description = "Весняні квіти", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 8, Name = "Букет Мрія", Price = 1150, Description = "Мрійливий букет", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 9, Name = "Букет Щедрість", Price = 1250, Description = "Щедрий букет", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 10, Name = "Букет Святковий", Price = 1400, Description = "Святковий букет", ImageUrl = "icons/bouquet.png" }
-        };
+            // Завантажуємо букети (максимум 20 для прикладу)
+            var bouquetParams = new BouquetParams
+                {
+                    PageNumber = 1,
+                    PageSize = 20 // Максимальна кількість, яка може бути завантажена
+                };
+
+            var bouquets = await BouquetService.GetAllBouquetsAsync(bouquetParams);
+            Bouquets = bouquets.ToList();
+
+            // Спочатку показуємо тільки PageSize букетів
+            VisibleBouquets = Bouquets.Take(PageSize).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка завантаження букетів: {ex.Message}");
+        }
     }
 
-    private void LoadMore()
+    private void LoadMoreBouquets()
     {
-        var nextBouquets = AllBouquets
-            .Skip(CurrentPage * PageSize)
-            .Take(PageSize)
-            .ToList();
-
+        // Додаємо ще PageSize букетів до видимого списку
+        var nextBouquets = Bouquets.Skip(VisibleBouquets.Count).Take(PageSize).ToList();
         VisibleBouquets.AddRange(nextBouquets);
-        CurrentPage++;
-    }
-
-    private void AddToCart(int bouquetId)
-    {
-        Console.WriteLine($"Bouquet with ID {bouquetId} added to cart.");
-        // Реалізуйте логіку додавання в кошик
-    }
-
-    public class BouquetDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
     }
 }
