@@ -2,6 +2,7 @@ using AutoMapper;
 using BLL.DTO.Bouquet;
 using BLL.DTO.BouquetCategoryBouquet;
 using BLL.DTO.ItemAddOn;
+using BLL.DTO.ShoppingCart;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Helpers;
@@ -96,6 +97,62 @@ public class BouquetService : IBouquetService
             await _unitOfWork.Bouquets.DeleteAsync(id);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
+        }
+        catch (Exception)
+        {
+            await _unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
+    }
+
+    public async Task<ShoppingCartDto> AddBouquetToCartAsync(int bouquetId, IEnumerable<ItemAddOnDto> addOns,
+        int userId, CancellationToken cancellationToken)
+    {
+        await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            var bouquet = await _unitOfWork.Bouquets.GetByIdAsync(bouquetId);
+
+            var shoppingCart = await _unitOfWork.ShoppingCarts.GetShoppingCartByUserId(userId);
+            if (shoppingCart == null)
+            {
+                shoppingCart = new ShoppingCart()
+                {
+                    UserId = userId,
+                    CreatedAt = DateTime.Now.ToUniversalTime()
+                };
+                await _unitOfWork.ShoppingCarts.AddAsync(shoppingCart);
+                await _unitOfWork.SaveAsync();
+            }
+
+            var cartItem = new CartItem()
+            {
+                CartId = shoppingCart.UserId,
+                BouquetId = bouquetId,
+                CustomBouquetId = null,
+                Quantity = 1,
+                Price = bouquet.Price
+            };
+            await _unitOfWork.SaveAsync();
+
+            var cartItemAddOns = addOns
+                .Select(addOn => new CartItemAddOn()
+                {
+                    CartItemId = cartItem.Id,
+                    AddOnId = addOn.Id,
+                    Quantity = addOn.Quantity,
+                    CardNote = addOn.CardNote
+                })
+                .ToList();
+            cartItem.AddOns = cartItemAddOns;
+
+            var cartItems = shoppingCart.CartItems.ToList();
+            cartItems.Add(cartItem);
+            shoppingCart.CartItems = cartItems;
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.CommitTransactionAsync(cancellationToken);
+
+            return _mapper.Map<ShoppingCartDto>(shoppingCart);
         }
         catch (Exception)
         {
