@@ -1,6 +1,7 @@
 ﻿using BLL.Services.Interfaces;
 using BLL.DTO.User;
 using DAL.Helpers.Params;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -16,6 +17,7 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    //[Authorize(Roles = "admin")]
     [HttpGet]
     public async Task<IActionResult> GetAllUsers([FromQuery] UserParams userParams)
     {
@@ -23,6 +25,7 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+    //[Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id)
     {
@@ -40,6 +43,7 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(GetUserById), new { id = userId }, userDto);
     }
 
+    //[Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto, CancellationToken cancellationToken)
     {
@@ -53,6 +57,7 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    //[Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id, CancellationToken cancellationToken)
     {
