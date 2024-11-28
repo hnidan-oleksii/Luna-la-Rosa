@@ -1,7 +1,315 @@
 ﻿@page "/ready-bouquets"
+@using BlazorFront.Services.Interfaces
+@using BLL.DTO.Bouquet
+@using DAL.Helpers.Params
+@inject IBouquetService BouquetService
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
 <main>
     <div class="container">
-        <Sidebar />
-        <BouquetListForCatalog />
+        <!-- Sidebar for filters -->
+        <aside class="sidebar">
+            <h3>Сортувати за</h3>
+            <hr class="sidebar-line">
+            <form>
+                <label><input type="radio" name="sort" value="popularity" @onchange="SortByPopularity"> Популярність</label><br>
+                <label><input type="radio" name="sort" value="ascending" @onchange="SortByAscending"> Зростання</label><br>
+                <label><input type="radio" name="sort" value="descending" @onchange="SortByDescending"> Спадання</label><br>
+
+                <h3>Колір</h3>
+                <hr class="sidebar-line">
+                <div class="color-options">
+                    @foreach (var color in Colors)
+                    {
+                        <label>
+                            <input type="checkbox" @onchange="() => ToggleColorFilter(color)" checked="@SelectedColors.Contains(color)">
+                            <span class="color-box @color"></span> @TranslateColor(color)
+                        </label>
+
+                        <br>
+                    }
+                </div>
+
+
+                <h3>Вид квітів</h3>
+                <hr class="sidebar-line">
+                @foreach (var flower in FlowerTypes)
+                {
+                    <label>
+                        <input type="checkbox" @onchange="() => ToggleFlowerFilter(flower)" checked="@SelectedFlowers.Contains(flower)">
+                        @TranslateFlowerType(flower)
+                    </label>
+
+                    <br>
+                }
+
+                <h3>Розмір</h3>
+                <hr class="sidebar-line">
+                @foreach (var size in Sizes)
+                {
+                    <label>
+                        <input type="checkbox" @onchange="() => ToggleSizeFilter(size)" checked="@SelectedSizes.Contains(size)">
+                        @TranslateSize(size)
+                    </label>
+
+                    <br>
+                }
+
+                <h3>Ціна</h3>
+                <hr class="sidebar-line">
+                <input type="number" min="1" placeholder="від" @bind="MinPrice"> -
+                <input type="number" max="10000" placeholder="до" @bind="MaxPrice"><br>
+                <button type="button" @onclick="ApplyFilters">ОК</button>
+            </form>
+            <h4>Не сподобався жоден букет? </h4>
+
+            <button class="create-custom-btn" @onclick="NavigateToCreateBouquet">Створити власний</button>
+        </aside>
+
+        <!-- Bouquet Listing -->
+        <section class="bouquet-list">
+            @if (IsLoading)
+            {
+                <p>Завантаження...</p>
+            }
+            else if (Bouquets != null && Bouquets.Any())
+            {
+                @foreach (var bouquet in Bouquets)
+                {
+                    <div class="bouquet-item" @onclick="() => NavigateToDetails(bouquet.Id)">
+                        <img src="data:image/png;base64,@Convert.ToBase64String(bouquet.Image)" alt="@bouquet.Name">
+                        <div class="bouquet-info">
+                            <p class="bouquet-name">@bouquet.Name</p>
+                            <p class="bouquet-price">@($"{bouquet.Price:C}")</p>
+                        </div>
+                        <p class="bouquet-desc">@bouquet.Description</p>
+                        <button class="add-to-cart-btn">У кошик</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Не знайдено жодного букета.</p>
+            }
+        </section>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        @if (TotalPages > 1)
+        {
+            @if (CurrentPage > 1)
+            {
+                <button class="pagination-arrow" @onclick="PreviousPage">«</button>
+            }
+            @for (int i = 1; i <= TotalPages; i++)
+            {
+                <button class="pagination-btn @(i == CurrentPage ? "active" : "")" @onclick="() => LoadPage(i)">
+                    @i
+                </button>
+            }
+            @if (CurrentPage < TotalPages)
+            {
+                <button class="pagination-arrow" @onclick="NextPage">»</button>
+            }
+        }
     </div>
 </main>
+
+@code {
+    private List<BouquetDto> Bouquets { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+
+    private int CurrentPage { get; set; } = 1;
+    private int TotalPages { get; set; } = 1;
+    private int TotalItems { get; set; } = 0;
+
+    private string OrderBy { get; set; } = "popularity";
+    private List<string> Colors { get; set; } = new() { "red", "pink", "white", "yellow", "orange", "purple", "black" };
+    private List<string> SelectedColors { get; set; } = new();
+    private List<string> SelectedFlowers { get; set; } = new();
+    private List<string> SelectedSizes { get; set; } = new();
+    private decimal MinPrice { get; set; } = 0;
+    private decimal MaxPrice { get; set; } = 10000;
+
+    private List<string> Sizes { get; set; } = new() { "Large", "Medium", "Small" };
+    private List<string> FlowerTypes { get; set; } = new() { "Rose azure", "Rose black", "Rose violet", "Tulip maroon", "Tulip indigo", "Tulip teal", "Orchid silver", "Orchid pink", "Orchid purple" };
+
+    private const int PageSize = 12; // Fixed 12 items per page
+
+    private void NavigateToCreateBouquet()
+    {
+        NavigationManager.NavigateTo("/custom-bouquet");
+    }
+
+    private void NavigateToDetails(int bouquetId)
+    {
+        NavigationManager.NavigateTo($"/product-details/{bouquetId}");
+    }
+
+    // Mapping dictionaries
+    private readonly Dictionary<string, string> FlowerTypeTranslations = new()
+    {
+        { "Rose azure", "Троянда блакитна" },
+        { "Rose black", "Троянда чорна" },
+        { "Rose violet", "Троянда фіолетова" },
+        { "Tulip maroon", "Тюльпан бордовий" },
+        { "Tulip indigo", "Тюльпан індиго" },
+        { "Tulip teal", "Тюльпан бірюзовий" },
+        { "Orchid silver", "Орхідея срібна" },
+        { "Orchid pink", "Орхідея рожева" },
+        { "Orchid purple", "Орхідея фіолетова" }
+    };
+
+    private readonly Dictionary<string, string> SizeTranslations = new()
+    {
+        { "Large", "Великий" },
+        { "Medium", "Середній" },
+        { "Small", "Маленький" }
+    };
+
+    private readonly Dictionary<string, string> ColorTranslations = new()
+    {
+        { "red", "Червоний" },
+        { "pink", "Рожевий" },
+        { "white", "Білий" },
+        { "yellow", "Жовтий" },
+        { "orange", "Помаранчевий" },
+        { "purple", "Фіолетовий" },
+        { "black", "Чорний" }
+    };
+
+    private string TranslateColor(string englishName) =>
+        ColorTranslations.TryGetValue(englishName, out var ukrName) ? ukrName : englishName;
+
+
+    private string TranslateFlowerType(string englishName) =>
+        FlowerTypeTranslations.TryGetValue(englishName, out var ukrName) ? ukrName : englishName;
+
+    private string TranslateSize(string englishName) =>
+        SizeTranslations.TryGetValue(englishName, out var ukrName) ? ukrName : englishName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBouquets();
+    }
+
+    private async Task LoadBouquets()
+    {
+        IsLoading = true;
+        try
+        {
+            var bouquetParams = new BouquetParams
+                {
+                    OrderBy = OrderBy,
+                    MainColor = string.Join(",", SelectedColors),
+                    FlowerTypeNames = string.Join(",", SelectedFlowers), // Англійські назви
+                    Size = string.Join(",", SelectedSizes), // Англійські назви
+                    MinPrice = (uint)MinPrice,
+                    MaxPrice = (uint)MaxPrice,
+                    PageNumber = CurrentPage,
+                    PageSize = PageSize
+                };
+
+            var bouquets = await BouquetService.GetAllBouquetsAsync(bouquetParams);
+
+            Bouquets = bouquets.ToList();
+
+            TotalItems = 30; // Замініть на отримання TotalCount з API
+            TotalPages = (int)Math.Ceiling((double)TotalItems / PageSize);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading bouquets: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+
+
+    private void SortByPopularity(ChangeEventArgs e) => UpdateOrder("popularity");
+    private void SortByAscending(ChangeEventArgs e) => UpdateOrder("ascending");
+    private void SortByDescending(ChangeEventArgs e) => UpdateOrder("descending");
+
+    private void UpdateOrder(string order)
+    {
+        OrderBy = order;
+        CurrentPage = 1; // Reset to first page
+        LoadBouquets();
+    }
+
+    private void ToggleColorFilter(string color)
+    {
+        if (SelectedColors.Contains(color))
+        {
+            SelectedColors.Remove(color);
+        }
+        else
+        {
+            SelectedColors.Add(color);
+        }
+        LoadBouquets();
+    }
+
+    private void ToggleFlowerFilter(string flowerType)
+    {
+        if (SelectedFlowers.Contains(flowerType))
+        {
+            SelectedFlowers.Remove(flowerType);
+        }
+        else
+        {
+            SelectedFlowers.Add(flowerType);
+        }
+    }
+
+    private void ToggleSizeFilter(string size)
+    {
+        if (SelectedSizes.Contains(size))
+        {
+            SelectedSizes.Remove(size);
+        }
+        else
+        {
+            SelectedSizes.Add(size);
+        }
+    }
+
+    private async Task ApplyFilters()
+    {
+        CurrentPage = 1; // Reset to first page
+        await LoadBouquets();
+    }
+
+    private async Task LoadPage(int page)
+    {
+        if (page < 1 || page > TotalPages) return; // Запобігання некоректним номерам сторінок
+
+        CurrentPage = page;
+        await LoadBouquets();
+    }
+
+
+    private async Task PreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            CurrentPage--;
+            await LoadBouquets();
+        }
+    }
+
+    private async Task NextPage()
+    {
+        if (CurrentPage < TotalPages)
+        {
+            CurrentPage++;
+            await LoadBouquets();
+        }
+    }
+}

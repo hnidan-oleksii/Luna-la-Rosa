@@ -163,3 +163,100 @@
     .add-to-cart-btn:hover {
         background-color: #555;
     }
+
+/* Стиль для фону модального вікна */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Прозорий чорний фон */
+    z-index: 1000;
+}
+
+/* Контейнер для контенту модального вікна */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 580px;
+    max-height: 90%;
+    overflow-y: auto; /* Скрол для довгих списків */
+    overflow-x: hidden; /* Заборонити горизонтальний скрол */
+    position: relative;
+}
+
+/* Заголовок модального вікна */
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Список подарунків */
+.modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Елементи списку подарунків */
+.modal-content ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 120px;
+    background-color: #f9f9f9;
+}
+
+.modal-content ul li img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.modal-content ul li p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+
+
+/* Кнопка закриття модального вікна */
+.modal-content button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background-color: #ff5e57;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 100px;
+    height: 30px;
+    font-size: 1.2rem;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #e04a45;
+}

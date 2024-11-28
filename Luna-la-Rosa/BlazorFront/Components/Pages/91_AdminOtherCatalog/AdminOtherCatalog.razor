@@ -1,84 +1,196 @@
 ﻿@page "/admin-other-catalog"
-<!-- Main Content -->
+@using BLL.DTO.AddOn
+@using BlazorFront.Services.Interfaces
+@inject IAddOnService AddOnService
+
+@rendermode InteractiveServer
+
+
 <main class="product-management-page">
+    <!-- Search and Add Container -->
     <div class="search-add-container">
-        <input type="text" placeholder="Пошук" class="search-bar">
-        <button class="add-button">Додати</button>
+        <input type="text" placeholder="Пошук" class="search-bar" @bind="SearchQuery" @bind:event="onchange" @bind:after="LoadAddOns">
+        <button class="add-button" @onclick="ShowAddModal">Додати</button>
     </div>
 
+    <!-- Product Grid -->
     <div class="product-grid">
-        <!-- Product Cards -->
-        <div class="product-card">
-            <img src="sweets-box.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="sweets-box.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="sweets-box.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="sweets-box.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="sweets-box.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="sweets-box.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
+        @if (IsLoading)
+        {
+            <p>Завантаження...</p>
+        }
+        else if (AddOns != null && AddOns.Any())
+        {
+            @foreach (var addOn in AddOns)
+            {
+                <div class="product-card">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(addOn.Image)" alt="@addOn.Name" class="product-image">
+                    <div class="product-info">
+                        <p class="product-name">@addOn.Name</p>
+                        <p class="product-price">@($"{addOn.Price:C}")</p>
+                    </div>
+                    <p class="product-description">ID: @addOn.Id</p>
+                    <div class="button-group">
+                        <img src="icons/edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon" @onclick="() => ShowEditModal(addOn)">
+                        <img src="icons/delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon" @onclick="() => DeleteAddOn(addOn.Id)">
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Не знайдено жодного продукту.</p>
+        }
     </div>
+
+    <!-- Add/Edit Modal -->
+    @if (IsModalVisible)
+    {
+        <div class="modal">
+            <div class="modal-content">
+                <h2>@(IsEditMode ? "Редагувати продукт" : "Додати продукт")</h2>
+                <form>
+                    <input type="text" placeholder="Назва" @bind="CurrentAddOn.Name">
+                    <input type="number" placeholder="Ціна" @bind="CurrentAddOn.Price">
+                    <select @bind="CurrentAddOn.TypeId">
+                        <option placeholder="Тип" value="">Оберіть тип</option>
+                        @foreach (var type in Types)
+                        {
+                            <option value="@type.Key">@type.Value</option>
+                        }
+                    </select>
+                    <input type="file" @onchange="UploadImage">
+                    <button @onclick="SaveAddOn">Зберегти</button>
+                    <button @onclick="CloseModal">Скасувати</button>
+                </form>
+            </div>
+        </div>
+    }
 </main>
+
+@code {
+    private List<AddOnDto> AddOns { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private string SearchQuery { get; set; } = string.Empty;
+    private bool IsModalVisible { get; set; } = false;
+    private bool IsEditMode { get; set; } = false;
+    private AddOnDto CurrentAddOn { get; set; } = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAddOns();
+    }
+
+    private async Task LoadAddOns()
+    {
+        IsLoading = true;
+        try
+        {
+            AddOns = (await AddOnService.GetAllAddOnsAsync(SearchQuery)).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching add-ons: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    // Types dictionary
+    private Dictionary<int, string> Types { get; } = new()
+    {
+        { 1, "Balloon" },
+        { 2, "PostCard" },
+        { 3, "Sweets" },
+        { 4, "Wrapping" },
+        { 5, "Ribbon" }
+    };
+
+
+
+    private void ShowAddModal()
+    {
+        IsEditMode = false;
+        CurrentAddOn = new AddOnDto();
+        IsModalVisible = true;
+    }
+
+    private void ShowEditModal(AddOnDto addOn)
+    {
+        IsEditMode = true;
+        CurrentAddOn = new AddOnDto
+            {
+                Id = addOn.Id,
+                Name = addOn.Name,
+                Price = addOn.Price,
+                TypeId = addOn.TypeId,
+                Image = addOn.Image
+            };
+        IsModalVisible = true;
+    }
+
+    private async Task SaveAddOn(MouseEventArgs e)
+    {
+        try
+        {
+            if (IsEditMode)
+            {
+                await AddOnService.UpdateAddOnAsync(CurrentAddOn, CancellationToken.None);
+            }
+            else
+            {
+                var createDto = new CreateAddOnDto
+                    {
+                        Name = CurrentAddOn.Name,
+                        Price = CurrentAddOn.Price,
+                        TypeId = CurrentAddOn.TypeId,
+                        Image = CurrentAddOn.Image
+                    };
+                await AddOnService.AddAddOnAsync(createDto, CancellationToken.None);
+            }
+            await LoadAddOns();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving add-on: {ex.Message}");
+        }
+        finally
+        {
+            CloseModal();
+        }
+    }
+
+    private async Task DeleteAddOn(int id)
+    {
+        try
+        {
+            await AddOnService.DeleteAddOnAsync(id, CancellationToken.None);
+            await LoadAddOns();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting add-on: {ex.Message}");
+        }
+    }
+
+    private void CloseModal()
+    {
+        IsModalVisible = false;
+        CurrentAddOn = new AddOnDto();
+    }
+
+    private void UploadImage(ChangeEventArgs e)
+    {
+        if (e.Value is not null and InputFileChangeEventArgs fileArgs)
+        {
+            using var memoryStream = new MemoryStream();
+            fileArgs.File.OpenReadStream().CopyTo(memoryStream);
+            CurrentAddOn.Image = memoryStream.ToArray();
+        }
+    }
+
+    
+}

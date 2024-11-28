@@ -1,90 +1,195 @@
 ﻿@page "/admin-flowers-catalog"
-<!-- Main Content -->
+@using BLL.DTO.Flower
+@using BlazorFront.Services.Interfaces
+@inject IFlowerService FlowerService
+
+@rendermode InteractiveServer
+
 <main class="product-management-page">
+    <!-- Search and Add Container -->
     <div class="search-add-container">
-        <input type="text" placeholder="Пошук" class="search-bar">
-        <button class="add-button">Додати</button>
+        <input type="text" placeholder="Пошук" class="search-bar" @bind="SearchQuery" @bind:event="onchange" @bind:after="LoadFlowers">
+        <button class="add-button" @onclick="ShowAddModal">Додати</button>
     </div>
 
+    <!-- Product Grid -->
     <div class="product-grid">
-        <!-- Product Cards -->
-        <div class="product-card">
-            <img src="flower.webp" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="plus.png" alt="Add Flower Icon" class="icon-btn add-flower-icon">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="flower.webp" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="plus.png" alt="Add Flower Icon" class="icon-btn add-flower-icon">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="flower.webp" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="plus.png" alt="Add Flower Icon" class="icon-btn add-flower-icon">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="flower.webp" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="plus.png" alt="Add Flower Icon" class="icon-btn add-flower-icon">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="flower.webp" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="plus.png" alt="Add Flower Icon" class="icon-btn add-flower-icon">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="flower.webp" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="plus.png" alt="Add Flower Icon" class="icon-btn add-flower-icon">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
+        @if (IsLoading)
+        {
+            <p>Завантаження...</p>
+        }
+        else if (Flowers != null && Flowers.Any())
+        {
+            @foreach (var flower in Flowers)
+            {
+                <div class="product-card">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(flower.Image)" alt="@flower.Name" class="product-image">
+                    <div class="product-info">
+                        <p class="product-name">@flower.Name</p>
+                        <p class="product-price">@($"{flower.Price:C}")</p>
+                    </div>
+                    <p class="product-description">Кількість: @flower.AvailableQuantity</p>
+                    <div class="button-group">
+                        <img src="icons/edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon" @onclick="() => ShowEditModal(flower)">
+                        <img src="icons/delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon" @onclick="() => DeleteFlower(flower.Id)">
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Не знайдено жодної квітки.</p>
+        }
     </div>
+
+    <!-- Add/Edit Modal -->
+    @if (IsModalVisible)
+    {
+        <div class="modal">
+            <div class="modal-content">
+                <h2>@(IsEditMode ? "Редагувати квітку" : "Додати квітку")</h2>
+                <form>
+                    <input type="text" placeholder="Назва" @bind="CurrentFlower.Name">
+                    <input type="text" placeholder="Колір" @bind="CurrentFlower.Color">
+                    <input type="number" placeholder="Ціна" @bind="CurrentFlower.Price">
+                    <input type="number" placeholder="Кількість" @bind="CurrentFlower.AvailableQuantity">
+                    <select @bind="CurrentFlower.TypeId">
+                        <option value="">Оберіть тип</option>
+                        @foreach (var type in Types)
+                        {
+                            <option value="@type.Key">@type.Value</option>
+                        }
+                    </select>
+                    <input type="file" @onchange="UploadImage">
+                    <button type="button" @onclick="SaveFlower">Зберегти</button>
+                    <button type="button" @onclick="CloseModal">Скасувати</button>
+                </form>
+            </div>
+        </div>
+    }
 </main>
+
+@code {
+    private List<FlowerDto> Flowers { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private string SearchQuery { get; set; } = string.Empty;
+    private bool IsModalVisible { get; set; } = false;
+    private bool IsEditMode { get; set; } = false;
+    private FlowerDto CurrentFlower { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFlowers();
+    }
+
+    private async Task LoadFlowers()
+    {
+        IsLoading = true;
+        try
+        {
+            Flowers = (await FlowerService.GetAllFlowersAsync(SearchQuery)).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching flowers: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+
+    // Types dictionary
+    private Dictionary<int, string> Types { get; } = new()
+    {
+        { 1, "Rose" },
+        { 2, "Tulip" },
+        { 3, "Orchid" }
+    };
+
+    private void ShowAddModal()
+    {
+        Console.WriteLine("add mode");
+        IsEditMode = false;
+        CurrentFlower = new FlowerDto();
+        IsModalVisible = true;
+    }
+
+    private void ShowEditModal(FlowerDto flower)
+    {
+        IsEditMode = true;
+        CurrentFlower = new FlowerDto
+            {
+                Id = flower.Id,
+                Name = flower.Name,
+                Color = flower.Color,
+                Price = flower.Price,
+                TypeId = flower.TypeId,
+                AvailableQuantity = flower.AvailableQuantity,
+                Image = flower.Image
+            };
+        IsModalVisible = true;
+    }
+
+    private async Task SaveFlower()
+    {
+        try
+        {
+            if (IsEditMode)
+            {
+                await FlowerService.UpdateFlowerAsync(CurrentFlower, CancellationToken.None);
+            }
+            else
+            {
+                var createDto = new CreateFlowerDto
+                    {
+                        Name = CurrentFlower.Name,
+                        Color = CurrentFlower.Color,
+                        Price = CurrentFlower.Price,
+                        TypeId = CurrentFlower.TypeId,
+                        Image = CurrentFlower.Image
+                    };
+                await FlowerService.AddFlowerAsync(createDto, CancellationToken.None);
+            }
+            await LoadFlowers();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving flower: {ex.Message}");
+        }
+        finally
+        {
+            CloseModal();
+        }
+    }
+
+    private async Task DeleteFlower(int id)
+    {
+        try
+        {
+            await FlowerService.DeleteFlowerAsync(id, CancellationToken.None);
+            await LoadFlowers();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting flower: {ex.Message}");
+        }
+    }
+
+    private void CloseModal()
+    {
+        IsModalVisible = false;
+        CurrentFlower = new FlowerDto();
+    }
+
+    private void UploadImage(ChangeEventArgs e)
+    {
+        if (e.Value is not null and InputFileChangeEventArgs fileArgs)
+        {
+            using var memoryStream = new MemoryStream();
+            fileArgs.File.OpenReadStream().CopyTo(memoryStream);
+            CurrentFlower.Image = memoryStream.ToArray();
+        }
+    }
+}

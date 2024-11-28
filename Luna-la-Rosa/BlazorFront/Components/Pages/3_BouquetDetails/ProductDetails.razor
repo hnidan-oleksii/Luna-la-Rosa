@@ -1,158 +1,217 @@
-﻿@page "/product-details/{ProductId:int}"
-@using System.Collections.Generic
+﻿@page "/product-details/{id:int}"
+@using BLL.DTO.Bouquet
+@using BLL.DTO.AddOn
+@using BlazorFront.Services.Interfaces
+@using DAL.Helpers.Params
+@inject IBouquetService BouquetService
+@inject IAddOnService AddOnService
+@inject NavigationManager NavigationManager
 
-<main>
-    <!-- Product Details Section -->
-    <section class="product-details">
+@rendermode InteractiveServer
+
+<section class="product-details">
+    @if (IsLoading)
+    {
+        <p>Завантаження...</p>
+    }
+    else if (Bouquet != null)
+    {
         <div class="product-info">
-            <img src="@Product.ImageUrl" alt="@Product.Name">
+            <img src="data:image/png;base64,@Convert.ToBase64String(Bouquet.Image)" alt="@Bouquet.Name">
             <div class="details">
-                <h2>@Product.Name</h2>
-                <p class="price">@Product.Price грн</p>
+                <h2>@Bouquet.Name</h2>
+                <p class="price">@($"{Bouquet.Price:C} грн")</p>
                 <p>Склад букета:</p>
                 <ul>
-                    @foreach (var component in Product.Components)
+                    @foreach (var flower in Bouquet.Flowers)
                     {
-                        <li>@component</li>
+                        <li>@($"{flower.Quantity} x {flower.Flower.Name}")</li>
                     }
                 </ul>
-                <h4>Бажаєте додати подарунок?</h4>
+                <h4>Подарунки до букету</h4>
                 <div class="gift-options">
-                    @foreach (var gift in GiftOptions)
+                    @if (Bouquet.AddOns != null && Bouquet.AddOns.Any())
                     {
-                        <img src="@gift.ImageUrl" alt="@gift.Name" @onclick="() => SelectGift(gift)">
+                        @foreach (var addOn in Bouquet.AddOns)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(addOn.AddOn.Image)" alt="@addOn.AddOn.Name" title="@addOn.AddOn.Name">
+                        }
+                    }
+                    else
+                    {
+                        <p>Додатків не знайдено</p>
                     }
                 </div>
+                <h4>Додати подарунок:</h4>
+                <div class="gift-options">
+                    <img src="icons/balloon.png" alt="Balloon" @onclick="OpenBalloonModal">
+                    <img src="icons/sweets-box.png" alt="Sweets Box" @onclick="OpenSweetsModal">
+                    <img src="icons/card.png" alt="Card" @onclick="OpenCardModal">
+                </div>
                 <div class="product-actions">
-                    <button class="add-to-cart" @onclick="AddToCart">Додати у кошик</button>
-                    <button class="order-now" @onclick="OrderNow">Замовити зараз</button>
+                    <button class="add-to-cart">Додати у кошик</button>
+                    <button class="order-now">Замовити зараз</button>
                 </div>
             </div>
         </div>
-    </section>
+    }
+</section>
 
-    <!-- Similar Bouquets Section -->
-    <section class="suggestions">
-        <h3>Букети, які вам також сподобаються</h3>
+<!-- The most popular Bouquets Section -->
+<section class="suggestions">
+    <h3>Букети, які вам також сподобаються</h3>
+    @if (PopularBouquets != null && PopularBouquets.Any())
+    {
         <div class="suggested-items">
-            @foreach (var bouquet in SuggestedBouquets)
+            @foreach (var bouquet in PopularBouquets)
             {
-                <div class="bouquet-item">
-                    <img src="@bouquet.ImageUrl" alt="@bouquet.Name">
+                <div class="bouquet-item" @onclick="() => NavigateToDetails(bouquet.Id)">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(bouquet.Image)" alt="@bouquet.Name">
                     <div class="bouquet-info">
                         <p class="bouquet-name">@bouquet.Name</p>
-                        <p class="bouquet-price">@bouquet.Price грн</p>
+                        <p class="bouquet-price">@($"{bouquet.Price:C} грн")</p>
                     </div>
                     <p class="bouquet-desc">@bouquet.Description</p>
-                    <button class="add-to-cart-btn" @onclick="() => AddToCart(bouquet.Id)">У кошик</button>
+                    <button class="add-to-cart-btn">У кошик</button>
                 </div>
             }
         </div>
-    </section>
-</main>
+    }
+    else
+    {
+        <p>Не вдалося завантажити популярні букети</p>
+    }
+</section>
+
+<!-- Modal for Add-Ons -->
+@if (IsModalVisible)
+{
+    <div class="modal">
+        <div class="modal-content">
+            <h2>@ModalTitle</h2>
+            <ul>
+                @foreach (var addOn in CurrentAddOns)
+                {
+                    <li>
+                        <img src="data:image/png;base64,@Convert.ToBase64String(addOn.Image)" alt="@addOn.Name" title="@addOn.Name">
+                        <p>@addOn.Name</p>
+                    </li>
+                }
+            </ul>
+            <button @onclick="CloseModal">Закрити</button>
+        </div>
+    </div>
+}
 
 @code {
-    [Parameter]
-    public int ProductId { get; set; }
+    [Parameter] public int Id { get; set; }
 
-    private ProductDto Product { get; set; }
-    private List<GiftDto> GiftOptions { get; set; } = new();
-    private List<BouquetDto> SuggestedBouquets { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private BouquetDto? Bouquet { get; set; }
+    private List<BouquetDto> PopularBouquets { get; set; } = new();
+    private List<AddOnDto> CurrentAddOns { get; set; } = new();
+    private bool IsModalVisible { get; set; } = false;
+    private string ModalTitle { get; set; } = "";
 
-    protected override void OnInitialized()
+    private void NavigateToDetails(int bouquetId)
     {
-        // Симуляція отримання даних для продукту
-        LoadProductDetails();
-        LoadGiftOptions();
-        LoadSuggestedBouquets();
+        NavigationManager.NavigateTo($"/product-details/{bouquetId}");
     }
 
-    private void AddToCart(int bouquetId)
+    protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine($"Bouquet with ID {bouquetId} added to cart.");
-        // Реалізуйте логіку додавання в кошик
+        await LoadBouquetDetails();
+        await LoadPopularBouquets();
     }
 
-    private void LoadProductDetails()
+    private async Task LoadBouquetDetails()
     {
-        // Імітація завантаження даних із сервісу чи бази
-        Product = new ProductDto
+        try
         {
-            Id = ProductId,
-            Name = "Тюльпанний снігопад",
-            Price = 1000,
-                ImageUrl = "icons/bouquet.png",
-            Components = new List<string>
+            Bouquet = await BouquetService.GetBouquetByIdAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading bouquet details: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task LoadPopularBouquets()
+    {
+        try
+        {
+            var bouquetParams = new BouquetParams
+                {
+                    OrderBy = "PopularityScore",
+                    PageSize = 3, // Тільки три букети
+                    PageNumber = 1
+                };
+
+            var popularBouquets = await BouquetService.GetAllBouquetsAsync(bouquetParams);
+            PopularBouquets = popularBouquets.ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading popular bouquets: {ex.Message}");
+        }
+    }
+
+    private async Task OpenBalloonModal()
+    {
+        ModalTitle = "Виберіть кульки";
+        IsModalVisible = true; // Відкриваємо модальне вікно перед завантаженням даних
+        await LoadAddOns("Balloon");
+    }
+
+    private async Task OpenSweetsModal()
+    {
+        ModalTitle = "Виберіть цукерки";
+        IsModalVisible = true; // Відкриваємо модальне вікно перед завантаженням даних
+        await LoadAddOns("Sweets");
+    }
+
+    private async Task OpenCardModal()
+    {
+        ModalTitle = "Виберіть картку";
+        IsModalVisible = true; // Відкриваємо модальне вікно перед завантаженням даних
+        await LoadAddOns("PostCard");
+    }
+
+    private async Task LoadAddOns(string type)
+    {
+        try
+        {
+            var groupedAddOns = await AddOnService.GetAddOnsGroupedByTypeAsync();
+            if (groupedAddOns.ContainsKey(type))
             {
-                "51 x Жовтий тюльпан",
-                "1 x Крафтовий папір (1 лист)"
+                CurrentAddOns = groupedAddOns[type];
             }
-        };
-    }
-
-    private void LoadGiftOptions()
-    {
-        GiftOptions = new List<GiftDto>
+            else
+            {
+                CurrentAddOns = new List<AddOnDto>();
+            }
+        }
+        catch (Exception ex)
         {
-            new GiftDto { Id = 1, Name = "Повітряна кулька", ImageUrl = "icons/bouquet.png" },
-            new GiftDto { Id = 2, Name = "Коробка цукерок", ImageUrl = "icons/bouquet.png" },
-            new GiftDto { Id = 3, Name = "Листівка", ImageUrl = "icons/bouquet.png" }
-        };
+            Console.WriteLine($"Error loading add-ons: {ex.Message}");
+        }
     }
 
-    private void LoadSuggestedBouquets()
+
+    private void CloseModal()
     {
-        SuggestedBouquets = new List<BouquetDto>
-        {
-            new BouquetDto { Id = 2, Name = "Букет Ніжність", Price = 1200, Description = "Класичний букет", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 3, Name = "Букет Щастя", Price = 900, Description = "Легкий і ніжний", ImageUrl = "icons/bouquet.png" },
-            new BouquetDto { Id = 4, Name = "Букет Кохання", Price = 1300, Description = "Букет для закоханих", ImageUrl = "icons/bouquet.png" }
-        };
+        IsModalVisible = false;
+        CurrentAddOns = new List<AddOnDto>();
     }
 
-    private void AddToCart()
+    private void AddAddOnToBouquet(AddOnDto addOn)
     {
-        Console.WriteLine($"Product {ProductId} added to cart.");
-        // Реалізація додавання до кошика
-    }
-
-    private void OrderNow()
-    {
-        Console.WriteLine($"Product {ProductId} ordered now.");
-        // Реалізація моментального замовлення
-    }
-
-    private void SelectGift(GiftDto gift)
-    {
-        Console.WriteLine($"Gift {gift.Name} selected.");
-        // Логіка обробки вибору подарунка
-    }
-
-    // DTO для продукту
-    private class ProductDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string ImageUrl { get; set; }
-        public List<string> Components { get; set; } = new();
-    }
-
-    // DTO для подарунків
-    private class GiftDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string ImageUrl { get; set; }
-    }
-
-    // DTO для рекомендованих букетів
-    private class BouquetDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
+        // Add logic to associate add-on with the bouquet
+        Console.WriteLine($"Додано подарунок: {addOn.Name}");
+        CloseModal();
     }
 }
