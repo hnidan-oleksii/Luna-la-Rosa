@@ -1,7 +1,7 @@
 using BLL.DTO.Flower;
 using FluentValidation;
 
-namespace BLL.Validation;
+namespace BLL.Validation.Flower;
 
 public class CreateFlowerDtoValidator : AbstractValidator<CreateFlowerDto>
 {

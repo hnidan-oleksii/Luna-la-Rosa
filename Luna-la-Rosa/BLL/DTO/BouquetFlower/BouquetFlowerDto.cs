@@ -8,5 +8,5 @@ public class BouquetFlowerDto
     public int FlowerId { get; set; }
     public int Quantity { get; set; }
 
-    public FlowerDto Flower { get; set; }
+    public FlowerDto? Flower { get; set; }
 }

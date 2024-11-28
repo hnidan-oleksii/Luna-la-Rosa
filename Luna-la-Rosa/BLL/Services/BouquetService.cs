@@ -53,10 +53,10 @@ public class BouquetService : IBouquetService
             foreach (var category in bouquetDto.Categories ?? Enumerable.Empty<BouquetCategoryBouquetDto>())
                 category.BouquetId = bouquet.Id;
 
-            bouquet.BouquetCategories = _mapper.Map<ICollection<BouquetCategoryBouquet>>(bouquetDto.Categories);
-            bouquet.BouquetAddOns = _mapper.Map<ICollection<BouquetAddOn>>(bouquetDto.AddOns);
-            bouquet.BouquetFlowers = _mapper.Map<ICollection<BouquetFlower>>(bouquetDto.Flowers);
-            await _unitOfWork.Bouquets.AddAsync(bouquet);
+            bouquet.BouquetCategories = _mapper.Map<IEnumerable<BouquetCategoryBouquet>>(bouquetDto.Categories);
+            bouquet.BouquetAddOns = _mapper.Map<IEnumerable<BouquetAddOn>>(bouquetDto.AddOns);
+            bouquet.BouquetFlowers = _mapper.Map<IEnumerable<BouquetFlower>>(bouquetDto.Flowers);
+            await _unitOfWork.Bouquets.UpdateAsync(bouquet);
 
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);

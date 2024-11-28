@@ -3,7 +3,7 @@ using API.Middleware.Exceptions;
 using BLL;
 using BLL.Services;
 using BLL.Services.Interfaces;
-using BLL.Validation;
+using BLL.Validation.AddOn;
 using DAL.Context;
 using DAL.Helpers.Search;
 using DAL.Helpers.Sorting;
@@ -47,11 +47,15 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAddOnRepository, AddOnRepository>();
 builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();
 builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
+builder.Services.AddScoped<ICustomBouquetRepository, CustomBouquetRepository>();
+builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepisitory>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();
 builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IFlowerService, FlowerService>();
+builder.Services.AddScoped<ICustomBouquetService, CustomBouquetService>();
+builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
 var app = builder.Build();
 

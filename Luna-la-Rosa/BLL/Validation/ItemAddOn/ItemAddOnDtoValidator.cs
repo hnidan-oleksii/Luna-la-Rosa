@@ -1,7 +1,7 @@
 using BLL.DTO.ItemAddOn;
 using FluentValidation;
 
-namespace BLL.Validation;
+namespace BLL.Validation.ItemAddOn;
 
 public class ItemAddOnDtoValidator : AbstractValidator<ItemAddOnDto>
 {
