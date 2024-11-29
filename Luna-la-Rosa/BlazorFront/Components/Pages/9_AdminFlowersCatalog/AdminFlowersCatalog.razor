@@ -60,7 +60,8 @@
                             <option value="@type.Key">@type.Value</option>
                         }
                     </select>
-                    <input type="file" @onchange="UploadImage">
+                    <InputFile OnChange="UploadImage" />
+
                     <button type="button" @onclick="SaveFlower">Зберегти</button>
                     <button type="button" @onclick="CloseModal">Скасувати</button>
                 </form>
@@ -183,13 +184,15 @@
         CurrentFlower = new FlowerDto();
     }
 
-    private void UploadImage(ChangeEventArgs e)
+    private async Task UploadImage(InputFileChangeEventArgs e)
     {
-        if (e.Value is not null and InputFileChangeEventArgs fileArgs)
+        var file = e.File;
+        if (file != null)
         {
             using var memoryStream = new MemoryStream();
-            fileArgs.File.OpenReadStream().CopyTo(memoryStream);
+            await file.OpenReadStream().CopyToAsync(memoryStream);
             CurrentFlower.Image = memoryStream.ToArray();
         }
     }
+
 }
