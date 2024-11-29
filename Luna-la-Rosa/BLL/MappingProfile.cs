@@ -52,9 +52,7 @@ public class MappingProfile : Profile
         CreateMap<BouquetFlowerDto, CustomBouquetFlower>()
             .ForMember(entity => entity.CustomBouquetId, opt => opt.MapFrom(dto => dto.BouquetId))
             .ReverseMap();
-        CreateMap<ItemAddOnDto, BouquetAddOn>()
-            .ForMember(entity => entity.CustomBouquetId,
-                opt => opt.MapFrom((_, _, _, context) => context.Items["CustomBouquetId"]));
+        CreateMap<ItemAddOnDto, BouquetAddOn>();
 
         // Flowers
         CreateMap<Flower, FlowerDto>().ReverseMap();
