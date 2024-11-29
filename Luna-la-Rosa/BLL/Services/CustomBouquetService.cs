@@ -1,5 +1,6 @@
 using AutoMapper;
 using BLL.DTO.CustomBouquet;
+using BLL.DTO.ItemAddOn;
 using BLL.DTO.ShoppingCart;
 using BLL.Services.Interfaces;
 using DAL.Entities;
@@ -69,6 +70,18 @@ public class CustomBouquetService : ICustomBouquetService
                 Quantity = 1,
                 Price = customBouquet.TotalPrice
             };
+            await _unitOfWork.SaveAsync();
+            var cartItemAddOns = customBouquetDto.CustomBouquetAddOns
+                .Select(addOn => new CartItemAddOn()
+                {
+                    CartItemId = cartItem.Id,
+                    AddOnId = addOn.Id,
+                    Quantity = addOn.Quantity,
+                    CardNote = addOn.CardNote
+                })
+                .ToList();
+            cartItem.AddOns = cartItemAddOns;
+
             var cartItems = shoppingCart.CartItems.ToList();
             cartItems.Add(cartItem);
             shoppingCart.CartItems = cartItems;
