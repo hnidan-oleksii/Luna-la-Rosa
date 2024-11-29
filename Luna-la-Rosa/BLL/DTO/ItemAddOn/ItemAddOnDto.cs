@@ -8,6 +8,7 @@ public class ItemAddOnDto
     public int BouquetId { get; set; }
     public int AddOnId { get; set; }
     public int Quantity { get; set; }
+    public string? CardNote { get; set; }
 
     public AddOnDto? AddOn { get; set; }
 }
