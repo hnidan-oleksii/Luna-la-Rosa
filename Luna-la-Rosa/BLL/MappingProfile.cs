@@ -64,6 +64,9 @@ public class MappingProfile : Profile
             .ReverseMap();
         CreateMap<CartItem, CartItemDto>()
             .ForMember(dto => dto.AddOns, opt => opt.MapFrom(entity => entity.AddOns));
+        CreateMap<CartItemAddOn, ItemAddOnDto>()
+            .ForMember(dto => dto.AddOn, opt => opt.MapFrom(entity => entity.AddOn))
+            .ReverseMap();
 
         // Orders
         CreateMap<Order, OrderDto>()
