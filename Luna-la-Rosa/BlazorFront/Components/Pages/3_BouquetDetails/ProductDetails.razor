@@ -42,6 +42,24 @@
                         <p>Додатків не знайдено</p>
                     }
                 </div>
+                <!-- Selected Add-Ons Section -->
+                @if (SelectedAddOns.Any())
+                {
+                    <div class="selected-add-ons">
+                        <h4>Вибрані додаткові подарунки</h4>
+                        <ul class="add-on-list">
+                            @foreach (var addOn in SelectedAddOns)
+                            {
+                                <li>
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(addOn.Image)" alt="@addOn.Name" title="@addOn.Name">
+                                    <p>@addOn.Name</p>
+                                    <button @onclick="() => RemoveAddOn(addOn)">X</button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+
                 <h4>Додати подарунок:</h4>
                 <div class="gift-options">
                     <img src="icons/balloon.png" alt="Balloon" @onclick="OpenBalloonModal">
@@ -56,6 +74,8 @@
         </div>
     }
 </section>
+
+
 
 <!-- The most popular Bouquets Section -->
 <section class="suggestions">
@@ -92,7 +112,7 @@
             <ul>
                 @foreach (var addOn in CurrentAddOns)
                 {
-                    <li>
+                    <li @onclick="() => AddAddOnToBouquet(addOn)">
                         <img src="data:image/png;base64,@Convert.ToBase64String(addOn.Image)" alt="@addOn.Name" title="@addOn.Name">
                         <p>@addOn.Name</p>
                     </li>
@@ -110,6 +130,7 @@
     private BouquetDto? Bouquet { get; set; }
     private List<BouquetDto> PopularBouquets { get; set; } = new();
     private List<AddOnDto> CurrentAddOns { get; set; } = new();
+    private List<AddOnDto> SelectedAddOns { get; set; } = new(); // Список вибраних додаткових подарунків
     private bool IsModalVisible { get; set; } = false;
     private string ModalTitle { get; set; } = "";
 
@@ -147,7 +168,7 @@
             var bouquetParams = new BouquetParams
                 {
                     OrderBy = "PopularityScore",
-                    PageSize = 3, // Тільки три букети
+                    PageSize = 3,
                     PageNumber = 1
                 };
 
@@ -163,21 +184,21 @@
     private async Task OpenBalloonModal()
     {
         ModalTitle = "Виберіть кульки";
-        IsModalVisible = true; // Відкриваємо модальне вікно перед завантаженням даних
+        IsModalVisible = true;
         await LoadAddOns("Balloon");
     }
 
     private async Task OpenSweetsModal()
     {
         ModalTitle = "Виберіть цукерки";
-        IsModalVisible = true; // Відкриваємо модальне вікно перед завантаженням даних
+        IsModalVisible = true;
         await LoadAddOns("Sweets");
     }
 
     private async Task OpenCardModal()
     {
         ModalTitle = "Виберіть картку";
-        IsModalVisible = true; // Відкриваємо модальне вікно перед завантаженням даних
+        IsModalVisible = true;
         await LoadAddOns("PostCard");
     }
 
@@ -201,7 +222,6 @@
         }
     }
 
-
     private void CloseModal()
     {
         IsModalVisible = false;
@@ -210,8 +230,14 @@
 
     private void AddAddOnToBouquet(AddOnDto addOn)
     {
-        // Add logic to associate add-on with the bouquet
-        Console.WriteLine($"Додано подарунок: {addOn.Name}");
-        CloseModal();
+        if (!SelectedAddOns.Any(a => a.Id == addOn.Id)) // Уникнення дублювання подарунків
+        {
+            SelectedAddOns.Add(addOn);
+        }
+    }
+
+    private void RemoveAddOn(AddOnDto addOn)
+    {
+        SelectedAddOns.Remove(addOn);
     }
 }
