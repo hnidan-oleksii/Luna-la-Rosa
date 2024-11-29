@@ -1,6 +1,5 @@
 using AutoMapper;
 using BLL.DTO.CustomBouquet;
-using BLL.DTO.ItemAddOn;
 using BLL.DTO.ShoppingCart;
 using BLL.Services.Interfaces;
 using DAL.Entities;
@@ -10,8 +9,6 @@ namespace BLL.Services;
 
 public class CustomBouquetService : ICustomBouquetService
 {
-    private const string ItemNameForCustomBouquetId = "CustomBouquetId";
-
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
 
@@ -24,8 +21,7 @@ public class CustomBouquetService : ICustomBouquetService
     public async Task<CustomBouquetDto> GetCustomBouquetByIdAsync(int id)
     {
         var customBouquet = await _unitOfWork.CustomBouquets.GetByIdAsync(id);
-        return _mapper.Map<CustomBouquetDto>(customBouquet,
-            opts => opts.Items[ItemNameForCustomBouquetId] = customBouquet.Id);
+        return _mapper.Map<CustomBouquetDto>(customBouquet);
     }
 
     public async Task<ShoppingCartDto> AddCustomBouquetAsync(CreateCustomBouquetDto customBouquetDto,
@@ -41,13 +37,11 @@ public class CustomBouquetService : ICustomBouquetService
             foreach (var flower in customBouquetDto.CustomBouquetFlowers)
                 flower.BouquetId = customBouquet.Id;
             foreach (var addOn in customBouquetDto.CustomBouquetAddOns)
-                addOn.BouquetId = customBouquet.Id;
+                addOn.CustomBouquetId = customBouquet.Id;
             customBouquet.CustomBouquetFlowers =
-                _mapper.Map<IEnumerable<CustomBouquetFlower>>(customBouquetDto.CustomBouquetFlowers,
-                    opts => opts.Items[ItemNameForCustomBouquetId] = customBouquet.Id);
+                _mapper.Map<IEnumerable<CustomBouquetFlower>>(customBouquetDto.CustomBouquetFlowers);
             customBouquet.CustomBouquetAddOns =
-                _mapper.Map<IEnumerable<BouquetAddOn>>(customBouquetDto.CustomBouquetAddOns,
-                    opts => opts.Items[ItemNameForCustomBouquetId] = customBouquet.Id);
+                _mapper.Map<IEnumerable<BouquetAddOn>>(customBouquetDto.CustomBouquetAddOns);
             await _unitOfWork.CustomBouquets.UpdateAsync(customBouquet);
 
             var shoppingCart = await _unitOfWork.ShoppingCarts.GetShoppingCartByUserId(customBouquet.UserId);
@@ -102,8 +96,7 @@ public class CustomBouquetService : ICustomBouquetService
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
-            var customBouquet = _mapper.Map<CustomBouquet>(customBouquetDto,
-                opt => opt.Items[ItemNameForCustomBouquetId] = customBouquetDto.Id);
+            var customBouquet = _mapper.Map<CustomBouquet>(customBouquetDto);
             customBouquet.TotalPrice =
                 CalculateTotalPrice(customBouquet.CustomBouquetFlowers, customBouquet.CustomBouquetAddOns);
             await _unitOfWork.CustomBouquets.UpdateAsync(customBouquet);
