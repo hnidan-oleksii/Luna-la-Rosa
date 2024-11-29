@@ -15,6 +15,8 @@ public class ShoppingCartRepisitory : GenericRepository<ShoppingCart>, IShopping
     {
         var shoppingCart = await context.ShoppingCarts
             .Include(sc => sc.CartItems)
+            .ThenInclude(ca => ca.AddOns)
+            .ThenInclude(cao => cao.AddOn)
             .FirstOrDefaultAsync(sc => sc.UserId == userId);
         return shoppingCart;
     }
