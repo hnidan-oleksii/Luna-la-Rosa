@@ -1,4 +1,6 @@
 using BLL.DTO.Bouquet;
+using BLL.DTO.ItemAddOn;
+using BLL.DTO.ShoppingCart;
 using BLL.Services.Interfaces;
 using DAL.Helpers;
 using DAL.Helpers.Params;
@@ -58,5 +60,15 @@ public class BouquetsController : ControllerBase
     {
         await _bouquetService.DeleteBouquetAsync(id, cancellationToken);
         return NoContent();
+    }
+
+    [HttpPost("order")]
+    public async Task<ActionResult<ShoppingCartDto>> AddBouquetToShoppingCart([FromQuery] int bouquetId,
+        [FromQuery] int userId, [FromBody] IEnumerable<ItemAddOnDto> addOns, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var cart = await _bouquetService.AddBouquetToCartAsync(bouquetId, addOns, userId, cancellationToken);
+        return Ok(cart);
     }
 }

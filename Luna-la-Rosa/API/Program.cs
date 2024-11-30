@@ -49,6 +49,7 @@ builder.Services.AddScoped<IBouquetRepository, BouquetRepository>();
 builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
 builder.Services.AddScoped<ICustomBouquetRepository, CustomBouquetRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepisitory>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();
@@ -56,6 +57,7 @@ builder.Services.AddScoped<IBouquetService, BouquetService>();
 builder.Services.AddScoped<IFlowerService, FlowerService>();
 builder.Services.AddScoped<ICustomBouquetService, CustomBouquetService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 

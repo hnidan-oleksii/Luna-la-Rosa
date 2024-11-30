@@ -7,9 +7,14 @@ public class ItemAddOnDtoValidator : AbstractValidator<ItemAddOnDto>
 {
     public ItemAddOnDtoValidator()
     {
+        RuleFor(x => x.Id)
+            .NotEmpty().WithMessage("Id is required")
+            .GreaterThan(0).WithMessage("Id must be greater than 0");
         RuleFor(x => x.AddOnId)
-            .NotEmpty().WithMessage("AddOn ID is required.");
-        RuleFor(x => x.Quantity).NotEmpty()
-            .GreaterThan(0).WithMessage("Item quantity must be greater than 0");
+            .NotEmpty().WithMessage("AddOnId is required")
+            .GreaterThan(0).WithMessage("AddOnId must be greater than 0");
+        RuleFor(x => x.Quantity)
+            .NotEmpty().WithMessage("Quantity is required")
+            .GreaterThan(0).WithMessage("Quantity must be greater than 0");
     }
 }
