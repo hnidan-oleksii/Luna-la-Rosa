@@ -91,6 +91,7 @@ builder.Services.AddScoped<IFlowerService, FlowerService>();
 builder.Services.AddScoped<ICustomBouquetService, CustomBouquetService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 //Keycloak
