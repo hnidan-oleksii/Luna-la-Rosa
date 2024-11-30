@@ -30,18 +30,11 @@
                 <div class="form-group">
                     <label>Колір</label>
                     <select id="bouquet-color" @bind="CurrentBouquet.MainColor">
-                            <option>Червоний</option>
-                            <option>Білий</option>
-                            <option>Рожевий</option>
-                        </select>
-                    </div>
+                        <option>Червоний</option>
+                        <option>Білий</option>
+                        <option>Рожевий</option>
+                    </select>
                 </div>
-                <div class="form-group">
-                    <label for="bouquet-description">Опис букета</label>
-                    <input type="text" id="bouquet-description" placeholder="Опис букета">
-                </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group">
                     <label>Розмір</label>
                     <div class="radio-options">
@@ -68,7 +61,6 @@
         </form>
     </section>
 
-
     <div class="bouquet-container">
         <!-- Left Column -->
         <div class="left-column">
@@ -76,33 +68,27 @@
             <div>
                 @foreach (var flower in Flowers)
                 {
-                <div class="flower-item">
+                    <div class="flower-item">
                         <p>@flower.Name (@flower.Price грн)</p>
-                    <div class="quantity-control">
+                        <div class="quantity-control">
                             <button @onclick="() => AddFlower(flower)">+</button>
+                        </div>
                     </div>
-                </div>
                 }
-                    </div>
+            </div>
             <h3>Вибір оформлення</h3>
             <div>
                 @foreach (var addOn in AddOns)
                 {
                     <div class="add-on-item">
                         <p>@addOn.Name (@addOn.Price грн)</p>
-                    <div class="quantity-control">
+                        <div class="quantity-control">
                             <button @onclick="() => AddAddOn(addOn)">+</button>
+                        </div>
                     </div>
-                </div>
                 }
-                    </div>
-                    <div class="quantity-control">
-                        <button class="minus">-</button>
-                        <input type="number" min="0" value="0">
-                        <button class="plus">+</button>
-                    </div>
-                </div>
             </div>
+        </div>
 
         <!-- Right Column -->
         <div class="right-column">
@@ -112,19 +98,17 @@
                 {
                     <div>
                         <p>@flower.Flower.Name x @flower.Quantity</p>
-                        </div>
+                    </div>
                 }
                 @foreach (var addOn in SelectedAddOns)
                 {
                     <div>
                         <p>@addOn.AddOn.Name x @addOn.Quantity</p>
-            </div>
+                    </div>
                 }
-        </div>
+            </div>
             <button class="save-button" @onclick="SaveBouquet">Зберегти</button>
-    </div>
-    <div class="form-actions">
-        <button type="submit" class="save-button">Зберегти</button>
+        </div>
     </div>
 </main>
 
@@ -135,10 +119,10 @@
         };
 
     private CreateBouquetDto NewBouquet = new CreateBouquetDto
-    {
-        Flowers = new List<BouquetFlowerDto>(),
-        AddOns = new List<ItemAddOnDto>()
-    };
+        {
+            Flowers = new List<BouquetFlowerDto>(),
+            AddOns = new List<ItemAddOnDto>()
+        };
 
 
     private List<FlowerDto> Flowers = new();
@@ -180,7 +164,7 @@
 
     private async Task SaveBouquet()
     {
-        
+
         NewBouquet.Name = CurrentBouquet.Name;
         Console.WriteLine("name:" + NewBouquet.Name);
         NewBouquet.Description = CurrentBouquet.Description;
@@ -200,10 +184,10 @@
     string.IsNullOrWhiteSpace(NewBouquet.MainColor) ||
     string.IsNullOrWhiteSpace(NewBouquet.Size) ||
     NewBouquet.Image == null)
-{
-    Console.WriteLine("Заповніть усі обов'язкові поля!");
-    return;
-}
+        {
+            Console.WriteLine("Заповніть усі обов'язкові поля!");
+            return;
+        }
 
 
         // Виклик сервісу для збереження букета
