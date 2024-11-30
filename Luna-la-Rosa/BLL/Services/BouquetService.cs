@@ -47,6 +47,8 @@ public class BouquetService : IBouquetService
                 bouquet.Price += bouquetDto.AddOns.Sum(ao => ao.Quantity * ao.AddOn.Price);
 
             await _unitOfWork.Bouquets.AddAsync(bouquet);
+            await _unitOfWork.SaveAsync();
+            Console.WriteLine(bouquet.Id);
 
             foreach (var flower in bouquetDto.Flowers)
                 flower.BouquetId = bouquet.Id;
