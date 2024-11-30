@@ -1,84 +1,190 @@
 ﻿@page "/admin-bouquet-catalog"
-<!-- Main Content -->
+@using BLL.DTO.Bouquet
+@using BlazorFront.Services.Interfaces
+@using DAL.Helpers.Params
+@inject IBouquetService BouquetService
+
+@rendermode InteractiveServer
+
 <main class="product-management-page">
+    <!-- Search and Add Container -->
     <div class="search-add-container">
-        <input type="text" placeholder="Пошук" class="search-bar">
-        <button class="add-button">Додати</button>
+        <input type="text" placeholder="Пошук" class="search-bar" @bind="SearchQuery" @bind:event="onchange" @bind:after="LoadBouquets">
+        <button class="add-button" @onclick="ShowAddModal">Додати</button>
     </div>
 
+    <!-- Product Grid -->
     <div class="product-grid">
-        <!-- Product Cards -->
-        <div class="product-card">
-            <img src="bouquet1.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="bouquet1.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="bouquet1.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="bouquet1.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="bouquet1.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
-        <div class="product-card">
-            <img src="bouquet1.png" alt="Bouquet Image" class="product-image">
-            <div class="product-info">
-                <p class="product-name">Назва</p>
-                <p class="product-price">1000$</p>
-            </div>
-            <p class="product-description">Опис</p>
-            <div class="button-group">
-                <img src="edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon">
-                <img src="delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon">
-            </div>
-        </div>
+        @if (IsLoading)
+        {
+            <p>Завантаження...</p>
+        }
+        else if (Bouquets != null && Bouquets.Any())
+        {
+            @foreach (var bouquet in Bouquets)
+            {
+                <div class="product-card">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(bouquet.Image)" alt="@bouquet.Name" class="product-image">
+                    <div class="product-info">
+                        <p class="product-name">@bouquet.Name</p>
+                        <p class="product-price">@($"{bouquet.Price:C}")</p>
+                    </div>
+                    <p class="product-description">@bouquet.Description</p>
+                    <div class="button-group">
+                        <img src="icons/edit-icon.png" alt="Edit Icon" class="icon-btn edit-icon" @onclick="() => ShowEditModal(bouquet)">
+                        <img src="icons/delete-icon.png" alt="Delete Icon" class="icon-btn delete-icon" @onclick="() => DeleteBouquet(bouquet.Id)">
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Не знайдено жодного букета.</p>
+        }
     </div>
+
+    <!-- Add/Edit Modal -->
+    @if (IsModalVisible)
+    {
+        <div class="modal">
+            <div class="modal-content">
+                <h2>@(IsEditMode ? "Редагувати букет" : "Додати букет")</h2>
+                <form>
+                    <input type="text" placeholder="Назва" @bind="CurrentBouquet.Name">
+                    <input type="text" placeholder="Колір" @bind="CurrentBouquet.MainColor">
+                    <input type="text" placeholder="Розмір" @bind="CurrentBouquet.Size">
+                    <textarea placeholder="Опис" @bind="CurrentBouquet.Description"></textarea>
+                    <input type="number" placeholder="Ціна" @bind="CurrentBouquet.Price">
+                    <InputFile OnChange="UploadImage" />
+
+                    <button type="button" @onclick="SaveBouquet">Зберегти</button>
+                    <button type="button" @onclick="CloseModal">Скасувати</button>
+                </form>
+            </div>
+        </div>
+    }
 </main>
+
+@code {
+    private List<BouquetDto> Bouquets { get; set; } = new();
+    private bool IsLoading { get; set; } = true;
+    private string SearchQuery { get; set; } = string.Empty;
+    private bool IsModalVisible { get; set; } = false;
+    private bool IsEditMode { get; set; } = false;
+    private BouquetDto CurrentBouquet { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBouquets();
+    }
+
+    private async Task LoadBouquets()
+    {
+        IsLoading = true;
+        try
+        {
+            var bouquetParams = new BouquetParams
+                {
+                    SearchQuery = SearchQuery,
+                    PageNumber = 1,
+                    PageSize = int.MaxValue // Отримати всі букети одразу
+                };
+
+            Bouquets = (await BouquetService.GetAllBouquetsAsync(bouquetParams)).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка при завантаженні букетів: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+
+    private void ShowAddModal()
+    {
+        IsEditMode = false;
+        CurrentBouquet = new BouquetDto();
+        IsModalVisible = true;
+    }
+
+    private void ShowEditModal(BouquetDto bouquet)
+    {
+        IsEditMode = true;
+        CurrentBouquet = new BouquetDto
+            {
+                Id = bouquet.Id,
+                Name = bouquet.Name,
+                MainColor = bouquet.MainColor,
+                Size = bouquet.Size,
+                Description = bouquet.Description,
+                Price = bouquet.Price,
+                Image = bouquet.Image
+            };
+        IsModalVisible = true;
+    }
+
+    private async Task SaveBouquet()
+    {
+        try
+        {
+            if (IsEditMode)
+            {
+                await BouquetService.UpdateBouquetAsync(CurrentBouquet, CancellationToken.None);
+            }
+            else
+            {
+                var createDto = new CreateBouquetDto
+                    {
+                        Name = CurrentBouquet.Name,
+                        MainColor = CurrentBouquet.MainColor,
+                        Size = CurrentBouquet.Size,
+                        Description = CurrentBouquet.Description,
+                        Image = CurrentBouquet.Image
+                    };
+                await BouquetService.AddBouquetAsync(createDto, CancellationToken.None);
+            }
+            await LoadBouquets();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка при збереженні букета: {ex.Message}");
+        }
+        finally
+        {
+            CloseModal();
+        }
+    }
+
+    private async Task DeleteBouquet(int id)
+    {
+        try
+        {
+            await BouquetService.DeleteBouquetAsync(id, CancellationToken.None);
+            await LoadBouquets();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Помилка при видаленні букета: {ex.Message}");
+        }
+    }
+
+    private void CloseModal()
+    {
+        IsModalVisible = false;
+        CurrentBouquet = new BouquetDto();
+    }
+
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(memoryStream);
+            CurrentBouquet.Image = memoryStream.ToArray();
+        }
+    }
+}
