@@ -43,15 +43,16 @@ public class BouquetService : IBouquetService
 
             bouquet.CreatedAt = DateTime.Now.ToUniversalTime();
             bouquet.Price = bouquetDto.Flowers.Sum(f => f.Quantity * f.Flower.Price);
-            if (bouquetDto.AddOns != null) bouquet.Price += bouquetDto.AddOns.Sum(ao => ao.Quantity * ao.AddOn.Price);
+            if (bouquetDto.AddOns.Count != 0)
+                bouquet.Price += bouquetDto.AddOns.Sum(ao => ao.Quantity * ao.AddOn.Price);
 
             await _unitOfWork.Bouquets.AddAsync(bouquet);
 
             foreach (var flower in bouquetDto.Flowers)
                 flower.BouquetId = bouquet.Id;
-            foreach (var addOn in bouquetDto.AddOns ?? Enumerable.Empty<ItemAddOnDto>())
+            foreach (var addOn in bouquetDto.AddOns)
                 addOn.BouquetId = bouquet.Id;
-            foreach (var category in bouquetDto.Categories ?? Enumerable.Empty<BouquetCategoryBouquetDto>())
+            foreach (var category in bouquetDto.Categories)
                 category.BouquetId = bouquet.Id;
 
             bouquet.BouquetCategories = _mapper.Map<IEnumerable<BouquetCategoryBouquet>>(bouquetDto.Categories);
