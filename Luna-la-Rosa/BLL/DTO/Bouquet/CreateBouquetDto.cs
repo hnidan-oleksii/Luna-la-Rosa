@@ -12,7 +12,7 @@ public class CreateBouquetDto
     public byte[] Image { get; set; }
     public string Description { get; set; }
 
-    public ICollection<BouquetFlowerDto> Flowers { get; set; }
-    public ICollection<BouquetCategoryBouquetDto>? Categories { get; set; }
-    public ICollection<ItemAddOnDto>? AddOns { get; set; }
+    public ICollection<BouquetFlowerDto> Flowers { get; set; } = new List<BouquetFlowerDto>();
+    public ICollection<BouquetCategoryBouquetDto> Categories { get; set; } = new List<BouquetCategoryBouquetDto>();
+    public ICollection<ItemAddOnDto> AddOns { get; set; } = new List<ItemAddOnDto>();
 }
