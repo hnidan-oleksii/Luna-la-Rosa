@@ -84,4 +84,11 @@ public class UserService : IUserService
             throw;
         }
     }
+    
+    public async Task<UserDto?> AuthenticateAsync(LoginDto login)
+    {
+        var user = await _unitOfWork.User.AuthenticateAsync(login.Email, login.Password);
+        return user == null ? null : _mapper.Map<UserDto>(user);
+    }
+
 }

@@ -1,4 +1,5 @@
-﻿using DAL.Context;
+﻿using System.Linq.Dynamic.Core;
+using DAL.Context;
 using DAL.Entities;
 using DAL.Helpers.Params;
 using DAL.Helpers.Search;
@@ -21,4 +22,16 @@ public class UserRepository : GenericRepository<User>, IUserRepository
             query = _searchHelper.ApplySearch(query, userParams.SearchQuery, searchFields);
         return await Task.FromResult(query);
     }
+
+    public async Task<User> AuthenticateAsync(string login, string password)
+    {
+        var userAccount = context.Users.FirstOrDefault(x => x.Email == login);
+        if (userAccount != null && userAccount.PasswordHash == password)
+        {
+            return userAccount;
+        }
+
+        return null;
+    }
+
 }

@@ -1,3 +1,4 @@
+using System.Text;
 using API.Keycloak;
 using Api.Middleware.Exceptions;
 using API.Middleware.Exceptions;
@@ -93,7 +94,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 //Keycloak
-builder.Services.AddAuthentication(options =>
+/*builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -127,7 +128,24 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<KeycloakAuthService>();
+builder.Services.AddScoped<KeycloakAuthService>();*/
+
+// Add services to the container
+var key = Encoding.UTF8.GetBytes("W8zDp4x2mY9vK6nF3qR7tW5eX2aZ7pU6sQ9bJ4vL2cT8nR5oX3kV6rP7mY2qJ9");
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
 
 var app = builder.Build();
 

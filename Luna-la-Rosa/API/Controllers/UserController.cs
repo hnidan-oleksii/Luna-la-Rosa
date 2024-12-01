@@ -1,8 +1,12 @@
-﻿using BLL.Services.Interfaces;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using BLL.Services.Interfaces;
 using BLL.DTO.User;
 using DAL.Helpers.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API.Controllers;
 
@@ -11,6 +15,7 @@ namespace API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly string _key = "W8zDp4x2mY9vK6nF3qR7tW5eX2aZ7pU6sQ9bJ4vL2cT8nR5oX3kV6rP7mY2qJ9";
 
     public UserController(IUserService userService)
     {
@@ -57,11 +62,30 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id, CancellationToken cancellationToken)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto request)
     {
-        await _userService.DeleteUserAsync(id, cancellationToken);
-        return NoContent();
+        var user = await _userService.AuthenticateAsync(request);
+        if (user != null)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_key);
+        
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[] {
+                    new Claim(ClaimTypes.Email, request.Email),
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+        
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var jwt = tokenHandler.WriteToken(token);
+
+            return Ok(new { Token = jwt });
+        }
+
+        return Unauthorized("Invalid credentials");
     }
 }
