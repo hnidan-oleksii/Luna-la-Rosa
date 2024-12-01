@@ -1,4 +1,4 @@
-using API;
+using API.Keycloak;
 using Api.Middleware.Exceptions;
 using API.Middleware.Exceptions;
 using BLL;
@@ -22,9 +22,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+//Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    // Описуємо, як отримати токен
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -32,8 +33,7 @@ builder.Services.AddSwaggerGen(c =>
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
-        
-    // Додаємо авторизацію для кожного запиту
+    
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -81,6 +81,7 @@ builder.Services.AddScoped<IFlowerRepository, FlowerRepository>();
 builder.Services.AddScoped<ICustomBouquetRepository, CustomBouquetRepository>();
 builder.Services.AddScoped<IShoppingCartRepository, ShoppingCartRepisitory>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Services
 builder.Services.AddScoped<IAddOnService, AddOnService>();
@@ -89,7 +90,9 @@ builder.Services.AddScoped<IFlowerService, FlowerService>();
 builder.Services.AddScoped<ICustomBouquetService, CustomBouquetService>();
 builder.Services.AddScoped<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
+//Keycloak
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -119,7 +122,7 @@ builder.Services.AddAuthentication(options =>
             }
         };
 
-        options.RequireHttpsMetadata = false; // Only in develop environment
+        options.RequireHttpsMetadata = false;
         options.SaveToken = true;
     });
 
