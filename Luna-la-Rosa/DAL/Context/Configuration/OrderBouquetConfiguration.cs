@@ -9,7 +9,6 @@ public class OrderBouquetConfiguration : IEntityTypeConfiguration<OrderBouquet>
     public void Configure(EntityTypeBuilder<OrderBouquet> builder)
     {
         builder.HasKey(ob => ob.Id);
-        builder.Property(ob => ob.Id).UseIdentityColumn();
         builder.Property(ob => ob.Quantity).IsRequired();
         builder.Property(ob => ob.Price).HasColumnType("NUMERIC(10, 2)");
 
