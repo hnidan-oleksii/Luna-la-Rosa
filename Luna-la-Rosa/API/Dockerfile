@@ -11,6 +11,7 @@ COPY ["Luna-la-Rosa/BLL/.", "BLL/"]
 COPY ["Luna-la-Rosa/API/.", "API/"]
 ENV BUILD_CONFIGURATION=Development
 RUN dotnet publish "API/API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+COPY ["Luna-la-Rosa/DAL/Seeding/Images/.", "/app/publish/Images"]
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
