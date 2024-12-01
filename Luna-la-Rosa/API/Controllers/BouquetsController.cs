@@ -34,7 +34,7 @@ public class BouquetsController : ControllerBase
         return Ok(bouquet);
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult> CreateBouquet([FromBody] CreateBouquetDto createBouquetDto,
         CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public class BouquetsController : ControllerBase
         return CreatedAtAction(nameof(GetBouquetById), new { id = createdBouquetId }, createdBouquetId);
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpPut("id")]
     public async Task<ActionResult> UpdateBouquet(int id, [FromBody] BouquetDto bouquetDto,
         CancellationToken cancellationToken)
@@ -58,7 +58,7 @@ public class BouquetsController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpDelete("id")]
     public async Task<ActionResult> DeleteBouquet(int id, CancellationToken cancellationToken)
     {

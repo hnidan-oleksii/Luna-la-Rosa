@@ -15,6 +15,7 @@ public class OrdersController : ControllerBase
         _orderService = orderService;
     }
 
+    //[Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllOrders()
     {
@@ -22,6 +23,7 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    //[Authorize]
     [HttpGet("users/{userId:int}")]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserId(int userId)
     {
@@ -29,6 +31,7 @@ public class OrdersController : ControllerBase
         return Ok(orders);
     }
 
+    //[Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<OrderDto>> GetOrder(int id)
     {

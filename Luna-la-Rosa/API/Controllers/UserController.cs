@@ -62,6 +62,7 @@ public class UserController : ControllerBase
         return NoContent();
     }
     
+    //[Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id, CancellationToken cancellationToken)
     {
@@ -81,8 +82,10 @@ public class UserController : ControllerBase
         
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] {
+                Subject = new ClaimsIdentity(new[]
+                {
                     new Claim(ClaimTypes.Email, request.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

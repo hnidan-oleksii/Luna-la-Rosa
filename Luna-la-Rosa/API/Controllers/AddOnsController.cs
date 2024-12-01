@@ -17,7 +17,7 @@ public class AddOnsController : ControllerBase
         _addOnService = addOnService;
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpGet("all")]
     public async Task<ActionResult<IEnumerable<AddOnDto>>> GetAllAddOnsAsync([FromQuery] AddOnParams addOnParams)
     {
@@ -39,7 +39,7 @@ public class AddOnsController : ControllerBase
         return Ok(addOn);
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddAddOn([FromBody] CreateAddOnDto addOnDto, CancellationToken cancellationToken)
     {
@@ -49,7 +49,7 @@ public class AddOnsController : ControllerBase
         return CreatedAtAction(nameof(GetAddOnById), new { id = createdId }, addOnDto);
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateAddOn(int id, [FromBody] AddOnDto addOnDto,
         CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ public class AddOnsController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize(Roles = "admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAddOn(int id, CancellationToken cancellationToken)
     {
