@@ -8,6 +8,7 @@ public interface IUnitOfWork : IDisposable
     ICustomBouquetRepository CustomBouquets { get; }
     IShoppingCartRepository ShoppingCarts { get; }
     IOrderRepository Orders { get; }
+    IUserRepository User { get; }
     Task SaveAsync();
     Task BeginTransactionAsync(CancellationToken cancellationToken);
     Task CommitTransactionAsync(CancellationToken cancellationToken);

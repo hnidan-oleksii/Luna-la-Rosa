@@ -9,6 +9,7 @@ using BLL.DTO.Flower;
 using BLL.DTO.ItemAddOn;
 using BLL.DTO.Order;
 using BLL.DTO.ShoppingCart;
+using BLL.DTO.User;
 using BLL.Helpers.Mapping;
 using DAL.Entities;
 using DAL.Helpers;
@@ -85,5 +86,9 @@ public class MappingProfile : Profile
         CreateMap<OrderAddOn, ItemAddOnDto>()
             .ForMember(dto => dto.BouquetId, opt => opt.MapFrom(entity => entity.OrderBouquetId))
             .ReverseMap();
+        
+        //User
+        CreateMap<User, UserDto>().ReverseMap();
+        CreateMap<CreateUserDto, User>().ReverseMap();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace API.Controllers;
+﻿using API.Keycloak;
+
+namespace API.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
