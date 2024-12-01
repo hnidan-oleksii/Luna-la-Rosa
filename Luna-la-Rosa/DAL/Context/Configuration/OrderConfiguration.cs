@@ -8,6 +8,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
+        builder.ToTable(t =>
+        {
+            t.HasCheckConstraint("CK_Order_PaymentMethod", "payment_method IN ('Card', 'Cash')");
+            t.HasCheckConstraint("CK_Order_Status", "status IN ('Pending', 'Processing', 'Shipped')");
+        });
         builder.HasKey(o => o.Id);
         builder.Property(o => o.Status).IsRequired().HasMaxLength(50);
         builder.Property(o => o.DeliveryPrice).HasColumnType("decimal(10,2)");
@@ -23,8 +28,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .WithMany(u => u.Orders)
             .HasForeignKey(o => o.UserId)
             .OnDelete(DeleteBehavior.SetNull);
-
-        builder.HasCheckConstraint("CK_Order_PaymentMethod", "payment_method IN ('Card', 'Cash on Delivery')");
 
         builder.HasIndex(o => o.UserId);
         builder.HasIndex(o => o.Status);
