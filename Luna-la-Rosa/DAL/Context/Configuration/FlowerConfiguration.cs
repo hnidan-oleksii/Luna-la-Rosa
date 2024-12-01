@@ -9,7 +9,6 @@ public class FlowerConfiguration : IEntityTypeConfiguration<Flower>
     public void Configure(EntityTypeBuilder<Flower> builder)
     {
         builder.HasKey(f => f.Id);
-        builder.Property(f => f.Id).UseIdentityColumn();
         builder.Property(f => f.Name).IsRequired().HasMaxLength(255);
         builder.Property(f => f.Color).IsRequired().HasMaxLength(50);
         builder.Property(f => f.Price).IsRequired().HasColumnType("NUMERIC(10, 2)");

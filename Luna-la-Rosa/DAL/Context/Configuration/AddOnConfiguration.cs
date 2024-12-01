@@ -9,7 +9,6 @@ public class AddOnConfiguration : IEntityTypeConfiguration<AddOn>
     public void Configure(EntityTypeBuilder<AddOn> builder)
     {
         builder.HasKey(ao => ao.Id);
-        builder.Property(ao => ao.Id).UseIdentityColumn();
         builder.Property(ao => ao.Name).IsRequired().HasMaxLength(255);
         builder.Property(ao => ao.Price).IsRequired().HasColumnType("NUMERIC(10, 2)");
         builder.Property(ao => ao.Image).HasColumnType("BYTEA");

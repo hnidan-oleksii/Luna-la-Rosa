@@ -9,7 +9,6 @@ public class FlowerTypeConfiguration : IEntityTypeConfiguration<FlowerType>
     public void Configure(EntityTypeBuilder<FlowerType> builder)
     {
         builder.HasKey(ft => ft.Id);
-        builder.Property(ft => ft.Id).UseIdentityColumn();
         builder.Property(ft => ft.Name).IsRequired().HasMaxLength(50);
 
         builder.HasMany(ft => ft.Flower)

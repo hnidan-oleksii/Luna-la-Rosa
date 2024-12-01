@@ -9,7 +9,6 @@ public class CustomBouquetConfiguration : IEntityTypeConfiguration<CustomBouquet
     public void Configure(EntityTypeBuilder<CustomBouquet> builder)
     {
         builder.HasKey(cb => cb.Id);
-        builder.Property(cb => cb.Id).UseIdentityColumn();
         builder.Property(cb => cb.TotalPrice).HasColumnType("NUMERIC(10, 2)");
         builder.Property(cb => cb.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
