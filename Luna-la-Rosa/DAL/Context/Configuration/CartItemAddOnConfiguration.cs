@@ -8,17 +8,17 @@ public class CartItemAddOnConfiguration : IEntityTypeConfiguration<CartItemAddOn
 {
     public void Configure(EntityTypeBuilder<CartItemAddOn> builder)
     {
-        builder.HasKey(ciaa => new { ciaa.CartItemId, ciaa.AddOnId });
-        builder.Property(ciaa => ciaa.CardNote).HasMaxLength(250);
+        builder.HasKey(ciao => new { ciao.CartItemId, ciao.AddOnId });
+        builder.Property(ciao => ciao.CardNote).HasMaxLength(250);
 
-        builder.HasOne(ciaa => ciaa.CartItem)
+        builder.HasOne(ciao => ciao.CartItem)
             .WithMany(ci => ci.AddOns)
-            .HasForeignKey(ciaa => ciaa.CartItemId)
+            .HasForeignKey(ciao => ciao.CartItemId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(ciaa => ciaa.AddOn)
+        builder.HasOne(ciao => ciao.AddOn)
             .WithMany(ao => ao.CartItems)
-            .HasForeignKey(ciaa => ciaa.AddOnId)
+            .HasForeignKey(ciao => ciao.AddOnId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }
