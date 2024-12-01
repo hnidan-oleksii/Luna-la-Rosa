@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using BLL.DTO.Order;
 using BLL.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -29,6 +31,21 @@ public class OrdersController : ControllerBase
     {
         var orders = await _orderService.GetAllOrdersByUserIdAsync(userId);
         return Ok(orders);
+    }
+    
+    [Authorize]
+    [HttpGet("users/orders")]
+    public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserId()
+    {
+        var userIdFromToken = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (userIdFromToken != null && int.TryParse(userIdFromToken, out var userId))
+        {
+            var orders = await _orderService.GetAllOrdersByUserIdAsync(userId);
+            return Ok(orders);
+        }
+
+        return Unauthorized("You are not authorized to view these orders.");
     }
 
     //[Authorize]
