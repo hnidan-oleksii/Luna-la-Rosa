@@ -61,6 +61,14 @@ public class UserController : ControllerBase
         await _userService.UpdateUserAsync(userDto, cancellationToken);
         return NoContent();
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(int id, CancellationToken cancellationToken)
+    {
+        await _userService.DeleteUserAsync(id, cancellationToken);
+        return NoContent();
+    }
+
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto request)
