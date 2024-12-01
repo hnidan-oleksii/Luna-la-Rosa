@@ -89,6 +89,8 @@ public class MappingProfile : Profile
         
         //User
         CreateMap<User, UserDto>().ReverseMap();
-        CreateMap<CreateUserDto, User>().ReverseMap();
+        CreateMap<UpdateUserDto, User>()
+            .ForMember(dto => dto.Role, opt => opt.Ignore())
+            .ForMember(dto => dto.CreatedAt, opt => opt.Ignore());
     }
 }

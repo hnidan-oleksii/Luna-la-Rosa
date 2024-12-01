@@ -51,14 +51,15 @@ public class UserService : IUserService
         }
     }
 
-    public async Task UpdateUserAsync(UserDto userDto, CancellationToken cancellationToken)
+    public async Task UpdateUserAsync(UpdateUserDto userDto, CancellationToken cancellationToken)
     {
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
-            var user = _mapper.Map<User>(userDto);
-            user.UpdatedAt = DateTime.Now.ToUniversalTime();
-            await _unitOfWork.User.UpdateAsync(user);
+            var existingUser = await _unitOfWork.User.GetByIdAsync(userDto.Id);
+            _mapper.Map(userDto, existingUser);
+            existingUser.UpdatedAt = DateTime.Now.ToUniversalTime();
+            await _unitOfWork.User.UpdateAsync(existingUser);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
         }

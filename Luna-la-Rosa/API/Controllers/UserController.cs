@@ -50,7 +50,7 @@ public class UserController : ControllerBase
 
     //[Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserDto userDto, CancellationToken cancellationToken)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
