@@ -36,6 +36,7 @@ public class UserService : IUserService
         try
         {
             var user = _mapper.Map<User>(userDto);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.PasswordHash);
             user.CreatedAt = DateTime.Now.ToUniversalTime();
             user.UpdatedAt = DateTime.Now.ToUniversalTime();
             user.Role = "User";
@@ -58,6 +59,12 @@ public class UserService : IUserService
         {
             var existingUser = await _unitOfWork.User.GetByIdAsync(userDto.Id);
             _mapper.Map(userDto, existingUser);
+
+            if (!string.IsNullOrEmpty(userDto.PasswordHash))
+            {
+                existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDto.PasswordHash);
+            }
+
             existingUser.UpdatedAt = DateTime.Now.ToUniversalTime();
             await _unitOfWork.User.UpdateAsync(existingUser);
             await _unitOfWork.SaveAsync();
@@ -88,8 +95,13 @@ public class UserService : IUserService
     
     public async Task<UserDto?> AuthenticateAsync(LoginDto login)
     {
-        var user = await _unitOfWork.User.AuthenticateAsync(login.Email, login.Password);
-        return user == null ? null : _mapper.Map<UserDto>(user);
+        var user = await _unitOfWork.User.AuthenticateAsync(login.Email);
+        
+        if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.PasswordHash))
+        {
+            return null;
+        }
+        
+        return _mapper.Map<UserDto>(user);
     }
-
 }

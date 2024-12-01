@@ -1,4 +1,4 @@
-﻿using System.Linq.Dynamic.Core;
+﻿using Microsoft.EntityFrameworkCore;
 using DAL.Context;
 using DAL.Entities;
 using DAL.Helpers.Params;
@@ -23,15 +23,8 @@ public class UserRepository : GenericRepository<User>, IUserRepository
         return await Task.FromResult(query);
     }
 
-    public async Task<User> AuthenticateAsync(string login, string password)
+    public async Task<User> AuthenticateAsync(string email)
     {
-        var userAccount = context.Users.FirstOrDefault(x => x.Email == login);
-        if (userAccount != null && userAccount.PasswordHash == password)
-        {
-            return userAccount;
-        }
-
-        return null;
+        return await context.Users.FirstOrDefaultAsync(x => x.Email == email);
     }
-
 }
