@@ -38,7 +38,7 @@ public class UserService : IUserService
             var user = _mapper.Map<User>(userDto);
             user.CreatedAt = DateTime.Now.ToUniversalTime();
             user.UpdatedAt = DateTime.Now.ToUniversalTime();
-            user.Role = "user";
+            user.Role = "User";
             await _unitOfWork.User.AddAsync(user);
             await _unitOfWork.SaveAsync();
             await _unitOfWork.CommitTransactionAsync(cancellationToken);
