@@ -25,54 +25,67 @@ public class DataSeeder
     public IReadOnlyCollection<OrderAddOn> OrderAddOns { get; }
     public IReadOnlyCollection<Payment> Payments { get; }
 
-    public DataSeeder(int rows = 30)
+    private static readonly string[] Colors = ["Red", "Pink", "White", "Yellow", "Orange", "Purple", "Black"];
+
+    public DataSeeder(int rows = 20)
     {
-        Users = GenerateUsers(rows);
+        Users = GenerateUsers();
 
         FlowerTypes = GenerateFlowerTypes();
-        Flowers = GenerateFlowers(rows);
+        Flowers = GenerateFlowers(rows * 3);
 
         AddOnTypes = GenerateAddOnTypes();
-        AddOns = GenerateAddOns(rows);
+        AddOns = GenerateAddOns(rows * 2);
 
-        Bouquets = GenerateBouquets(rows);
+        Bouquets = GenerateBouquets(rows * 2);
         BouquetCategories = GenerateBouquetCategories();
-        BouquetCategoryBouquets = GenerateBouquetCategoryBouquets(10);
-        BouquetFlowers = GenerateBouquetFlowers(rows);
+        BouquetCategoryBouquets = GenerateBouquetCategoryBouquets(rows);
+        BouquetFlowers = GenerateBouquetFlowers();
 
-        CustomBouquets = GenerateCustomBouquets(rows);
-        CustomBouquetFlowers = GenerateCustomBouquetFlowers(rows);
+        CustomBouquets = GenerateCustomBouquets(rows * 3);
+        CustomBouquetFlowers = GenerateCustomBouquetFlowers();
 
-        BouquetAddOns = GenerateBouquetAddOns(rows);
+        BouquetAddOns = GenerateBouquetAddOns(rows * 2);
         UpdateBouquetPrices();
         UpdateCustomBouquetPrices();
 
-        ShoppingCarts = GenerateShoppingCarts(10);
-        CartItems = GenerateCartItems(rows);
+        ShoppingCarts = GenerateShoppingCarts();
+        CartItems = GenerateCartItems();
         CartItemAddOns = GenerateCartItemAddOns(rows);
         UpdateCardItemPrices();
 
         Orders = GenerateOrders(rows);
-        OrderBouquets = GenerateOrderBouquets(rows);
+        OrderBouquets = GenerateOrderBouquets();
         OrderAddOns = GenerateOrderAddOns(rows);
         UpdateOrderPrices();
-        Payments = GeneratePayments(Orders.Count(o => o.PaymentMethod == "Card"));
+        Payments = GeneratePayments();
     }
 
-    private IReadOnlyCollection<User> GenerateUsers(int count)
+    private IReadOnlyCollection<User> GenerateUsers()
     {
-        var faker = new Faker<User>()
-            .RuleFor(u => u.Id, f => f.IndexFaker + 1)
-            .RuleFor(u => u.Email, f => f.Internet.Email())
-            .RuleFor(u => u.PasswordHash, f => f.Internet.Password())
-            .RuleFor(u => u.FirstName, f => f.Name.FirstName())
-            .RuleFor(u => u.LastName, f => f.Name.LastName())
-            .RuleFor(u => u.PhoneNumber, f => f.Phone.PhoneNumber())
-            .RuleFor(u => u.Role, f => f.PickRandom("User", "Admin"))
-            .RuleFor(u => u.CreatedAt, f => f.Date.Past().ToUniversalTime())
-            .RuleFor(u => u.UpdatedAt, f => f.Date.Recent(14).ToUniversalTime());
-
-        return GenerateRows(faker, count);
+        return new List<User>
+        {
+            new()
+            {
+                Id = 1,
+                Email = "alice@gmail.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("alice"),
+                FirstName = "Alice",
+                LastName = "Admin",
+                Role = "Admin",
+                PhoneNumber = "123-456-7890"
+            },
+            new()
+            {
+                Id = 2,
+                Email = "bob@gmail.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("bob"),
+                FirstName = "Bob",
+                LastName = "User",
+                Role = "User",
+                PhoneNumber = "987-654-3210"
+            }
+        };
     }
 
     private IReadOnlyCollection<FlowerType> GenerateFlowerTypes()
@@ -87,16 +100,19 @@ public class DataSeeder
 
     private IReadOnlyCollection<Flower> GenerateFlowers(int count)
     {
+        var images = GetImagesFromDirectoryInBase64("./Images/Flowers");
         var faker = new Faker<Flower>()
             .RuleFor(f => f.Id, f => f.IndexFaker + 1)
             .RuleFor(f => f.TypeId, f => f.PickRandom<FlowerType>(FlowerTypes).Id)
-            .RuleFor(f => f.Color, f => f.Commerce.Color())
-            .RuleFor(f => f.Name, (_, f) => FlowerTypes.First(ft => ft.Id == f.TypeId).Name + " " + f.Color)
-            .RuleFor(f => f.Price, f => f.Random.Decimal(1, 50))
-            .RuleFor(f => f.AvailableQuantity, f => f.Random.Int(0, 100))
-            .RuleFor(f => f.Image, f => f.Random.Bytes(100))
-            .RuleFor(f => f.CreatedAt, f => f.Date.Past().ToUniversalTime())
-            .RuleFor(f => f.UpdatedAt, f => f.Date.Recent(14).ToUniversalTime());
+            .RuleFor(f => f.Color, f => f.PickRandom(Colors))
+            .RuleFor(f => f.Name, (_, fl) =>
+            {
+                var flowerType = FlowerTypes.First(ft => ft.Id == fl.TypeId).Name;
+                return $"{fl.Color} {flowerType}";
+            })
+            .RuleFor(f => f.Image, f => f.PickRandom(images))
+            .RuleFor(f => f.Price, f => f.Random.Decimal(10, 100))
+            .RuleFor(f => f.AvailableQuantity, f => f.Random.Int(1, 50));
 
         return GenerateRows(faker, count);
     }
@@ -115,12 +131,14 @@ public class DataSeeder
 
     private IReadOnlyCollection<AddOn> GenerateAddOns(int count)
     {
+        var images = GetImagesFromDirectoryInBase64("./Images/AddOns");
         var faker = new Faker<AddOn>()
             .RuleFor(ao => ao.Id, f => f.IndexFaker + 1)
             .RuleFor(ao => ao.TypeId, f => f.PickRandom<AddOnType>(AddOnTypes).Id)
-            .RuleFor(ao => ao.Name, f => f.Commerce.ProductName())
+            .RuleFor(ao => ao.Name,
+                (f, ao) => AddOnTypes.First(aot => aot.Id == ao.TypeId).Name + $"\"{f.Commerce.ProductName()}\"")
             .RuleFor(ao => ao.Price, f => f.Random.Decimal(1, 20))
-            .RuleFor(ao => ao.Image, f => f.Random.Bytes(100))
+            .RuleFor(ao => ao.Image, f => f.PickRandom(images))
             .RuleFor(ao => ao.CreatedAt, f => f.Date.Past().ToUniversalTime());
 
         return GenerateRows(faker, count);
@@ -130,19 +148,20 @@ public class DataSeeder
     {
         return
         [
-            new BouquetCategory { Id = 1, CategoryName = "Wedding" },
+            new BouquetCategory { Id = 1, CategoryName = "Wedding" }
         ];
     }
 
     private IReadOnlyCollection<Bouquet> GenerateBouquets(int count)
     {
+        var images = GetImagesFromDirectoryInBase64("./Images/Bouquets");
         var faker = new Faker<Bouquet>()
             .RuleFor(b => b.Id, f => f.IndexFaker + 1)
             .RuleFor(b => b.Name, f => f.Commerce.ProductName())
-            .RuleFor(b => b.MainColor, f => f.Commerce.Color())
+            .RuleFor(b => b.MainColor, f => f.PickRandom(Colors))
             .RuleFor(b => b.Size, f => f.PickRandom("Small", "Medium", "Large"))
-            .RuleFor(b => b.Image, f => f.Random.Bytes(100))
-            .RuleFor(b => b.Description, f => f.Lorem.Sentence(wordCount: 3))
+            .RuleFor(b => b.Image, f => f.PickRandom(images))
+            .RuleFor(b => b.Description, f => f.Lorem.Sentence(3))
             .RuleFor(b => b.PopularityScore, f => f.Random.Int(0, 100))
             .RuleFor(b => b.CreatedAt, f => f.Date.Past().ToUniversalTime())
             .RuleFor(b => b.UpdatedAt, f => f.Date.Recent(14).ToUniversalTime());
@@ -159,14 +178,35 @@ public class DataSeeder
         return GenerateRows(faker, count);
     }
 
-    private IReadOnlyCollection<BouquetFlower> GenerateBouquetFlowers(int count)
+    private IReadOnlyCollection<BouquetFlower> GenerateBouquetFlowers()
     {
-        var faker = new Faker<BouquetFlower>()
-            .RuleFor(bf => bf.BouquetId, f => f.PickRandom<Bouquet>(Bouquets).Id)
-            .RuleFor(bf => bf.FlowerId, f => f.PickRandom<Flower>(Flowers).Id)
-            .RuleFor(bf => bf.Quantity, f => f.Random.Int(1, 10));
+        var bouquets = Bouquets.OrderBy(_ => Guid.NewGuid()).ToList();
+        var random = new Random();
+        var bouquetFlowers = new List<BouquetFlower>();
 
-        return GenerateRows(faker, count);
+        foreach (var bouquet in bouquets)
+        {
+            var faker = new Faker<BouquetFlower>()
+                .RuleFor(bf => bf.BouquetId, _ => bouquet.Id)
+                .RuleFor(bf => bf.FlowerId, (f, bf) =>
+                {
+                    var bouquetById = Bouquets.First(b => b.Id == bf.BouquetId);
+                    var matchingFlowers = Flowers.Where(fl => fl.Color == bouquetById.MainColor).ToList();
+                    var flowersNotInBouquet = matchingFlowers.Where(fl =>
+                        !bouquetFlowers
+                            .Where(lbf => lbf.BouquetId == bf.BouquetId)
+                            .Select(lbf => lbf.FlowerId)
+                            .Contains(fl.Id)
+                    );
+                    return f.PickRandom(flowersNotInBouquet).Id;
+                })
+                .RuleFor(bf => bf.Quantity, f => f.Random.Int(1, 30));
+
+            var itemCount = random.Next(1, 3);
+            bouquetFlowers.AddRange(GenerateRows(faker, itemCount));
+        }
+
+        return bouquetFlowers;
     }
 
     private IReadOnlyCollection<CustomBouquet> GenerateCustomBouquets(int count)
@@ -179,14 +219,24 @@ public class DataSeeder
         return GenerateRows(faker, count);
     }
 
-    private IReadOnlyCollection<CustomBouquetFlower> GenerateCustomBouquetFlowers(int count)
+    private IReadOnlyCollection<CustomBouquetFlower> GenerateCustomBouquetFlowers()
     {
-        var faker = new Faker<CustomBouquetFlower>()
-            .RuleFor(cbf => cbf.CustomBouquetId, f => f.PickRandom<CustomBouquet>(CustomBouquets).Id)
-            .RuleFor(cbf => cbf.FlowerId, f => f.PickRandom<Flower>(Flowers).Id)
-            .RuleFor(cbf => cbf.Quantity, f => f.Random.Int(1, 10));
+        var customBouquets = CustomBouquets.OrderBy(_ => Guid.NewGuid()).ToList();
+        var random = new Random();
+        var customBouquetFlowers = new List<CustomBouquetFlower>();
 
-        return GenerateRows(faker, count);
+        foreach (var customBouquet in customBouquets)
+        {
+            var faker = new Faker<CustomBouquetFlower>()
+                .RuleFor(cbf => cbf.CustomBouquetId, _ => customBouquet.Id)
+                .RuleFor(cbf => cbf.FlowerId, f => f.PickRandom<Flower>(Flowers).Id)
+                .RuleFor(cbf => cbf.Quantity, f => f.Random.Int(1, 10));
+
+            var itemCount = random.Next(1, 4);
+            customBouquetFlowers.AddRange(GenerateRows(faker, itemCount));
+        }
+
+        return customBouquetFlowers;
     }
 
     private IReadOnlyCollection<BouquetAddOn> GenerateBouquetAddOns(int count)
@@ -202,38 +252,72 @@ public class DataSeeder
         return GenerateRows(faker, count);
     }
 
-    private IReadOnlyCollection<ShoppingCart> GenerateShoppingCarts(int count)
+    private IReadOnlyCollection<ShoppingCart> GenerateShoppingCarts()
     {
-        var uniqueUsers = Users.OrderBy(_ => Guid.NewGuid()).Take(count).ToList();
+        var users = Users.OrderBy(_ => Guid.NewGuid()).ToList();
         var faker = new Faker<ShoppingCart>()
-            .RuleFor(sc => sc.UserId, f => uniqueUsers[f.IndexFaker].Id)
+            .RuleFor(sc => sc.UserId, f => users[f.IndexFaker].Id)
             .RuleFor(sc => sc.CreatedAt, f => f.Date.Past().ToUniversalTime())
             .RuleFor(sc => sc.UpdatedAt, f => f.Date.Recent(14).ToUniversalTime());
 
-        return GenerateRows(faker, count);
+        return GenerateRows(faker, users.Count);
     }
 
-    private IReadOnlyCollection<CartItem> GenerateCartItems(int count)
+    private IReadOnlyCollection<CartItem> GenerateCartItems()
     {
-        var faker = new Faker<CartItem>()
-            .RuleFor(ci => ci.Id, f => f.IndexFaker + 1)
-            .RuleFor(ci => ci.CartId, f => f.PickRandom<ShoppingCart>(ShoppingCarts).UserId)
-            .RuleFor(ci => ci.BouquetId, f => f.Random.Bool() ? f.PickRandom<Bouquet>(Bouquets).Id : null)
-            .RuleFor(ci => ci.CustomBouquetId,
-                (f, ci) => ci.BouquetId == null ? f.PickRandom<CustomBouquet>(CustomBouquets).Id : null)
-            .RuleFor(ci => ci.Quantity, f => f.Random.Int(1, 5));
+        var shoppingCarts = ShoppingCarts.OrderBy(_ => Guid.NewGuid()).ToList();
+        var random = new Random();
+        var cartItems = new List<CartItem>();
 
-        return GenerateRows(faker, count);
+        foreach (var shoppingCart in shoppingCarts)
+        {
+            var faker = new Faker<CartItem>()
+                .RuleFor(ci => ci.Id, f => f.IndexFaker + 1 + cartItems.Count)
+                .RuleFor(ci => ci.CartId, _ => shoppingCart.UserId)
+                .RuleFor(ci => ci.BouquetId, f => f.Random.Bool() ? f.PickRandom<Bouquet>(Bouquets).Id : null)
+                .RuleFor(ci => ci.CustomBouquetId,
+                    (f, ci) => ci.BouquetId == null ? f.PickRandom<CustomBouquet>(CustomBouquets).Id : null)
+                .RuleFor(ci => ci.Quantity, f => f.Random.Int(1, 5));
+
+            var itemsCount = random.Next(1, 5);
+            cartItems.AddRange(GenerateRows(faker, itemsCount));
+        }
+
+        return cartItems;
     }
 
     private IReadOnlyCollection<CartItemAddOn> GenerateCartItemAddOns(int count)
     {
-        var faker = new Faker<CartItemAddOn>()
-            .RuleFor(ciaa => ciaa.CardNote, f => f.Lorem.Sentence())
-            .RuleFor(ciaa => ciaa.CartItemId, f => f.PickRandom<CartItem>(CartItems).Id)
-            .RuleFor(ciaa => ciaa.AddOnId, f => f.PickRandom<AddOn>(AddOns).Id);
+        var cartItemsAddOns = new List<CartItemAddOn>();
+        var random = new Random();
 
-        return GenerateRows(faker, count);
+        for (var i = 0; i < count; i++)
+        {
+            var faker = new Faker<CartItemAddOn>()
+                .RuleFor(ciao => ciao.CartItemId, f => f.PickRandom<CartItem>(CartItems).Id)
+                .RuleFor(ciao => ciao.AddOnId, (f, ciao) =>
+                {
+                    var addOnsNotWithCartItem = AddOns.Where(aol =>
+                        !cartItemsAddOns
+                            .Where(lciao => lciao.CartItemId == ciao.CartItemId)
+                            .Select(lciao => lciao.AddOnId)
+                            .Contains(aol.Id));
+
+                    return f.PickRandom<AddOn>(addOnsNotWithCartItem).Id;
+                })
+                .RuleFor(ciao => ciao.Quantity, f => f.Random.Int(1, 5))
+                .RuleFor(ciao => ciao.CardNote, (f, ciao) =>
+                {
+                    var addOnTypeName = AddOnTypes
+                        .First(aot => aot.Id == AddOns.First(ao => ao.Id == ciao.AddOnId).TypeId).Name;
+                    return addOnTypeName == "PostCard" ? f.Lorem.Sentence() : null;
+                });
+
+            var itemsCount = random.Next(1, 5);
+            cartItemsAddOns.AddRange(GenerateRows<CartItemAddOn>(faker, itemsCount));
+        }
+
+        return cartItemsAddOns;
     }
 
     private IReadOnlyCollection<Order> GenerateOrders(int count)
@@ -241,11 +325,11 @@ public class DataSeeder
         var faker = new Faker<Order>()
             .RuleFor(o => o.Id, f => f.IndexFaker + 1)
             .RuleFor(o => o.UserId, f => f.PickRandom<User>(Users).Id)
-            .RuleFor(o => o.Status, f => f.PickRandom("Pending", "Processing", "Shipped", "Delivered"))
+            .RuleFor(o => o.Status, f => f.PickRandom("Pending", "Processing", "Shipped"))
             .RuleFor(o => o.DeliveryPrice, f => f.Random.Decimal(20, 500))
             .RuleFor(o => o.DeliveryAddress, f => f.Address.FullAddress())
             .RuleFor(o => o.DeliveryDate, f => f.Date.Future(30).ToUniversalTime())
-            .RuleFor(o => o.PaymentMethod, f => f.PickRandom("Card", "Cash on Delivery"))
+            .RuleFor(o => o.PaymentMethod, f => f.PickRandom("Card", "Cash"))
             .RuleFor(o => o.Comment, f => f.Lorem.Sentence())
             .RuleFor(o => o.CreatedAt, f => f.Date.Past().ToUniversalTime())
             .RuleFor(o => o.UpdatedAt, f => f.Date.Recent(14).ToUniversalTime());
@@ -253,42 +337,74 @@ public class DataSeeder
         return GenerateRows(faker, count);
     }
 
-    private IReadOnlyCollection<OrderBouquet> GenerateOrderBouquets(int count)
+    private IReadOnlyCollection<OrderBouquet> GenerateOrderBouquets()
     {
-        var faker = new Faker<OrderBouquet>()
-            .RuleFor(ob => ob.Id, f => f.IndexFaker + 1)
-            .RuleFor(ob => ob.OrderId, f => f.PickRandom<Order>(Orders).Id)
-            .RuleFor(ob => ob.BouquetId, f => f.Random.Bool() ? f.PickRandom<Bouquet>(Bouquets).Id : null)
-            .RuleFor(ob => ob.CustomBouquetId,
-                (f, ob) => ob.BouquetId == null ? f.PickRandom<CustomBouquet>(CustomBouquets).Id : null)
-            .RuleFor(ob => ob.Quantity, f => f.Random.Int(1, 5));
+        var orders = Orders.OrderBy(_ => Guid.NewGuid()).ToList();
+        var random = new Random();
+        var orderBouquets = new List<OrderBouquet>();
 
-        return GenerateRows(faker, count);
+        foreach (var order in orders)
+        {
+            var faker = new Faker<OrderBouquet>()
+                .RuleFor(ob => ob.Id, f => f.IndexFaker + 1 + orderBouquets.Count)
+                .RuleFor(ob => ob.OrderId, _ => order.Id)
+                .RuleFor(ob => ob.BouquetId, f => f.Random.Bool() ? f.PickRandom<Bouquet>(Bouquets).Id : null)
+                .RuleFor(ob => ob.CustomBouquetId,
+                    (f, ob) => ob.BouquetId == null ? f.PickRandom<CustomBouquet>(CustomBouquets).Id : null)
+                .RuleFor(ob => ob.Quantity, f => f.Random.Int(1, 5));
+
+            var itemCount = random.Next(1, 3);
+            orderBouquets.AddRange(GenerateRows(faker, itemCount));
+        }
+
+        return orderBouquets;
     }
 
     private IReadOnlyCollection<OrderAddOn> GenerateOrderAddOns(int count)
     {
-        var faker = new Faker<OrderAddOn>()
-            .RuleFor(oao => oao.CardNote, f => f.Lorem.Sentence())
-            .RuleFor(oao => oao.OrderBouquetId, f => f.PickRandom<OrderBouquet>(OrderBouquets).Id)
-            .RuleFor(oao => oao.AddOnId, f => f.PickRandom<AddOn>(AddOns).Id);
+        var orderAddOns = new List<OrderAddOn>();
+        var random = new Random();
 
-        return GenerateRows(faker, count);
+        for (var i = 0; i < count; i++)
+        {
+            var faker = new Faker<OrderAddOn>()
+                .RuleFor(oao => oao.OrderBouquetId, f => f.PickRandom<OrderBouquet>(OrderBouquets).Id)
+                .RuleFor(oao => oao.AddOnId, (f, oao) =>
+                {
+                    var addOnsNotWithOrderBouquet = AddOns.Where(aol =>
+                        !orderAddOns
+                            .Where(loao => loao.OrderBouquetId == oao.OrderBouquetId)
+                            .Select(loao => loao.AddOnId)
+                            .Contains(aol.Id));
+
+                    return f.PickRandom<AddOn>(addOnsNotWithOrderBouquet).Id;
+                })
+                .RuleFor(oao => oao.CardNote, (f, oao) =>
+                {
+                    var addOnTypeName = AddOnTypes
+                        .First(aot => aot.Id == AddOns.First(ao => ao.Id == oao.AddOnId).TypeId).Name;
+                    return addOnTypeName == "PostCard" ? f.Lorem.Sentence() : null;
+                });
+
+            var itemCount = random.Next(1, 4);
+            orderAddOns.AddRange(GenerateRows(faker, itemCount));
+        }
+
+        return orderAddOns;
     }
 
-    private IReadOnlyCollection<Payment> GeneratePayments(int count)
+    private IReadOnlyCollection<Payment> GeneratePayments()
     {
-        var uniqueOrders = Orders.Where(o => o.PaymentMethod == "Card").OrderBy(_ => Guid.NewGuid()).Take(count)
-            .ToList();
+        var ordersPayedByCard = Orders.Where(o => o.PaymentMethod == "Card").OrderBy(_ => Guid.NewGuid()).ToList();
         var faker = new Faker<Payment>()
             .RuleFor(p => p.Id, f => f.IndexFaker + 1)
-            .RuleFor(p => p.OrderId, f => uniqueOrders[f.IndexFaker].Id)
+            .RuleFor(p => p.OrderId, f => ordersPayedByCard[f.IndexFaker].Id)
             .RuleFor(p => p.Amount, f => f.Random.Decimal(20, 500))
-            .RuleFor(p => p.PaymentMethod, f => f.PickRandom("Card", "Cash on Delivery"))
+            .RuleFor(p => p.PaymentMethod, f => f.PickRandom("Card", "Cash"))
             .RuleFor(p => p.Status, f => f.PickRandom("Pending", "Completed", "Failed"))
             .RuleFor(p => p.TransactionDate, f => f.Date.Recent(30).ToUniversalTime());
 
-        return GenerateRows(faker, count);
+        return GenerateRows(faker, ordersPayedByCard.Count);
     }
 
     private void UpdateBouquetPrices()
@@ -328,10 +444,7 @@ public class DataSeeder
                 ? Bouquets.First(bq => bq.Id == cartItem.BouquetId.Value).Price
                 : CustomBouquets.First(cb => cb.Id == cartItem.CustomBouquetId!.Value).TotalPrice;
 
-            if (!cartItem.AddOns.Any())
-            {
-                continue;
-            }
+            if (!cartItem.AddOns.Any()) continue;
 
             var cartItemAddons = CartItemAddOns.Where(cao => cao.CartItemId == cartItem.Id);
             var addOnPrice = cartItemAddons.Sum(cao => AddOns.First(ao => ao.Id == cao.AddOnId).Price);
@@ -367,5 +480,14 @@ public class DataSeeder
     private T SeedRow<T>(Faker<T> faker, int rowId) where T : class
     {
         return faker.UseSeed(rowId).Generate();
+    }
+
+    private List<byte[]> GetImagesFromDirectoryInBase64(string pathToImages)
+    {
+        var fileNames = Directory.GetFiles(pathToImages).ToList();
+        var imagesAsBase64Strings = fileNames
+            .Select(File.ReadAllBytes)
+            .ToList();
+        return imagesAsBase64Strings;
     }
 }
