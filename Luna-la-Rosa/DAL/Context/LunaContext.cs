@@ -12,7 +12,7 @@ public class LunaContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
-	public DbSet<FlowerType> FlowerTypes { get; set; }
+    public DbSet<FlowerType> FlowerTypes { get; set; }
     public DbSet<Flower> Flowers { get; set; }
     public DbSet<Bouquet> Bouquets { get; set; }
     public DbSet<BouquetCategory> BouquetCategories { get; set; }
@@ -23,9 +23,9 @@ public class LunaContext : DbContext
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
     public DbSet<CartItemAddOn> CartItemAddOns { get; set; }
-	public DbSet<AddOnType> AddOnTypes { get; set; }
+    public DbSet<AddOnType> AddOnTypes { get; set; }
     public DbSet<AddOn> AddOns { get; set; }
-	public DbSet<BouquetAddOn> BouquetAddOns { get; set; }
+    public DbSet<BouquetAddOn> BouquetAddOns { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderBouquet> OrderBouquets { get; set; }
     public DbSet<OrderAddOn> OrderAddOns { get; set; }
@@ -34,7 +34,7 @@ public class LunaContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
-		modelBuilder.ApplyConfiguration(new FlowerTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new FlowerTypeConfiguration());
         modelBuilder.ApplyConfiguration(new FlowerConfiguration());
         modelBuilder.ApplyConfiguration(new BouquetConfiguration());
         modelBuilder.ApplyConfiguration(new BouquetCategoryConfiguration());
@@ -45,9 +45,9 @@ public class LunaContext : DbContext
         modelBuilder.ApplyConfiguration(new ShoppingCartConfiguration());
         modelBuilder.ApplyConfiguration(new CartItemConfiguration());
         modelBuilder.ApplyConfiguration(new CartItemAddOnConfiguration());
-		modelBuilder.ApplyConfiguration(new AddOnTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new AddOnTypeConfiguration());
         modelBuilder.ApplyConfiguration(new AddOnConfiguration());
-		modelBuilder.ApplyConfiguration(new BouquetAddOnConfiguration());
+        modelBuilder.ApplyConfiguration(new BouquetAddOnConfiguration());
         modelBuilder.ApplyConfiguration(new OrderConfiguration());
         modelBuilder.ApplyConfiguration(new OrderBouquetConfiguration());
         modelBuilder.ApplyConfiguration(new OrderAddOnConfiguration());
@@ -56,7 +56,7 @@ public class LunaContext : DbContext
         var seeder = new DataSeeder();
 
         modelBuilder.Entity<User>().HasData(seeder.Users);
-		modelBuilder.Entity<FlowerType>().HasData(seeder.FlowerTypes);
+        modelBuilder.Entity<FlowerType>().HasData(seeder.FlowerTypes);
         modelBuilder.Entity<Flower>().HasData(seeder.Flowers);
         modelBuilder.Entity<Bouquet>().HasData(seeder.Bouquets);
         modelBuilder.Entity<BouquetCategory>().HasData(seeder.BouquetCategories);
@@ -66,10 +66,10 @@ public class LunaContext : DbContext
         modelBuilder.Entity<CustomBouquetFlower>().HasData(seeder.CustomBouquetFlowers);
         modelBuilder.Entity<ShoppingCart>().HasData(seeder.ShoppingCarts);
         modelBuilder.Entity<CartItem>().HasData(seeder.CartItems);
-		modelBuilder.Entity<AddOnType>().HasData(seeder.AddOnTypes);
+        modelBuilder.Entity<AddOnType>().HasData(seeder.AddOnTypes);
         modelBuilder.Entity<AddOn>().HasData(seeder.AddOns);
         modelBuilder.Entity<CartItemAddOn>().HasData(seeder.CartItemAddOns);
-		modelBuilder.Entity<BouquetAddOn>().HasData(seeder.BouquetAddOns);
+        modelBuilder.Entity<BouquetAddOn>().HasData(seeder.BouquetAddOns);
         modelBuilder.Entity<Order>().HasData(seeder.Orders);
         modelBuilder.Entity<OrderBouquet>().HasData(seeder.OrderBouquets);
         modelBuilder.Entity<OrderAddOn>().HasData(seeder.OrderAddOns);
