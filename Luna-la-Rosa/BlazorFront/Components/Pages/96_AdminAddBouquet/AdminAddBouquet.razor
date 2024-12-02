@@ -1,6 +1,17 @@
 ﻿@page "/admin-add-bouquet"
+@using BLL.DTO.AddOn
+@using BLL.DTO.Bouquet
+@using BLL.DTO.BouquetFlower
+@using BLL.DTO.Flower
+@using BLL.DTO.ItemAddOn
+@using BlazorFront.Services
+@using BlazorFront.Services.Interfaces
+@inject IBouquetService BouquetService
+@inject IFlowerService FlowerService
+@inject IAddOnService AddOnService
 
-<!-- Main Section for Bouquet Creation -->
+@rendermode InteractiveServer
+
 <main class="bouquet-creation">
     <section class="bouquet-form-simple">
         <h2>Створення букета</h2>
@@ -8,220 +19,193 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="bouquet-name">Назва букета</label>
-                    <input type="text" id="bouquet-name" placeholder="Назва букета">
+                    <input type="text" id="bouquet-name" @bind="CurrentBouquet.Name" placeholder="Назва букета">
                 </div>
                 <div class="form-group">
-                    <label for="bouquet-price">Ціна букета</label>
-                    <input type="number" id="bouquet-price" placeholder="Ціна букета">
+                    <label for="bouquet-description">Опис букета</label>
+                    <input type="text" id="bouquet-description" @bind="CurrentBouquet.Description" placeholder="Опис букета">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Колір</label>
-                    <div class="select-box">
-                        <select id="bouquet-color">
-                            <option>Червоний</option>
-                            <option>Білий</option>
-                            <option>Рожевий</option>
-                        </select>
-                    </div>
+                    <select id="bouquet-color" @bind="CurrentBouquet.MainColor">
+                        <option>Червоний</option>
+                        <option>Білий</option>
+                        <option>Рожевий</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="bouquet-description">Опис букета</label>
-                    <input type="text" id="bouquet-description" placeholder="Опис букета">
+                    <label>Розмір</label>
+                    <div class="radio-options">
+                        <label>
+                            <input type="radio" name="size" value="Large" @bind:checked="CurrentBouquet.Size"> Великий
+                        </label>
+                        <label>
+                            <input type="radio" name="size" value="Medium" @bind:checked="CurrentBouquet.Size"> Середній
+                        </label>
+                        <label>
+                            <input type="radio" name="size" value="Small" @bind:checked="CurrentBouquet.Size"> Маленький
+                        </label>
+
+                    </div>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Розмір</label>
-                    <div class="radio-options">
-                        <label><input type="radio" name="size" value="Великий"> Великий</label>
-                        <label><input type="radio" name="size" value="Середній"> Середній</label>
-                        <label><input type="radio" name="size" value="Маленький"> Маленький</label>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="bouquet-photo">Завантажити фото букета</label>
-                    <input type="file" id="bouquet-photo">
+                    <InputFile OnChange="UploadImage" />
+
                 </div>
             </div>
         </form>
     </section>
 
-
     <div class="bouquet-container">
-        <!-- Left Column: Flower and Decoration Selection -->
+        <!-- Left Column -->
         <div class="left-column">
-            <!-- Category Tabs -->
-            <div class="category-tabs">
-                <button>Троянди</button>
-                <button>Тюльпани</button>
-                <button>Півонії</button>
-                <button>Тюльпани</button>
-                <button>Півонії</button>
-                <button>Тюльпани</button>
-                <button>Півонії</button>
-                <button>Тюльпани</button>
-                <button>Півонії</button>
+            <h3>Вибір квітів</h3>
+            <div>
+                @foreach (var flower in Flowers)
+                {
+                    <div class="flower-item">
+                        <p>@flower.Name (@flower.Price грн)</p>
+                        <div class="quantity-control">
+                            <button @onclick="() => AddFlower(flower)">+</button>
+                        </div>
+                    </div>
+                }
             </div>
-
-            <!-- Flower Selection -->
-            <div class="selection-section">
-                <div class="flower-item">
-                    <img src="bouquet.png" alt="Жовтий тюльпан">
-                    <div class="item-details">
-                        <p>Жовтий тюльпан</p>
-                        <span class="price">45 грн/шт.</span>
+            <h3>Вибір оформлення</h3>
+            <div>
+                @foreach (var addOn in AddOns)
+                {
+                    <div class="add-on-item">
+                        <p>@addOn.Name (@addOn.Price грн)</p>
+                        <div class="quantity-control">
+                            <button @onclick="() => AddAddOn(addOn)">+</button>
+                        </div>
                     </div>
-                    <div class="quantity-control">
-                        <button class="minus">-</button>
-                        <input type="number" min="0" value="1">
-                        <button class="plus">+</button>
-                    </div>
-                </div>
-
-                <div class="flower-item">
-                    <img src="bouquet.png" alt="Білий тюльпан">
-                    <div class="item-details">
-                        <p>Білий тюльпан</p>
-                        <span class="price">45 грн/шт.</span>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="minus">-</button>
-                        <input type="number" min="0" value="0">
-                        <button class="plus">+</button>
-                    </div>
-                </div>
-
-                <div class="flower-item">
-                    <img src="bouquet.png" alt="Червоний тюльпан">
-                    <div class="item-details">
-                        <p>Червоний тюльпан</p>
-                        <span class="price">45 грн/шт.</span>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="minus">-</button>
-                        <input type="number" min="0" value="0">
-                        <button class="plus">+</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="decoration-div">
-                <p>Оформлення</p>
-            </div>
-
-
-            <!-- Decoration Selection -->
-            <div class="selection-section">
-                <div class="decoration-item">
-                    <img src="bouquet.png" alt="Картонний папір" class="decoration-image">
-                    <div class="item-details">
-                        <p>Картонний папір 1 лист</p>
-                        <span class="price">25 грн</span>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="minus">-</button>
-                        <input type="number" min="0" value="0">
-                        <button class="plus">+</button>
-                    </div>
-                </div>
-                <div class="decoration-item">
-                    <img src="bouquet.png" alt="Мотузка з текстурою" class="decoration-image">
-                    <div class="item-details">
-                        <p>Мотузка з текстурою</p>
-                        <span class="price">40 грн</span>
-                    </div>
-                    <div class="quantity-control">
-                        <button class="minus">-</button>
-                        <input type="number" min="0" value="0">
-                        <button class="plus">+</button>
-                    </div>
-                </div>
+                }
             </div>
         </div>
 
-        <!-- Right Column: Bouquet Summary -->
+        <!-- Right Column -->
         <div class="right-column">
             <h2>Ваш букет:</h2>
-            <div class="bouquet-summary">
-                <div class="bouquet-item">
-                    <button class="remove-item">×</button>
-                    <img src="bouquet.png" alt="Жовтий тюльпан">
-                    <div class="item-details">
-                        <p class="item-name">Жовтий тюльпан</p>
-                        <span class="price">45 грн</span>
-                        <div class="quantity-control">
-                            <button class="minus">-</button>
-                            <input type="number" min="1" value="1">
-                            <button class="plus">+</button>
-                        </div>
+            <div>
+                @foreach (var flower in SelectedFlowers)
+                {
+                    <div>
+                        <p>@flower.Flower.Name x @flower.Quantity</p>
                     </div>
-                </div>
-            </div>
-            <div class="bouquet-summary">
-                <div class="bouquet-item">
-                    <button class="remove-item">×</button>
-                    <img src="bouquet.png" alt="Жовтий тюльпан">
-                    <div class="item-details">
-                        <p class="item-name">Жовтий тюльпан</p>
-                        <span class="price">45 грн</span>
-                        <div class="quantity-control">
-                            <button class="minus">-</button>
-                            <input type="number" min="1" value="1">
-                            <button class="plus">+</button>
-                        </div>
+                }
+                @foreach (var addOn in SelectedAddOns)
+                {
+                    <div>
+                        <p>@addOn.AddOn.Name x @addOn.Quantity</p>
                     </div>
-                </div>
+                }
             </div>
-            <div class="bouquet-summary">
-                <div class="bouquet-item">
-                    <button class="remove-item">×</button>
-                    <img src="bouquet.png" alt="Жовтий тюльпан">
-                    <div class="item-details">
-                        <p class="item-name">Жовтий тюльпан</p>
-                        <span class="price">45 грн</span>
-                        <div class="quantity-control">
-                            <button class="minus">-</button>
-                            <input type="number" min="1" value="1">
-                            <button class="plus">+</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bouquet-summary">
-                <div class="bouquet-item">
-                    <button class="remove-item">×</button>
-                    <img src="bouquet.png" alt="Жовтий тюльпан">
-                    <div class="item-details">
-                        <p class="item-name">Жовтий тюльпан</p>
-                        <span class="price">45 грн</span>
-                        <div class="quantity-control">
-                            <button class="minus">-</button>
-                            <input type="number" min="1" value="1">
-                            <button class="plus">+</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="bouquet-summary">
-                <div class="bouquet-item">
-                    <button class="remove-item">×</button>
-                    <img src="bouquet.png" alt="Жовтий тюльпан">
-                    <div class="item-details">
-                        <p class="item-name">Жовтий тюльпан</p>
-                        <span class="price">45 грн</span>
-                        <div class="quantity-control">
-                            <button class="minus">-</button>
-                            <input type="number" min="1" value="1">
-                            <button class="plus">+</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <button class="save-button" @onclick="SaveBouquet">Зберегти</button>
         </div>
     </div>
-    <div class="form-actions">
-        <button type="submit" class="save-button">Зберегти</button>
-    </div>
 </main>
+
+@code {
+    private CreateBouquetDto CurrentBouquet = new CreateBouquetDto
+        {
+            Size = "Medium" // Встановіть значення за замовчуванням, якщо потрібно
+        };
+
+    private CreateBouquetDto NewBouquet = new CreateBouquetDto
+        {
+            Flowers = new List<BouquetFlowerDto>(),
+            AddOns = new List<ItemAddOnDto>()
+        };
+
+
+    private List<FlowerDto> Flowers = new();
+    private List<AddOnDto> AddOns = new();
+    private List<BouquetFlowerDto> SelectedFlowers = new();
+    private List<ItemAddOnDto> SelectedAddOns = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Flowers = (await FlowerService.GetAllFlowersAsync(string.Empty)).ToList();
+        AddOns = (await AddOnService.GetAllAddOnsAsync(string.Empty)).ToList();
+    }
+
+    private void AddFlower(FlowerDto flower)
+    {
+        var existing = SelectedFlowers.FirstOrDefault(f => f.FlowerId == flower.Id);
+        if (existing != null)
+        {
+            existing.Quantity++;
+        }
+        else
+        {
+            SelectedFlowers.Add(new BouquetFlowerDto { FlowerId = flower.Id, Quantity = 1, Flower = flower });
+        }
+    }
+
+    private void AddAddOn(AddOnDto addOn)
+    {
+        var existing = SelectedAddOns.FirstOrDefault(a => a.AddOnId == addOn.Id);
+        if (existing != null)
+        {
+            existing.Quantity++;
+        }
+        else
+        {
+            SelectedAddOns.Add(new ItemAddOnDto { AddOnId = addOn.Id, Quantity = 1, AddOn = addOn });
+        }
+    }
+
+    private async Task SaveBouquet()
+    {
+
+        NewBouquet.Name = CurrentBouquet.Name;
+        Console.WriteLine("name:" + NewBouquet.Name);
+        NewBouquet.Description = CurrentBouquet.Description;
+        Console.WriteLine("desc:" + NewBouquet.Description);
+        NewBouquet.Size = CurrentBouquet.Size;
+        Console.WriteLine("size:" + NewBouquet.Size);
+        NewBouquet.MainColor = CurrentBouquet.MainColor;
+        Console.WriteLine("color:" + NewBouquet.MainColor);
+        NewBouquet.Image = CurrentBouquet.Image;
+        Console.WriteLine("img:" + NewBouquet.Image);
+        NewBouquet.Flowers = SelectedFlowers;
+        Console.WriteLine("flow:" + NewBouquet.Flowers);
+        NewBouquet.AddOns = SelectedAddOns;
+        Console.WriteLine("addons:" + NewBouquet.AddOns);
+
+        if (string.IsNullOrWhiteSpace(NewBouquet.Name) ||
+    string.IsNullOrWhiteSpace(NewBouquet.MainColor) ||
+    string.IsNullOrWhiteSpace(NewBouquet.Size) ||
+    NewBouquet.Image == null)
+        {
+            Console.WriteLine("Заповніть усі обов'язкові поля!");
+            return;
+        }
+
+
+        // Виклик сервісу для збереження букета
+        await BouquetService.AddBouquetAsync(NewBouquet, CancellationToken.None);
+
+        // Очистка форми або перенаправлення
+        Console.WriteLine("Букет успішно збережений!");
+    }
+
+
+    private async Task UploadImage(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            using var memoryStream = new MemoryStream();
+            await file.OpenReadStream().CopyToAsync(memoryStream);
+            CurrentBouquet.Image = memoryStream.ToArray();
+        }
+    }
+}

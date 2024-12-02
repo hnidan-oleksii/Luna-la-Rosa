@@ -19,6 +19,16 @@ builder.Services.AddHttpClient<IBouquetService, BouquetService>(client =>
     client.BaseAddress = new Uri("http://localhost:5000/");
 });
 
+builder.Services.AddHttpClient<ICustomBouquetService, CustomBouquetService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000/");
+});
+
+builder.Services.AddHttpClient<IShoppingCartService, ShoppingCartService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000/");
+});
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

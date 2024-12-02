@@ -260,3 +260,49 @@
 .modal-content button:hover {
     background-color: #e04a45;
 }
+
+.selected-add-ons ul {
+    list-style: none; /* Прибираємо стандартні маркери списку */
+    padding: 0;
+    margin: 0;
+}
+
+    .selected-add-ons ul li {
+        display: flex; /* Включаємо горизонтальне вирівнювання */
+        align-items: center; /* Вирівнюємо елементи по центру вертикально */
+        gap: 15px; /* Відступ між елементами */
+        padding: 5px 0;
+        border-bottom: 1px solid #ddd; /* Розділювач між елементами */
+    }
+
+        .selected-add-ons ul li:last-child {
+            border-bottom: none; /* Прибираємо розділювач для останнього елемента */
+        }
+
+        .selected-add-ons ul li img {
+            width: 40px; /* Ширина зображення */
+            height: 40px; /* Висота зображення */
+            object-fit: cover; /* Пропорційне обрізання зображення */
+            border-radius: 8px; /* Закруглені кути */
+        }
+
+        .selected-add-ons ul li p {
+            margin: 0;
+            font-size: 1rem; /* Розмір тексту */
+            flex: 1; /* Дозволяємо тексту займати весь доступний простір */
+        }
+
+        .selected-add-ons ul li button {
+            background-color: #ff5e57; /* Червоний фон */
+            color: white; /* Білий текст */
+            border: none;
+            border-radius: 5px; /* Закруглені кути */
+            padding: 5px 10px; /* Внутрішні відступи */
+            font-size: 0.9rem; /* Розмір тексту кнопки */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Анімація при наведенні */
+        }
+
+            .selected-add-ons ul li button:hover {
+                background-color: #e04a45; /* Трохи темніший червоний при наведенні */
+            }
